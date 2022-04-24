@@ -1,6 +1,8 @@
-import { DocumentRenderer } from "@keystone-6/document-renderer";
 import type { NextPage, InferGetStaticPropsType } from "next";
-import Head from "next/head";
+import { DocumentRenderer } from "@keystone-6/document-renderer";
+import { Footer } from "../components/Footer";
+import { MainHead } from "../components/MainHead";
+import { SmoothScroll } from "../components/SmoothScroll/SmoothScroll";
 import { query } from "../graphql/gql-client";
 import styles from "../styles/Home.module.css";
 
@@ -9,24 +11,16 @@ const Home: NextPage = ({
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     <div className={styles.container}>
-      <Head>
-        <title>stefvw.dev</title>
-        <meta
-          name="description"
-          content="Stef van Wijchen front end developer portfolio"
-        />
-        <link
-          rel="icon"
-          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👨‍💻</text></svg>"
-        />
-      </Head>
+      <MainHead />
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>Hello I am Stef</h1>
-        <DocumentRenderer document={test?.post?.content?.document} />
-      </main>
+      <SmoothScroll>
+        <main className={styles.main}>
+          <DocumentRenderer document={test?.post?.content?.document} />
+          <div style={{ height: "200vh" }}></div>
+        </main>
+      </SmoothScroll>
 
-      <footer className={styles.footer}></footer>
+      <Footer />
     </div>
   );
 };
