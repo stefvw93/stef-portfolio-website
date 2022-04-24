@@ -10,15 +10,13 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
   const content = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!container.current || !content.current) return;
-    container.current.style.height = content.current.offsetHeight + "px";
+    container.current!.style.height = content.current!.offsetHeight + "px";
   });
 
   useEffect(() => {
-    if (!content.current) return;
-    const smoothScroll = createSmoothScroll(content.current);
-    smoothScroll.init();
-    return smoothScroll.destroy;
+    const { init, destroy } = createSmoothScroll(content.current!);
+    init();
+    return destroy;
   }, []);
 
   return (
@@ -32,22 +30,25 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
 
 export type SmoothScrollSettings = {
   smoothness?: number;
+  fps?: number;
 };
 
 function createSmoothScroll(
   target: HTMLElement,
-  { smoothness = 0.2 }: SmoothScrollSettings = {}
+  { smoothness = 0.2, fps = 60 }: SmoothScrollSettings = {}
 ) {
   let scrollY = window.scrollY;
   let animateY = scrollY;
+  const targetFrameDelta = 1000 / fps;
   const setY = gsap.quickSetter(target, "y", "px");
 
   function getScrollPosition() {
     scrollY = window.scrollY;
   }
 
-  function updateScrollPosition() {
-    animateY = gsap.utils.interpolate(animateY, scrollY, smoothness);
+  function updateScrollPosition(_: number, deltaTime: number) {
+    const progress = smoothness * (targetFrameDelta / deltaTime);
+    animateY = gsap.utils.interpolate(animateY, scrollY, progress);
     setY(-animateY);
   }
 
@@ -59,7 +60,6 @@ function createSmoothScroll(
   function init() {
     gsap.ticker.add(getScrollPosition);
     gsap.ticker.add(updateScrollPosition);
-    gsap.set(target, { z: "0px" });
   }
 
   return {
