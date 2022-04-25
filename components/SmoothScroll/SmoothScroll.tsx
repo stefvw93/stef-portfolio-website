@@ -1,7 +1,6 @@
 import gsap from "gsap";
 import { PropsWithChildren, useEffect, useRef } from "react";
-import { Box } from "../layout/Box/Box";
-import styles from "./SmoothScroll.module.css";
+import styles from "./SmoothScroll.module.scss";
 
 export type SmoothScrollProps = PropsWithChildren<{}>;
 
@@ -10,21 +9,20 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
   const content = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    container.current!.style.height = content.current!.offsetHeight + "px";
-  });
-
-  useEffect(() => {
-    const { init, destroy } = createSmoothScroll(content.current!);
+    const { init, destroy } = createSmoothScroll(
+      container.current!,
+      content.current!
+    );
     init();
     return destroy;
   }, []);
 
   return (
-    <Box className={styles.container} ref={container}>
-      <Box className={styles.content} ref={content}>
+    <div className={styles.container} ref={container}>
+      <div className={styles.content} ref={content}>
         {children}
-      </Box>
-    </Box>
+      </div>
+    </div>
   );
 }
 
@@ -34,6 +32,7 @@ export type SmoothScrollSettings = {
 };
 
 function createSmoothScroll(
+  container: HTMLElement,
   target: HTMLElement,
   { smoothness = 0.2, fps = 60 }: SmoothScrollSettings = {}
 ) {
@@ -52,14 +51,23 @@ function createSmoothScroll(
     setY(-animateY);
   }
 
+  function handleResize() {
+    console.log("handleresize");
+    destroy();
+    init();
+  }
+
   function destroy() {
     gsap.ticker.remove(getScrollPosition);
     gsap.ticker.remove(updateScrollPosition);
+    window.removeEventListener("resize", handleResize);
   }
 
   function init() {
+    container.style.height = target.offsetHeight + "px";
     gsap.ticker.add(getScrollPosition);
     gsap.ticker.add(updateScrollPosition);
+    window.addEventListener("resize", handleResize);
   }
 
   return {

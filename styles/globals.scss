@@ -1,0 +1,36 @@
+@font-face {
+  font-family: "PP Neue Montreal";
+  src: url("/public/fonts/PPNeueMontreal-Book.otf") format("otf");
+}
+
+:root {
+  --color-eerie-black: #141514ff;
+  --color-flame: #e53d00ff;
+  --color-snow: #fbf5f3ff;
+  --color-wintergreen-dream: #6a8e7fff;
+  --color-azure: #3185fcff;
+}
+
+html {
+  font-size: 16px;
+  font-family: "PP Neue Montreal", Helvetica Neue, -apple-system,
+    BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans,
+    Droid Sans, sans-serif;
+  color: var(--color-eerie-black);
+  background: var(--color-snow);
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}

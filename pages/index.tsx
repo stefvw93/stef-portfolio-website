@@ -4,29 +4,28 @@ import { Footer } from "../components/Footer";
 import { MainHead } from "../components/MainHead";
 import { SmoothScroll } from "../components/SmoothScroll/SmoothScroll";
 import { query } from "../graphql/gql-client";
-import styles from "../styles/Home.module.css";
+import styles from "../styles/Home.module.scss";
+import { Scaffold } from "../components/Scaffold/Scaffold";
 
 const Home: NextPage = ({
   test,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
-    <div className={styles.container}>
+    <>
       <MainHead />
-
-      <SmoothScroll>
-        <main className={styles.main}>
-          <DocumentRenderer document={test?.post?.content?.document} />
-          <div style={{ height: "200vh" }}></div>
-        </main>
-      </SmoothScroll>
-
-      <Footer />
-    </div>
+      <Scaffold>
+        <div className={styles.helloContainer}>
+          <article className={styles.hello}>
+            <DocumentRenderer document={test?.post?.content?.document} />
+          </article>
+        </div>
+      </Scaffold>
+    </>
   );
 };
 
 export async function getStaticProps() {
-  const { data, error } = await query.post({ slug: "test" });
+  const { data, error } = await query.post({ slug: "hello" });
   if (error) return { props: {} };
   return { props: { test: data } };
 }
