@@ -52,7 +52,6 @@ function createSmoothScroll(
   }
 
   function handleResize() {
-    console.log("handleresize");
     destroy();
     init();
   }
