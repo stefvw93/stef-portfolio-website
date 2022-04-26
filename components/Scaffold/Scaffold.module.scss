@@ -5,6 +5,10 @@
   width: 100vw;
   padding: 2.5rem;
   z-index: 2;
+
+  @media (max-width: 400px) {
+    padding: 1.875rem;
+  }
 }
 
 .topMenu_navigation {
@@ -17,4 +21,11 @@
   padding-inline-start: 2.5rem;
   padding-inline-end: 2.5rem;
   min-height: 100vh;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  @media (max-width: 400px) {
+    padding-inline-start: 1.875rem;
+    padding-inline-end: 1.875rem;
+  }
 }
