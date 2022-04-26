@@ -16,25 +16,28 @@ const Home: NextPage = ({
   useEffect(() => {
     if (!window) return;
     const animated = document.getElementsByClassName("animated-lines");
-    const splitText = createSplitText(animated[0] as HTMLParagraphElement, {
-      wordSpanAttrs: { class: "word" },
-      lineSpanAttrs: { class: "line" },
-    });
+    const { words, lines, destroy } = createSplitText(
+      animated[0] as HTMLParagraphElement,
+      {
+        wordSpanAttrs: { class: "word" },
+        lineSpanAttrs: { class: "line" },
+      }
+    );
 
-    if (!splitText.words.length || !splitText.lines.length) return;
+    if (!words.length || !lines.length) return;
 
-    gsap.set(splitText.words, { opacity: 0 });
+    gsap.set(words, { opacity: 0 });
     gsap.fromTo(
-      splitText.words,
+      words,
       { opacity: 0 },
       {
         opacity: 1,
         duration: 1,
-        stagger: -(1 / splitText.words.length) * 0.6,
+        stagger: -(1 / words.length) * 0.6,
       }
     );
     gsap.fromTo(
-      splitText.lines,
+      lines,
       {
         x: 20,
         display: "inline-block",
@@ -48,10 +51,12 @@ const Home: NextPage = ({
         stagger: -0.1,
         ease: Power2.easeOut,
         onComplete() {
-          // splitText.reset();
+          // reset();
         },
       }
     );
+
+    return destroy;
   }, []);
 
   return (
@@ -60,18 +65,20 @@ const Home: NextPage = ({
       <Scaffold>
         <div className={styles.helloContainer}>
           <article className={styles.hello}>
-            <DocumentRenderer
-              document={test?.post?.content?.document}
-              renderers={{
-                block: {
-                  paragraph: ({ children, textAlign }) => (
-                    <p className="animated-lines" style={{ textAlign }}>
-                      {children}
-                    </p>
-                  ),
-                },
-              }}
-            />
+            {test?.post && (
+              <DocumentRenderer
+                document={test?.post?.content?.document}
+                renderers={{
+                  block: {
+                    paragraph: ({ children, textAlign }) => (
+                      <p className="animated-lines" style={{ textAlign }}>
+                        {children}
+                      </p>
+                    ),
+                  },
+                }}
+              />
+            )}
           </article>
         </div>
       </Scaffold>
@@ -81,8 +88,7 @@ const Home: NextPage = ({
 
 export async function getStaticProps() {
   const { data, error } = await query.post({ slug: "hello" });
-  if (error) return { props: {} };
-  return { props: { test: data } };
+  return { props: error ? {} : { test: data } };
 }
 
 export default Home;

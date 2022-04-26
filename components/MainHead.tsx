@@ -1,9 +1,11 @@
+import { AppContext } from "next/app";
 import Head from "next/head";
+import { useRouter } from "next/router";
 
 export function MainHead() {
   return (
     <Head>
-      <title>stefvw.dev</title>
+      <title>stef.codes</title>
       <meta
         name="description"
         content="Stef van Wijchen front end developer portfolio"

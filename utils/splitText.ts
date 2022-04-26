@@ -15,17 +15,20 @@ export function createSplitText(
   let words: HTMLSpanElement[] = [];
   let lines: HTMLSpanElement[] = [];
 
+  function getText() {
+    return (textNode instanceof Text ? textNode.nodeValue : "") ?? "";
+  }
+
   function reset() {
     splitElements.delete(element);
-    if (text == undefined) return;
-    element.innerText = text;
+    element.innerText = text ?? "";
   }
 
   function split() {
     if (splitElements.has(element)) return;
 
     textNode = element.firstChild;
-    text = (textNode instanceof Text ? textNode.nodeValue : "") ?? "";
+    text = getText();
     fragment = document.createDocumentFragment();
 
     words = text.split(" ").map((word) => {
@@ -72,21 +75,25 @@ export function createSplitText(
     }
   }
 
-  function handleResize(): void {
-    if (!document.contains(element) || !splitElements.has(element)) {
-      return void window.removeEventListener("resize", handleResize);
-    }
+  function destroy(doReset = false) {
+    if (doReset) reset();
+    window.removeEventListener("resize", handleResize);
+  }
 
+  function handleResize(): void {
     reset();
     split();
   }
 
   function init() {
+    if (!element) return;
+    textNode = element.firstChild;
+    text = getText();
     split();
     window.addEventListener("resize", handleResize);
   }
 
   init();
 
-  return { text, words, lines, split, reset };
+  return { text, words, lines, split, reset, destroy };
 }
