@@ -1,13 +1,16 @@
 import type { NextPage, InferGetStaticPropsType } from "next";
-import { DocumentRenderer } from "@keystone-6/document-renderer";
 import { MainHead } from "../components/MainHead";
-import { query } from "../graphql/gql-client";
+import { gqlClient } from "../graphql/gql-client";
 import styles from "../styles/Home.module.scss";
 import { Scaffold } from "../components/Scaffold/Scaffold";
 import { useEffect } from "react";
 import { slideLinesFadeWords } from "../utils/animations/text";
 import { Preloader } from "../components/Preloader/Preloader";
 import { SplitText } from "../utils/splitText";
+import { gql } from "@urql/core";
+import { Query, QueryPostsArgs } from "../generated/graphql";
+import { Hello } from "../components/Hello/Hello";
+import { AnimationEvent } from "../utils/globalEvents";
 
 function animate() {
   const animated = document.getElementsByClassName("animated-lines");
@@ -15,13 +18,11 @@ function animate() {
 }
 
 const Home: NextPage = ({
-  test,
+  posts,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   useEffect(() => {
-    const animated = document.getElementsByClassName("animated-lines");
-    SplitText.split(animated[0] as HTMLElement, {
-      wordSpanAttrs: { class: styles.word },
-      lineSpanAttrs: { class: "line" },
+    window.addEventListener(AnimationEvent.PreloadComplete, () => {
+      animate();
     });
   }, []);
 
@@ -29,33 +30,48 @@ const Home: NextPage = ({
     <>
       <MainHead />
       <Scaffold>
-        <div className={styles.helloContainer}>
-          <article className={styles.hello}>
-            {test?.post && (
-              <DocumentRenderer
-                document={test?.post?.content?.document}
-                renderers={{
-                  block: {
-                    paragraph: ({ children, textAlign }) => (
-                      <p className="animated-lines" style={{ textAlign }}>
-                        {children}
-                      </p>
-                    ),
-                  },
-                }}
-              />
-            )}
-          </article>
-        </div>
+        {posts?.map((post) => {
+          if (post.slug === "hello") {
+            return <Hello key={post.id} post={post} />;
+          }
+        })}
       </Scaffold>
-      <Preloader onComplete={animate} />
+      <Preloader />
     </>
   );
 };
 
 export async function getStaticProps() {
-  const { data, error } = await query.post({ slug: "hello" });
-  return { props: error ? {} : { test: data } };
+  const { data, error } = await gqlClient
+    .query<{ posts: Query["posts"] }, QueryPostsArgs>(
+      gql`
+        query HomePosts($where: PostWhereInput!) {
+          posts(where: $where) {
+            id
+            title
+            slug
+            content {
+              document
+            }
+            skills {
+              id
+              content
+            }
+          }
+        }
+      `,
+      {
+        where: {
+          categories: {
+            equals: "home",
+          },
+        },
+      }
+    )
+    .toPromise();
+
+  if (!data || error) return { props: {} };
+  return { props: { posts: data.posts } };
 }
 
 export default Home;

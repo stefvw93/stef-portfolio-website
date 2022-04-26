@@ -1,8 +1,12 @@
-import { AppContext } from "next/app";
 import Head from "next/head";
-import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { createGlobalEvents } from "../utils/globalEvents";
 
 export function MainHead() {
+  useEffect(() => {
+    createGlobalEvents();
+  }, []);
+
   return (
     <Head>
       <title>stef.codes</title>

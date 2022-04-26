@@ -139,15 +139,21 @@ export type Mutation = {
   createInitialUser: UserAuthenticationWithPasswordSuccess;
   createPost?: Maybe<Post>;
   createPosts?: Maybe<Array<Maybe<Post>>>;
+  createSkill?: Maybe<Skill>;
+  createSkills?: Maybe<Array<Maybe<Skill>>>;
   createUser?: Maybe<User>;
   createUsers?: Maybe<Array<Maybe<User>>>;
   deletePost?: Maybe<Post>;
   deletePosts?: Maybe<Array<Maybe<Post>>>;
+  deleteSkill?: Maybe<Skill>;
+  deleteSkills?: Maybe<Array<Maybe<Skill>>>;
   deleteUser?: Maybe<User>;
   deleteUsers?: Maybe<Array<Maybe<User>>>;
   endSession: Scalars['Boolean'];
   updatePost?: Maybe<Post>;
   updatePosts?: Maybe<Array<Maybe<Post>>>;
+  updateSkill?: Maybe<Skill>;
+  updateSkills?: Maybe<Array<Maybe<Skill>>>;
   updateUser?: Maybe<User>;
   updateUsers?: Maybe<Array<Maybe<User>>>;
 };
@@ -174,6 +180,16 @@ export type MutationCreatePostsArgs = {
 };
 
 
+export type MutationCreateSkillArgs = {
+  data: SkillCreateInput;
+};
+
+
+export type MutationCreateSkillsArgs = {
+  data: Array<SkillCreateInput>;
+};
+
+
 export type MutationCreateUserArgs = {
   data: UserCreateInput;
 };
@@ -191,6 +207,16 @@ export type MutationDeletePostArgs = {
 
 export type MutationDeletePostsArgs = {
   where: Array<PostWhereUniqueInput>;
+};
+
+
+export type MutationDeleteSkillArgs = {
+  where: SkillWhereUniqueInput;
+};
+
+
+export type MutationDeleteSkillsArgs = {
+  where: Array<SkillWhereUniqueInput>;
 };
 
 
@@ -212,6 +238,17 @@ export type MutationUpdatePostArgs = {
 
 export type MutationUpdatePostsArgs = {
   data: Array<PostUpdateArgs>;
+};
+
+
+export type MutationUpdateSkillArgs = {
+  data: SkillUpdateInput;
+  where: SkillWhereUniqueInput;
+};
+
+
+export type MutationUpdateSkillsArgs = {
+  data: Array<SkillUpdateArgs>;
 };
 
 
@@ -239,6 +276,20 @@ export type NestedStringFilter = {
   startsWith?: InputMaybe<Scalars['String']>;
 };
 
+export type NestedStringNullableFilter = {
+  contains?: InputMaybe<Scalars['String']>;
+  endsWith?: InputMaybe<Scalars['String']>;
+  equals?: InputMaybe<Scalars['String']>;
+  gt?: InputMaybe<Scalars['String']>;
+  gte?: InputMaybe<Scalars['String']>;
+  in?: InputMaybe<Array<Scalars['String']>>;
+  lt?: InputMaybe<Scalars['String']>;
+  lte?: InputMaybe<Scalars['String']>;
+  not?: InputMaybe<NestedStringNullableFilter>;
+  notIn?: InputMaybe<Array<Scalars['String']>>;
+  startsWith?: InputMaybe<Scalars['String']>;
+};
+
 export enum OrderDirection {
   Asc = 'asc',
   Desc = 'desc'
@@ -251,19 +302,38 @@ export type PasswordState = {
 
 export type Post = {
   __typename?: 'Post';
+  categories?: Maybe<Scalars['String']>;
   content?: Maybe<Post_Content_Document>;
   id: Scalars['ID'];
+  skills?: Maybe<Array<Skill>>;
+  skillsCount?: Maybe<Scalars['Int']>;
   slug?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
 };
 
+
+export type PostSkillsArgs = {
+  orderBy?: Array<SkillOrderByInput>;
+  skip?: Scalars['Int'];
+  take?: InputMaybe<Scalars['Int']>;
+  where?: SkillWhereInput;
+};
+
+
+export type PostSkillsCountArgs = {
+  where?: SkillWhereInput;
+};
+
 export type PostCreateInput = {
+  categories?: InputMaybe<Scalars['String']>;
   content?: InputMaybe<Scalars['JSON']>;
+  skills?: InputMaybe<SkillRelateToManyForCreateInput>;
   slug?: InputMaybe<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
 };
 
 export type PostOrderByInput = {
+  categories?: InputMaybe<OrderDirection>;
   id?: InputMaybe<OrderDirection>;
   slug?: InputMaybe<OrderDirection>;
   title?: InputMaybe<OrderDirection>;
@@ -275,7 +345,9 @@ export type PostUpdateArgs = {
 };
 
 export type PostUpdateInput = {
+  categories?: InputMaybe<Scalars['String']>;
   content?: InputMaybe<Scalars['JSON']>;
+  skills?: InputMaybe<SkillRelateToManyForUpdateInput>;
   slug?: InputMaybe<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
 };
@@ -284,12 +356,15 @@ export type PostWhereInput = {
   AND?: InputMaybe<Array<PostWhereInput>>;
   NOT?: InputMaybe<Array<PostWhereInput>>;
   OR?: InputMaybe<Array<PostWhereInput>>;
+  categories?: InputMaybe<StringNullableFilter>;
   id?: InputMaybe<IdFilter>;
+  skills?: InputMaybe<SkillManyRelationFilter>;
   slug?: InputMaybe<StringFilter>;
   title?: InputMaybe<StringFilter>;
 };
 
 export type PostWhereUniqueInput = {
+  categories?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['ID']>;
   slug?: InputMaybe<Scalars['String']>;
 };
@@ -311,6 +386,9 @@ export type Query = {
   post?: Maybe<Post>;
   posts?: Maybe<Array<Post>>;
   postsCount?: Maybe<Scalars['Int']>;
+  skill?: Maybe<Skill>;
+  skills?: Maybe<Array<Skill>>;
+  skillsCount?: Maybe<Scalars['Int']>;
   user?: Maybe<User>;
   users?: Maybe<Array<User>>;
   usersCount?: Maybe<Scalars['Int']>;
@@ -332,6 +410,24 @@ export type QueryPostsArgs = {
 
 export type QueryPostsCountArgs = {
   where?: PostWhereInput;
+};
+
+
+export type QuerySkillArgs = {
+  where: SkillWhereUniqueInput;
+};
+
+
+export type QuerySkillsArgs = {
+  orderBy?: Array<SkillOrderByInput>;
+  skip?: Scalars['Int'];
+  take?: InputMaybe<Scalars['Int']>;
+  where?: SkillWhereInput;
+};
+
+
+export type QuerySkillsCountArgs = {
+  where?: SkillWhereInput;
 };
 
 
@@ -357,6 +453,71 @@ export enum QueryMode {
   Insensitive = 'insensitive'
 }
 
+export type Skill = {
+  __typename?: 'Skill';
+  content?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  slug?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+};
+
+export type SkillCreateInput = {
+  content?: InputMaybe<Scalars['String']>;
+  slug?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type SkillManyRelationFilter = {
+  every?: InputMaybe<SkillWhereInput>;
+  none?: InputMaybe<SkillWhereInput>;
+  some?: InputMaybe<SkillWhereInput>;
+};
+
+export type SkillOrderByInput = {
+  content?: InputMaybe<OrderDirection>;
+  id?: InputMaybe<OrderDirection>;
+  slug?: InputMaybe<OrderDirection>;
+  title?: InputMaybe<OrderDirection>;
+};
+
+export type SkillRelateToManyForCreateInput = {
+  connect?: InputMaybe<Array<SkillWhereUniqueInput>>;
+  create?: InputMaybe<Array<SkillCreateInput>>;
+};
+
+export type SkillRelateToManyForUpdateInput = {
+  connect?: InputMaybe<Array<SkillWhereUniqueInput>>;
+  create?: InputMaybe<Array<SkillCreateInput>>;
+  disconnect?: InputMaybe<Array<SkillWhereUniqueInput>>;
+  set?: InputMaybe<Array<SkillWhereUniqueInput>>;
+};
+
+export type SkillUpdateArgs = {
+  data: SkillUpdateInput;
+  where: SkillWhereUniqueInput;
+};
+
+export type SkillUpdateInput = {
+  content?: InputMaybe<Scalars['String']>;
+  slug?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type SkillWhereInput = {
+  AND?: InputMaybe<Array<SkillWhereInput>>;
+  NOT?: InputMaybe<Array<SkillWhereInput>>;
+  OR?: InputMaybe<Array<SkillWhereInput>>;
+  content?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IdFilter>;
+  slug?: InputMaybe<StringFilter>;
+  title?: InputMaybe<StringFilter>;
+};
+
+export type SkillWhereUniqueInput = {
+  id?: InputMaybe<Scalars['ID']>;
+  slug?: InputMaybe<Scalars['String']>;
+};
+
 export type StringFilter = {
   contains?: InputMaybe<Scalars['String']>;
   endsWith?: InputMaybe<Scalars['String']>;
@@ -367,6 +528,20 @@ export type StringFilter = {
   lt?: InputMaybe<Scalars['String']>;
   lte?: InputMaybe<Scalars['String']>;
   not?: InputMaybe<NestedStringFilter>;
+  notIn?: InputMaybe<Array<Scalars['String']>>;
+  startsWith?: InputMaybe<Scalars['String']>;
+};
+
+export type StringNullableFilter = {
+  contains?: InputMaybe<Scalars['String']>;
+  endsWith?: InputMaybe<Scalars['String']>;
+  equals?: InputMaybe<Scalars['String']>;
+  gt?: InputMaybe<Scalars['String']>;
+  gte?: InputMaybe<Scalars['String']>;
+  in?: InputMaybe<Array<Scalars['String']>>;
+  lt?: InputMaybe<Scalars['String']>;
+  lte?: InputMaybe<Scalars['String']>;
+  not?: InputMaybe<NestedStringNullableFilter>;
   notIn?: InputMaybe<Array<Scalars['String']>>;
   startsWith?: InputMaybe<Scalars['String']>;
 };
@@ -1048,6 +1223,55 @@ export default {
             ]
           },
           {
+            "name": "createSkill",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Skill",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "data",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "createSkills",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "Skill",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "data",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "createUser",
             "type": {
               "kind": "OBJECT",
@@ -1123,6 +1347,55 @@ export default {
               "ofType": {
                 "kind": "OBJECT",
                 "name": "Post",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "where",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "deleteSkill",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Skill",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "where",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "deleteSkills",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "Skill",
                 "ofType": null
               }
             },
@@ -1265,6 +1538,65 @@ export default {
             ]
           },
           {
+            "name": "updateSkill",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Skill",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "data",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              },
+              {
+                "name": "where",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "updateSkills",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "Skill",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "data",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "updateUser",
             "type": {
               "kind": "OBJECT",
@@ -1349,6 +1681,14 @@ export default {
         "name": "Post",
         "fields": [
           {
+            "name": "categories",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "content",
             "type": {
               "kind": "OBJECT",
@@ -1367,6 +1707,84 @@ export default {
               }
             },
             "args": []
+          },
+          {
+            "name": "skills",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "Skill",
+                  "ofType": null
+                }
+              }
+            },
+            "args": [
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "name": "skip",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              },
+              {
+                "name": "take",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "where",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "skillsCount",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": [
+              {
+                "name": "where",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
           },
           {
             "name": "slug",
@@ -1540,6 +1958,104 @@ export default {
             ]
           },
           {
+            "name": "skill",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Skill",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "where",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "skills",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "Skill",
+                  "ofType": null
+                }
+              }
+            },
+            "args": [
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "name": "skip",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              },
+              {
+                "name": "take",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "where",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "skillsCount",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": [
+              {
+                "name": "where",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "user",
             "type": {
               "kind": "OBJECT",
@@ -1636,6 +2152,48 @@ export default {
                 }
               }
             ]
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Skill",
+        "fields": [
+          {
+            "name": "content",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "id",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "slug",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "title",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
           }
         ],
         "interfaces": []
