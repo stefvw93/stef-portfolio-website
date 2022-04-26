@@ -1,6 +1,6 @@
 const splitElements = new WeakSet<HTMLElement>();
 
-type SplitTextConfig = {
+export type SplitTextConfig = {
   wordSpanAttrs?: Record<string, string>;
   lineSpanAttrs?: Record<string, string>;
   wrapLines?: boolean;
@@ -8,6 +8,9 @@ type SplitTextConfig = {
 
 export class SplitText {
   static instances = new WeakMap<HTMLElement, SplitText>();
+  static split(element: HTMLElement, config: SplitTextConfig = {}): void {
+    return void new SplitText(element, config);
+  }
 
   private config: SplitTextConfig = {
     wordSpanAttrs: {},

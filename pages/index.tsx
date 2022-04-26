@@ -5,54 +5,24 @@ import { query } from "../graphql/gql-client";
 import styles from "../styles/Home.module.scss";
 import { Scaffold } from "../components/Scaffold/Scaffold";
 import { useEffect } from "react";
+import { slideLinesFadeWords } from "../utils/animations/text";
+import { Preloader } from "../components/Preloader/Preloader";
 import { SplitText } from "../utils/splitText";
-import gsap, { Power2 } from "gsap";
+
+function animate() {
+  const animated = document.getElementsByClassName("animated-lines");
+  slideLinesFadeWords(animated[0] as HTMLElement);
+}
 
 const Home: NextPage = ({
   test,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   useEffect(() => {
     const animated = document.getElementsByClassName("animated-lines");
-
-    const splitText = new SplitText(animated[0] as HTMLParagraphElement, {
-      wordSpanAttrs: { class: "word" },
+    SplitText.split(animated[0] as HTMLElement, {
+      wordSpanAttrs: { class: styles.word },
       lineSpanAttrs: { class: "line" },
     });
-
-    const { words, lines, destroy } = splitText;
-    if (!words.length || !lines.length) return;
-
-    gsap.set(words, { opacity: 0 });
-    gsap.fromTo(
-      words,
-      { opacity: 0 },
-      {
-        opacity: 1,
-        duration: 1,
-        stagger: -(1 / words.length) * 0.6,
-      }
-    );
-    gsap.fromTo(
-      lines,
-      {
-        x: 20,
-        display: "inline-block",
-        backfaceVisibility: "hidden",
-        transformOrigin: "left",
-        scale: 1,
-      },
-      {
-        x: 0,
-        duration: 1,
-        stagger: -0.1,
-        ease: Power2.easeOut,
-        onComplete() {
-          // reset();
-        },
-      }
-    );
-
-    return destroy.bind(splitText);
   }, []);
 
   return (
@@ -78,6 +48,7 @@ const Home: NextPage = ({
           </article>
         </div>
       </Scaffold>
+      <Preloader onComplete={animate} />
     </>
   );
 };
