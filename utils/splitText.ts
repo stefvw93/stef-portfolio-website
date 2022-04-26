@@ -72,7 +72,11 @@ export function createSplitText(
     }
   }
 
-  function handleResize() {
+  function handleResize(): void {
+    if (!document.contains(element) || !splitElements.has(element)) {
+      return void window.removeEventListener("resize", handleResize);
+    }
+
     reset();
     split();
   }
