@@ -7,7 +7,7 @@ import { slideLinesFadeWords } from "../utils/animations/text";
 import { Preloader } from "../components/Preloader/Preloader";
 import { gql } from "@urql/core";
 import { Query, QueryPostsArgs } from "../generated/graphql";
-import { BigText } from "../components/BigText/BigText";
+import { BigText } from "../components/Hello/BigText";
 
 const Home: NextPage = ({
   posts,

@@ -21,6 +21,7 @@ export class SplitText {
   text?: string;
   words: HTMLSpanElement[] = [];
   lines: HTMLSpanElement[] = [];
+  private containerWidth = window.innerWidth;
 
   constructor(private element: HTMLElement, config: SplitTextConfig = {}) {
     if (SplitText.instances.has(element)) {
@@ -30,7 +31,7 @@ export class SplitText {
     Object.assign(this.config, config);
 
     this.init();
-    // window.addEventListener("resize", this.handleResize);
+    window.addEventListener("resize", this.handleResize);
     SplitText.instances.set(element, this);
   }
 
@@ -81,6 +82,8 @@ export class SplitText {
   }
 
   private handleResize = (): void => {
+    if (this.containerWidth === window.innerWidth) return;
+    this.containerWidth = window.innerWidth;
     this.reset();
     this.init();
   };
@@ -91,7 +94,7 @@ export class SplitText {
 
   destroy(doReset = true) {
     if (doReset) this.reset();
-    // window.removeEventListener("resize", this.handleResize);
+    window.removeEventListener("resize", this.handleResize);
     SplitText.instances.delete(this.element);
   }
 }

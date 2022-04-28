@@ -20,11 +20,11 @@ export function BigText({ post }: HelloProps) {
     if (!animated[0]) return;
 
     const splitText = new SplitText(animated[0] as HTMLElement, {
-      wordSpanAttrs: { class: styles.word },
+      wordSpanAttrs: { class: "word" },
       lineSpanAttrs: { class: "line" },
     });
 
-    const duration = 0.8;
+    gsap.set(container.current!.getElementsByClassName("word"), { opacity: 0 });
 
     window.addEventListener(AnimationEvent.PreloadComplete, () => {
       const intersectionObserver = new IntersectionObserver(
@@ -32,6 +32,8 @@ export function BigText({ post }: HelloProps) {
           if (!entries[0].isIntersecting) return;
 
           observer.disconnect();
+
+          const duration = 0.8;
 
           gsap.fromTo(
             splitText.words,
@@ -57,7 +59,7 @@ export function BigText({ post }: HelloProps) {
               stagger: -(1 / splitText.lines.length) * 0.6,
               ease: Power2.easeOut,
               onComplete() {
-                splitText.destroy();
+                // splitText.destroy();
               },
             }
           );

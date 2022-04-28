@@ -1,6 +1,6 @@
 @font-face {
   font-family: "PP Neue Montreal";
-  src: url("/fonts/PPNeueMontreal-Book.otf") format("opentype");
+  src: url("/fonts/PPNeueMontreal-Book.otf");
 }
 
 :root {
@@ -25,6 +25,7 @@ html,
 body {
   padding: 0;
   margin: 0;
+  overscroll-behavior-y: none;
 }
 
 a {
