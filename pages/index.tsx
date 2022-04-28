@@ -1,39 +1,28 @@
 import type { NextPage, InferGetStaticPropsType } from "next";
 import { MainHead } from "../components/MainHead";
 import { gqlClient } from "../graphql/gql-client";
-import styles from "../styles/Home.module.scss";
 import { Scaffold } from "../components/Scaffold/Scaffold";
 import { useEffect } from "react";
 import { slideLinesFadeWords } from "../utils/animations/text";
 import { Preloader } from "../components/Preloader/Preloader";
-import { SplitText } from "../utils/splitText";
 import { gql } from "@urql/core";
 import { Query, QueryPostsArgs } from "../generated/graphql";
-import { Hello } from "../components/Hello/Hello";
-import { AnimationEvent } from "../utils/globalEvents";
-
-function animate() {
-  const animated = document.getElementsByClassName("animated-lines");
-  slideLinesFadeWords(animated[0] as HTMLElement);
-}
+import { BigText } from "../components/BigText/BigText";
 
 const Home: NextPage = ({
   posts,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  useEffect(() => {
-    window.addEventListener(AnimationEvent.PreloadComplete, () => {
-      animate();
-    });
-  }, []);
-
+  console.log(posts);
   return (
     <>
       <MainHead />
       <Scaffold>
         {posts?.map((post) => {
           if (post.slug === "hello") {
-            return <Hello key={post.id} post={post} />;
+            return <BigText key={post.id} post={post} />;
           }
+
+          return <BigText key={post.id} post={post} />;
         })}
       </Scaffold>
       <Preloader />

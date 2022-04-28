@@ -30,7 +30,7 @@ export class SplitText {
     Object.assign(this.config, config);
 
     this.init();
-    window.addEventListener("resize", this.handleResize);
+    // window.addEventListener("resize", this.handleResize);
     SplitText.instances.set(element, this);
   }
 
@@ -91,7 +91,7 @@ export class SplitText {
 
   destroy(doReset = true) {
     if (doReset) this.reset();
-    window.removeEventListener("resize", this.handleResize);
+    // window.removeEventListener("resize", this.handleResize);
     SplitText.instances.delete(this.element);
   }
 }

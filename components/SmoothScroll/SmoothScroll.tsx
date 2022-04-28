@@ -46,7 +46,7 @@ function createSmoothScroll(
   }
 
   function updateScrollPosition(_: number, deltaTime: number) {
-    const progress = smoothness * (targetFrameDelta / deltaTime);
+    const progress = smoothness / (targetFrameDelta / deltaTime);
     animateY = gsap.utils.interpolate(animateY, scrollY, progress);
     setY(-animateY);
   }
