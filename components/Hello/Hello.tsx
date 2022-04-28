@@ -4,16 +4,18 @@ import { useEffect, useRef } from "react";
 import { Post } from "../../generated/graphql";
 import { AnimationEvent } from "../../utils/globalEvents";
 import { SplitText } from "../../utils/splitText";
-import styles from "./BigText.module.scss";
+import styles from "./Hello.module.scss";
 
 export type HelloProps = {
-  post: Post;
+  post?: Post;
 };
 
-export function BigText({ post }: HelloProps) {
+export function Hello({ post }: HelloProps) {
   const container = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (!post) return;
+
     const animated =
       container.current!.getElementsByClassName("animated-lines");
 
@@ -71,7 +73,9 @@ export function BigText({ post }: HelloProps) {
 
       intersectionObserver.observe(container.current!);
     });
-  }, []);
+  }, [post]);
+
+  if (!post) return null;
 
   return (
     <div ref={container} className={styles.helloContainer}>

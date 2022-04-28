@@ -1,0 +1,25 @@
+.container {
+  height: 100vh;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  grid-template-areas:
+    ". . a"
+    "b b .";
+  gap: 2rem;
+}
+
+.postsContainer {
+  grid-area: b;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.postContainer {
+  padding-block: 2.5rem;
+}
+
+.traits {
+  color: var(--color-wintergreen-dream);
+}

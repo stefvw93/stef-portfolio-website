@@ -28,9 +28,19 @@ body {
   overscroll-behavior-y: none;
 }
 
+h2 {
+  font-size: 1.5rem;
+  margin-block: 1em;
+}
+
 a {
   color: inherit;
   text-decoration: none;
+}
+
+p {
+  line-height: 1.6em;
+  margin-block: 1.6em;
 }
 
 * {

@@ -12,9 +12,22 @@ export type Scalars = {
   Float: number;
   /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSON: any;
+  /** The `Upload` scalar type represents a file upload. */
+  Upload: any;
 };
 
 export type AuthenticatedItem = User;
+
+export type CloudImageFieldOutput = ImageFieldOutput & {
+  __typename?: 'CloudImageFieldOutput';
+  extension: ImageExtension;
+  filesize: Scalars['Int'];
+  height: Scalars['Int'];
+  id: Scalars['ID'];
+  ref: Scalars['String'];
+  url: Scalars['String'];
+  width: Scalars['Int'];
+};
 
 export type CreateInitialUserInput = {
   email?: InputMaybe<Scalars['String']>;
@@ -31,6 +44,28 @@ export type IdFilter = {
   lte?: InputMaybe<Scalars['ID']>;
   not?: InputMaybe<IdFilter>;
   notIn?: InputMaybe<Array<Scalars['ID']>>;
+};
+
+export enum ImageExtension {
+  Gif = 'gif',
+  Jpg = 'jpg',
+  Png = 'png',
+  Webp = 'webp'
+}
+
+export type ImageFieldInput = {
+  ref?: InputMaybe<Scalars['String']>;
+  upload?: InputMaybe<Scalars['Upload']>;
+};
+
+export type ImageFieldOutput = {
+  extension: ImageExtension;
+  filesize: Scalars['Int'];
+  height: Scalars['Int'];
+  id: Scalars['ID'];
+  ref: Scalars['String'];
+  url: Scalars['String'];
+  width: Scalars['Int'];
 };
 
 export type KeystoneAdminMeta = {
@@ -133,27 +168,38 @@ export type KeystoneMeta = {
   adminMeta: KeystoneAdminMeta;
 };
 
+export type LocalImageFieldOutput = ImageFieldOutput & {
+  __typename?: 'LocalImageFieldOutput';
+  extension: ImageExtension;
+  filesize: Scalars['Int'];
+  height: Scalars['Int'];
+  id: Scalars['ID'];
+  ref: Scalars['String'];
+  url: Scalars['String'];
+  width: Scalars['Int'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   authenticateUserWithPassword?: Maybe<UserAuthenticationWithPasswordResult>;
   createInitialUser: UserAuthenticationWithPasswordSuccess;
   createPost?: Maybe<Post>;
   createPosts?: Maybe<Array<Maybe<Post>>>;
-  createSkill?: Maybe<Skill>;
-  createSkills?: Maybe<Array<Maybe<Skill>>>;
+  createTrait?: Maybe<Trait>;
+  createTraits?: Maybe<Array<Maybe<Trait>>>;
   createUser?: Maybe<User>;
   createUsers?: Maybe<Array<Maybe<User>>>;
   deletePost?: Maybe<Post>;
   deletePosts?: Maybe<Array<Maybe<Post>>>;
-  deleteSkill?: Maybe<Skill>;
-  deleteSkills?: Maybe<Array<Maybe<Skill>>>;
+  deleteTrait?: Maybe<Trait>;
+  deleteTraits?: Maybe<Array<Maybe<Trait>>>;
   deleteUser?: Maybe<User>;
   deleteUsers?: Maybe<Array<Maybe<User>>>;
   endSession: Scalars['Boolean'];
   updatePost?: Maybe<Post>;
   updatePosts?: Maybe<Array<Maybe<Post>>>;
-  updateSkill?: Maybe<Skill>;
-  updateSkills?: Maybe<Array<Maybe<Skill>>>;
+  updateTrait?: Maybe<Trait>;
+  updateTraits?: Maybe<Array<Maybe<Trait>>>;
   updateUser?: Maybe<User>;
   updateUsers?: Maybe<Array<Maybe<User>>>;
 };
@@ -180,13 +226,13 @@ export type MutationCreatePostsArgs = {
 };
 
 
-export type MutationCreateSkillArgs = {
-  data: SkillCreateInput;
+export type MutationCreateTraitArgs = {
+  data: TraitCreateInput;
 };
 
 
-export type MutationCreateSkillsArgs = {
-  data: Array<SkillCreateInput>;
+export type MutationCreateTraitsArgs = {
+  data: Array<TraitCreateInput>;
 };
 
 
@@ -210,13 +256,13 @@ export type MutationDeletePostsArgs = {
 };
 
 
-export type MutationDeleteSkillArgs = {
-  where: SkillWhereUniqueInput;
+export type MutationDeleteTraitArgs = {
+  where: TraitWhereUniqueInput;
 };
 
 
-export type MutationDeleteSkillsArgs = {
-  where: Array<SkillWhereUniqueInput>;
+export type MutationDeleteTraitsArgs = {
+  where: Array<TraitWhereUniqueInput>;
 };
 
 
@@ -241,14 +287,14 @@ export type MutationUpdatePostsArgs = {
 };
 
 
-export type MutationUpdateSkillArgs = {
-  data: SkillUpdateInput;
-  where: SkillWhereUniqueInput;
+export type MutationUpdateTraitArgs = {
+  data: TraitUpdateInput;
+  where: TraitWhereUniqueInput;
 };
 
 
-export type MutationUpdateSkillsArgs = {
-  data: Array<SkillUpdateArgs>;
+export type MutationUpdateTraitsArgs = {
+  data: Array<TraitUpdateArgs>;
 };
 
 
@@ -305,36 +351,41 @@ export type Post = {
   categories?: Maybe<Scalars['String']>;
   content?: Maybe<Post_Content_Document>;
   id: Scalars['ID'];
-  skills?: Maybe<Array<Skill>>;
-  skillsCount?: Maybe<Scalars['Int']>;
+  image?: Maybe<ImageFieldOutput>;
+  layout?: Maybe<Scalars['String']>;
   slug?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
+  traits?: Maybe<Array<Trait>>;
+  traitsCount?: Maybe<Scalars['Int']>;
 };
 
 
-export type PostSkillsArgs = {
-  orderBy?: Array<SkillOrderByInput>;
+export type PostTraitsArgs = {
+  orderBy?: Array<TraitOrderByInput>;
   skip?: Scalars['Int'];
   take?: InputMaybe<Scalars['Int']>;
-  where?: SkillWhereInput;
+  where?: TraitWhereInput;
 };
 
 
-export type PostSkillsCountArgs = {
-  where?: SkillWhereInput;
+export type PostTraitsCountArgs = {
+  where?: TraitWhereInput;
 };
 
 export type PostCreateInput = {
   categories?: InputMaybe<Scalars['String']>;
   content?: InputMaybe<Scalars['JSON']>;
-  skills?: InputMaybe<SkillRelateToManyForCreateInput>;
+  image?: InputMaybe<ImageFieldInput>;
+  layout?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
+  traits?: InputMaybe<TraitRelateToManyForCreateInput>;
 };
 
 export type PostOrderByInput = {
   categories?: InputMaybe<OrderDirection>;
   id?: InputMaybe<OrderDirection>;
+  layout?: InputMaybe<OrderDirection>;
   slug?: InputMaybe<OrderDirection>;
   title?: InputMaybe<OrderDirection>;
 };
@@ -347,9 +398,11 @@ export type PostUpdateArgs = {
 export type PostUpdateInput = {
   categories?: InputMaybe<Scalars['String']>;
   content?: InputMaybe<Scalars['JSON']>;
-  skills?: InputMaybe<SkillRelateToManyForUpdateInput>;
+  image?: InputMaybe<ImageFieldInput>;
+  layout?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
+  traits?: InputMaybe<TraitRelateToManyForUpdateInput>;
 };
 
 export type PostWhereInput = {
@@ -358,13 +411,13 @@ export type PostWhereInput = {
   OR?: InputMaybe<Array<PostWhereInput>>;
   categories?: InputMaybe<StringNullableFilter>;
   id?: InputMaybe<IdFilter>;
-  skills?: InputMaybe<SkillManyRelationFilter>;
+  layout?: InputMaybe<StringNullableFilter>;
   slug?: InputMaybe<StringFilter>;
   title?: InputMaybe<StringFilter>;
+  traits?: InputMaybe<TraitManyRelationFilter>;
 };
 
 export type PostWhereUniqueInput = {
-  categories?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['ID']>;
   slug?: InputMaybe<Scalars['String']>;
 };
@@ -386,9 +439,9 @@ export type Query = {
   post?: Maybe<Post>;
   posts?: Maybe<Array<Post>>;
   postsCount?: Maybe<Scalars['Int']>;
-  skill?: Maybe<Skill>;
-  skills?: Maybe<Array<Skill>>;
-  skillsCount?: Maybe<Scalars['Int']>;
+  trait?: Maybe<Trait>;
+  traits?: Maybe<Array<Trait>>;
+  traitsCount?: Maybe<Scalars['Int']>;
   user?: Maybe<User>;
   users?: Maybe<Array<User>>;
   usersCount?: Maybe<Scalars['Int']>;
@@ -413,21 +466,21 @@ export type QueryPostsCountArgs = {
 };
 
 
-export type QuerySkillArgs = {
-  where: SkillWhereUniqueInput;
+export type QueryTraitArgs = {
+  where: TraitWhereUniqueInput;
 };
 
 
-export type QuerySkillsArgs = {
-  orderBy?: Array<SkillOrderByInput>;
+export type QueryTraitsArgs = {
+  orderBy?: Array<TraitOrderByInput>;
   skip?: Scalars['Int'];
   take?: InputMaybe<Scalars['Int']>;
-  where?: SkillWhereInput;
+  where?: TraitWhereInput;
 };
 
 
-export type QuerySkillsCountArgs = {
-  where?: SkillWhereInput;
+export type QueryTraitsCountArgs = {
+  where?: TraitWhereInput;
 };
 
 
@@ -452,71 +505,6 @@ export enum QueryMode {
   Default = 'default',
   Insensitive = 'insensitive'
 }
-
-export type Skill = {
-  __typename?: 'Skill';
-  content?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  slug?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-};
-
-export type SkillCreateInput = {
-  content?: InputMaybe<Scalars['String']>;
-  slug?: InputMaybe<Scalars['String']>;
-  title?: InputMaybe<Scalars['String']>;
-};
-
-export type SkillManyRelationFilter = {
-  every?: InputMaybe<SkillWhereInput>;
-  none?: InputMaybe<SkillWhereInput>;
-  some?: InputMaybe<SkillWhereInput>;
-};
-
-export type SkillOrderByInput = {
-  content?: InputMaybe<OrderDirection>;
-  id?: InputMaybe<OrderDirection>;
-  slug?: InputMaybe<OrderDirection>;
-  title?: InputMaybe<OrderDirection>;
-};
-
-export type SkillRelateToManyForCreateInput = {
-  connect?: InputMaybe<Array<SkillWhereUniqueInput>>;
-  create?: InputMaybe<Array<SkillCreateInput>>;
-};
-
-export type SkillRelateToManyForUpdateInput = {
-  connect?: InputMaybe<Array<SkillWhereUniqueInput>>;
-  create?: InputMaybe<Array<SkillCreateInput>>;
-  disconnect?: InputMaybe<Array<SkillWhereUniqueInput>>;
-  set?: InputMaybe<Array<SkillWhereUniqueInput>>;
-};
-
-export type SkillUpdateArgs = {
-  data: SkillUpdateInput;
-  where: SkillWhereUniqueInput;
-};
-
-export type SkillUpdateInput = {
-  content?: InputMaybe<Scalars['String']>;
-  slug?: InputMaybe<Scalars['String']>;
-  title?: InputMaybe<Scalars['String']>;
-};
-
-export type SkillWhereInput = {
-  AND?: InputMaybe<Array<SkillWhereInput>>;
-  NOT?: InputMaybe<Array<SkillWhereInput>>;
-  OR?: InputMaybe<Array<SkillWhereInput>>;
-  content?: InputMaybe<StringFilter>;
-  id?: InputMaybe<IdFilter>;
-  slug?: InputMaybe<StringFilter>;
-  title?: InputMaybe<StringFilter>;
-};
-
-export type SkillWhereUniqueInput = {
-  id?: InputMaybe<Scalars['ID']>;
-  slug?: InputMaybe<Scalars['String']>;
-};
 
 export type StringFilter = {
   contains?: InputMaybe<Scalars['String']>;
@@ -544,6 +532,60 @@ export type StringNullableFilter = {
   not?: InputMaybe<NestedStringNullableFilter>;
   notIn?: InputMaybe<Array<Scalars['String']>>;
   startsWith?: InputMaybe<Scalars['String']>;
+};
+
+export type Trait = {
+  __typename?: 'Trait';
+  id: Scalars['ID'];
+  title?: Maybe<Scalars['String']>;
+};
+
+export type TraitCreateInput = {
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type TraitManyRelationFilter = {
+  every?: InputMaybe<TraitWhereInput>;
+  none?: InputMaybe<TraitWhereInput>;
+  some?: InputMaybe<TraitWhereInput>;
+};
+
+export type TraitOrderByInput = {
+  id?: InputMaybe<OrderDirection>;
+  title?: InputMaybe<OrderDirection>;
+};
+
+export type TraitRelateToManyForCreateInput = {
+  connect?: InputMaybe<Array<TraitWhereUniqueInput>>;
+  create?: InputMaybe<Array<TraitCreateInput>>;
+};
+
+export type TraitRelateToManyForUpdateInput = {
+  connect?: InputMaybe<Array<TraitWhereUniqueInput>>;
+  create?: InputMaybe<Array<TraitCreateInput>>;
+  disconnect?: InputMaybe<Array<TraitWhereUniqueInput>>;
+  set?: InputMaybe<Array<TraitWhereUniqueInput>>;
+};
+
+export type TraitUpdateArgs = {
+  data: TraitUpdateInput;
+  where: TraitWhereUniqueInput;
+};
+
+export type TraitUpdateInput = {
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type TraitWhereInput = {
+  AND?: InputMaybe<Array<TraitWhereInput>>;
+  NOT?: InputMaybe<Array<TraitWhereInput>>;
+  OR?: InputMaybe<Array<TraitWhereInput>>;
+  id?: InputMaybe<IdFilter>;
+  title?: InputMaybe<StringFilter>;
+};
+
+export type TraitWhereUniqueInput = {
+  id?: InputMaybe<Scalars['ID']>;
 };
 
 export type User = {
@@ -629,6 +671,189 @@ export default {
           {
             "kind": "OBJECT",
             "name": "User"
+          }
+        ]
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CloudImageFieldOutput",
+        "fields": [
+          {
+            "name": "extension",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "filesize",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "height",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "id",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "ref",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "url",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "width",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": [
+          {
+            "kind": "INTERFACE",
+            "name": "ImageFieldOutput"
+          }
+        ]
+      },
+      {
+        "kind": "INTERFACE",
+        "name": "ImageFieldOutput",
+        "fields": [
+          {
+            "name": "extension",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "filesize",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "height",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "id",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "ref",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "url",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "width",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": [],
+        "possibleTypes": [
+          {
+            "kind": "OBJECT",
+            "name": "CloudImageFieldOutput"
+          },
+          {
+            "kind": "OBJECT",
+            "name": "LocalImageFieldOutput"
           }
         ]
       },
@@ -1118,6 +1343,95 @@ export default {
       },
       {
         "kind": "OBJECT",
+        "name": "LocalImageFieldOutput",
+        "fields": [
+          {
+            "name": "extension",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "filesize",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "height",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "id",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "ref",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "url",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "width",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": [
+          {
+            "kind": "INTERFACE",
+            "name": "ImageFieldOutput"
+          }
+        ]
+      },
+      {
+        "kind": "OBJECT",
         "name": "Mutation",
         "fields": [
           {
@@ -1223,10 +1537,10 @@ export default {
             ]
           },
           {
-            "name": "createSkill",
+            "name": "createTrait",
             "type": {
               "kind": "OBJECT",
-              "name": "Skill",
+              "name": "Trait",
               "ofType": null
             },
             "args": [
@@ -1243,12 +1557,12 @@ export default {
             ]
           },
           {
-            "name": "createSkills",
+            "name": "createTraits",
             "type": {
               "kind": "LIST",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "Skill",
+                "name": "Trait",
                 "ofType": null
               }
             },
@@ -1370,10 +1684,10 @@ export default {
             ]
           },
           {
-            "name": "deleteSkill",
+            "name": "deleteTrait",
             "type": {
               "kind": "OBJECT",
-              "name": "Skill",
+              "name": "Trait",
               "ofType": null
             },
             "args": [
@@ -1390,12 +1704,12 @@ export default {
             ]
           },
           {
-            "name": "deleteSkills",
+            "name": "deleteTraits",
             "type": {
               "kind": "LIST",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "Skill",
+                "name": "Trait",
                 "ofType": null
               }
             },
@@ -1538,10 +1852,10 @@ export default {
             ]
           },
           {
-            "name": "updateSkill",
+            "name": "updateTrait",
             "type": {
               "kind": "OBJECT",
-              "name": "Skill",
+              "name": "Trait",
               "ofType": null
             },
             "args": [
@@ -1568,12 +1882,12 @@ export default {
             ]
           },
           {
-            "name": "updateSkills",
+            "name": "updateTraits",
             "type": {
               "kind": "LIST",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "Skill",
+                "name": "Trait",
                 "ofType": null
               }
             },
@@ -1709,14 +2023,47 @@ export default {
             "args": []
           },
           {
-            "name": "skills",
+            "name": "image",
+            "type": {
+              "kind": "INTERFACE",
+              "name": "ImageFieldOutput",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "layout",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "slug",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "title",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "traits",
             "type": {
               "kind": "LIST",
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "Skill",
+                  "name": "Trait",
                   "ofType": null
                 }
               }
@@ -1768,7 +2115,7 @@ export default {
             ]
           },
           {
-            "name": "skillsCount",
+            "name": "traitsCount",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
@@ -1785,22 +2132,6 @@ export default {
                 }
               }
             ]
-          },
-          {
-            "name": "slug",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "title",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
           }
         ],
         "interfaces": []
@@ -1958,10 +2289,10 @@ export default {
             ]
           },
           {
-            "name": "skill",
+            "name": "trait",
             "type": {
               "kind": "OBJECT",
-              "name": "Skill",
+              "name": "Trait",
               "ofType": null
             },
             "args": [
@@ -1978,14 +2309,14 @@ export default {
             ]
           },
           {
-            "name": "skills",
+            "name": "traits",
             "type": {
               "kind": "LIST",
               "ofType": {
                 "kind": "NON_NULL",
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "Skill",
+                  "name": "Trait",
                   "ofType": null
                 }
               }
@@ -2037,7 +2368,7 @@ export default {
             ]
           },
           {
-            "name": "skillsCount",
+            "name": "traitsCount",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
@@ -2158,16 +2489,8 @@ export default {
       },
       {
         "kind": "OBJECT",
-        "name": "Skill",
+        "name": "Trait",
         "fields": [
-          {
-            "name": "content",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
           {
             "name": "id",
             "type": {
@@ -2176,14 +2499,6 @@ export default {
                 "kind": "SCALAR",
                 "name": "Any"
               }
-            },
-            "args": []
-          },
-          {
-            "name": "slug",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
             },
             "args": []
           },

@@ -22,14 +22,12 @@
 
 .main {
   position: relative;
-  padding-inline-start: 2.5rem;
-  padding-inline-end: 2.5rem;
+  padding-inline: 2.5rem;
   min-height: 100vh;
-  max-width: 1200px;
+  max-width: 1600px;
   margin: 0 auto;
 
   @media (max-width: 400px) {
-    padding-inline-start: 1.875rem;
-    padding-inline-end: 1.875rem;
+    padding-inline: 1.875rem;
   }
 }

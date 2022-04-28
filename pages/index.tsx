@@ -7,7 +7,8 @@ import { slideLinesFadeWords } from "../utils/animations/text";
 import { Preloader } from "../components/Preloader/Preloader";
 import { gql } from "@urql/core";
 import { Query, QueryPostsArgs } from "../generated/graphql";
-import { BigText } from "../components/Hello/BigText";
+import { Hello } from "../components/Hello/Hello";
+import { Traits } from "../components/Traits/Traits";
 
 const Home: NextPage = ({
   posts,
@@ -17,13 +18,8 @@ const Home: NextPage = ({
     <>
       <MainHead />
       <Scaffold>
-        {posts?.map((post) => {
-          if (post.slug === "hello") {
-            return <BigText key={post.id} post={post} />;
-          }
-
-          return <BigText key={post.id} post={post} />;
-        })}
+        <Hello post={posts?.find((p) => p.slug === "hello")} />
+        <Traits posts={posts?.filter((p) => p.categories === "about")} />
       </Scaffold>
       <Preloader />
     </>
@@ -34,27 +30,25 @@ export async function getStaticProps() {
   const { data, error } = await gqlClient
     .query<{ posts: Query["posts"] }, QueryPostsArgs>(
       gql`
-        query HomePosts($where: PostWhereInput!) {
+        query Posts($where: PostWhereInput!) {
           posts(where: $where) {
             id
             title
             slug
+            layout
+            categories
             content {
               document
             }
-            skills {
+            traits {
               id
-              content
+              title
             }
           }
         }
       `,
       {
-        where: {
-          categories: {
-            equals: "home",
-          },
-        },
+        where: {},
       }
     )
     .toPromise();
