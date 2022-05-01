@@ -1,5 +1,5 @@
 .container {
-  height: 100vh;
+  min-height: 100vh;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(2, 1fr);
@@ -7,6 +7,17 @@
     ". . a"
     "b b .";
   gap: 2rem;
+}
+
+.imageContainer {
+  grid-area: a;
+}
+
+.image {
+  position: sticky;
+  background: green;
+  width: 100%;
+  height: 100%;
 }
 
 .postsContainer {

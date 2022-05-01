@@ -1,27 +1,39 @@
-const splitElements = new WeakSet<HTMLElement>();
-
 export type SplitTextConfig = {
   wordSpanAttrs?: Record<string, string>;
   lineSpanAttrs?: Record<string, string>;
   wrapLines?: boolean;
 };
+class SplitText {
+  static instances = new Map<HTMLElement, SplitText>();
 
-export class SplitText {
-  static instances = new WeakMap<HTMLElement, SplitText>();
   static split(element: HTMLElement, config: SplitTextConfig = {}): void {
     return void new SplitText(element, config);
   }
 
+  text?: string;
+  words: HTMLSpanElement[] = [];
+  lines: HTMLSpanElement[] = [];
+
+  private containerWidth = this.element.parentElement?.offsetWidth;
   private config: SplitTextConfig = {
     wordSpanAttrs: {},
     lineSpanAttrs: {},
     wrapLines: true,
   };
 
-  text?: string;
-  words: HTMLSpanElement[] = [];
-  lines: HTMLSpanElement[] = [];
-  private containerWidth = window.innerWidth;
+  private resizeObserver = new ResizeObserver((entries) => {
+    for (const entry of entries) {
+      const { inlineSize }: ResizeObserverSize = Array.isArray(
+        entry.contentBoxSize
+      )
+        ? entry.contentBoxSize[0]
+        : entry.contentBoxSize;
+
+      if (inlineSize === this.containerWidth) return;
+      this.containerWidth = inlineSize;
+      this.handleResize();
+    }
+  });
 
   constructor(private element: HTMLElement, config: SplitTextConfig = {}) {
     if (SplitText.instances.has(element)) {
@@ -29,17 +41,18 @@ export class SplitText {
     }
 
     Object.assign(this.config, config);
-
-    this.init();
-    window.addEventListener("resize", this.handleResize);
     SplitText.instances.set(element, this);
+    this.split();
   }
 
-  private init() {
+  private split() {
     const fragment = document.createDocumentFragment();
     const textNode = this.element.firstChild;
-    this.text =
-      this.text ?? (textNode instanceof Text ? textNode.nodeValue : "") ?? "";
+
+    if (!(textNode instanceof Text)) return;
+
+    this.text = textNode.nodeValue ?? "";
+    this.resizeObserver.unobserve(this.element);
 
     {
       this.words = this.text.split(" ").map((word) => {
@@ -79,13 +92,15 @@ export class SplitText {
       fragment.replaceChildren(...this.lines);
       this.element.replaceChildren(fragment);
     }
+
+    this.resizeObserver.observe(this.element.parentElement || document.body);
   }
 
   private handleResize = (): void => {
     if (this.containerWidth === window.innerWidth) return;
     this.containerWidth = window.innerWidth;
     this.reset();
-    this.init();
+    this.split();
   };
 
   reset() {
@@ -94,7 +109,8 @@ export class SplitText {
 
   destroy(doReset = true) {
     if (doReset) this.reset();
-    window.removeEventListener("resize", this.handleResize);
     SplitText.instances.delete(this.element);
   }
 }
+
+export { SplitText };

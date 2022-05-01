@@ -20,6 +20,7 @@ const Home: NextPage = ({
       <Scaffold>
         <Hello post={posts?.find((p) => p.slug === "hello")} />
         <Traits posts={posts?.filter((p) => p.categories === "about")} />
+        <div style={{ height: "100vh" }} />
       </Scaffold>
       <Preloader />
     </>

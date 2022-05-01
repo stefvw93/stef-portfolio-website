@@ -11,6 +11,9 @@ export function Traits({ posts }: TraitsProps) {
 
   return (
     <div className={styles.container}>
+      <div className={styles.imageContainer}>
+        <div className={styles.image}></div>
+      </div>
       <div className={styles.postsContainer}>
         <PostItem {...posts[0]} />
         <PostItem {...posts[1]} />
