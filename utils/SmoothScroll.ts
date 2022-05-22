@@ -7,6 +7,8 @@ export type SmoothScrollConfig = {
 };
 
 export class SmoothScroll {
+  static instance?: SmoothScroll;
+
   private scrollY: number = window.scrollY;
   private animateY: number = this.scrollY;
   private framerate: number;
@@ -23,20 +25,27 @@ export class SmoothScroll {
     public readonly target: HTMLElement,
     config: Partial<SmoothScrollConfig> = {}
   ) {
+    if (SmoothScroll.instance) {
+      throw new Error(
+        "Call `destroy` on current instance before creating a new instance."
+      );
+    }
+
     this.config = Object.assign(this.config, config);
     this.framerate = 1000 / this.config.fps;
     this.setY = gsap.quickSetter(target, "y", "px") as any;
-    this.updateScrollPosition = this.updateScrollPosition.bind(this);
     this.start();
+    SmoothScroll.instance = this;
   }
 
   destroy = () => {
     gsap.ticker.remove(this.updateScrollPosition);
     window.removeEventListener("scroll", this.getScrollPosition);
     window.removeEventListener("resize", this.handleResize);
+    SmoothScroll.instance = undefined;
   };
 
-  private updateScrollPosition(time: number, deltaTime: number) {
+  private updateScrollPosition = (time: number, deltaTime: number) => {
     const progress = this.config.smoothness / (this.framerate / deltaTime);
     this.animateY = gsap.utils.interpolate(
       this.animateY,
@@ -45,12 +54,12 @@ export class SmoothScroll {
     );
     this.config.onUpdate?.(time, deltaTime);
     this.setY(Math.abs(this.animateY) < 0.01 ? 0 : -this.animateY);
-  }
+  };
 
-  private handleResize() {
+  private handleResize = () => {
     this.destroy();
     this.start();
-  }
+  };
 
   private start() {
     if (window.ontouchstart || navigator.maxTouchPoints > 0) {

@@ -1,61 +1,51 @@
-import type { NextPage, InferGetStaticPropsType } from "next";
-import { MainHead } from "../components/MainHead";
-import { gqlClient } from "../graphql/gql-client";
-import { Scaffold } from "../components/Scaffold/Scaffold";
-import { useEffect } from "react";
-import { slideLinesFadeWords } from "../utils/animations/text";
-import { Preloader } from "../components/Preloader/Preloader";
-import { gql } from "@urql/core";
-import { Query, QueryPostsArgs } from "../generated/graphql";
-import { Hello } from "../components/Hello/Hello";
-import { Traits } from "../components/Traits/Traits";
+import type { NextPage, InferGetStaticPropsType } from "next"
+import { gqlClient } from "../graphql/gql-client"
+import { gql } from "@urql/core"
+import { Query, QueryPostsArgs } from "../generated/graphql"
+import { ExperienceComponent } from "../components/Experience/ExperienceComponent"
+import type { ReactElement } from "react"
 
-const Home: NextPage = ({
-  posts,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  console.log(posts);
+const Home: NextPage = () => {
   return (
     <>
-      <MainHead />
-      <Scaffold>
-        <Hello post={posts?.find((p) => p.slug === "hello")} />
-        <Traits posts={posts?.filter((p) => p.categories === "about")} />
-        <div style={{ height: "100vh" }} />
-      </Scaffold>
-      <Preloader />
+      <ExperienceComponent />
     </>
-  );
-};
-
-export async function getStaticProps() {
-  const { data, error } = await gqlClient
-    .query<{ posts: Query["posts"] }, QueryPostsArgs>(
-      gql`
-        query Posts($where: PostWhereInput!) {
-          posts(where: $where) {
-            id
-            title
-            slug
-            layout
-            categories
-            content {
-              document
-            }
-            traits {
-              id
-              title
-            }
-          }
-        }
-      `,
-      {
-        where: {},
-      }
-    )
-    .toPromise();
-
-  if (!data || error) return { props: {} };
-  return { props: { posts: data.posts } };
+  )
 }
 
-export default Home;
+// const Home: NextPage = ({
+//   posts,
+// }: InferGetStaticPropsType<typeof getStaticProps>) => {
+
+// export async function getStaticProps() {
+//   const { data, error } = await gqlClient
+//     .query<{ posts: Query["posts"] }, QueryPostsArgs>(
+//       gql`
+//         query Posts($where: PostWhereInput!) {
+//           posts(where: $where) {
+//             id
+//             title
+//             slug
+//             layout
+//             categories
+//             content {
+//               document
+//             }
+//             traits {
+//               id
+//               title
+//             }
+//           }
+//         }
+//       `,
+//       {
+//         where: {},
+//       }
+//     )
+//     .toPromise();
+
+//   if (!data || error) return { props: {} };
+//   return { props: { posts: data.posts } };
+// }
+
+export default Home
