@@ -3,6 +3,7 @@ import GUI from "lil-gui"
 import * as THREE from "three"
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"
 import { Stage } from "./objects/Stage"
+import { TitleText } from "./objects/TitleText"
 
 export class Experience {
   debug = true
@@ -32,6 +33,7 @@ export class Experience {
      * Objects
      */
     Stage.create(this)
+    TitleText.create(this, "Stef")
 
     /**
      * Listeners
@@ -41,15 +43,27 @@ export class Experience {
   }
 
   private createCamera() {
+    const center = new THREE.Vector3(0, 0, 0)
     const camera = new THREE.PerspectiveCamera(
       45,
       this.size.width / this.size.height,
       0.1,
       100
     )
-    camera.position.y = 2
-    camera.position.z = 3
-    camera.lookAt(new THREE.Vector3(0, 0, 0))
+    camera.position.set(-1, 1, 4)
+    camera.lookAt(center)
+
+    const controls = ["x", "y", "z"]
+    controls.forEach((axis) => {
+      this.guiFolder
+        ?.add(camera.position, axis)
+        .name(`camera ${axis}`)
+        .min(-10)
+        .max(10)
+        .step(0.01)
+        .onChange(() => camera.lookAt(center))
+    })
+
     this.scene.add(camera)
     return camera
   }

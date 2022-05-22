@@ -2,11 +2,11 @@ import * as THREE from "three"
 import { Experience } from "../Experience"
 
 export class Stage {
+  private gui = this.experience.gui?.addFolder("Stage")
+
   static create(experience: Experience) {
     return new Stage(experience)
   }
-
-  private gui = this.experience.gui?.addFolder("Stage")
 
   constructor(public experience: Experience) {
     this.createLights()
