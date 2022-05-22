@@ -2,12 +2,15 @@ import gsap from "gsap"
 import GUI from "lil-gui"
 import * as THREE from "three"
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"
+import { ParagraphText } from "./objects/ParagraphText"
 import { Stage } from "./objects/Stage"
 import { TitleText } from "./objects/TitleText"
+import Stats from "stats-js"
 
 export class Experience {
   debug = true
   gui = this.debug ? new GUI() : null
+  stats = this.debug ? new Stats() : null
   guiFolder = this.gui?.addFolder("Scene")
   size = new THREE.Vector2(globalThis.innerWidth, globalThis.innerHeight)
   clock = new THREE.Clock()
@@ -28,6 +31,8 @@ export class Experience {
 
     if (this.debug) {
       this.scene.add(new THREE.AxesHelper(2))
+      this.stats?.showPanel(0)
+      if (this.stats) document.body.appendChild(this.stats.dom)
     }
 
     /**
@@ -35,12 +40,15 @@ export class Experience {
      */
     Stage.create(this)
     TitleText.create(this, "Stef")
+    ParagraphText.create(this)
 
     /**
      * Listeners
      */
     gsap.ticker.add(this.tick)
     window.addEventListener("resize", this.handleResize)
+
+    console.log(this)
   }
 
   private createCamera() {
@@ -87,7 +95,11 @@ export class Experience {
   }
 
   private createRenderer() {
-    const renderer = new THREE.WebGLRenderer({ canvas: this.canvas })
+    const renderer = new THREE.WebGLRenderer({
+      canvas: this.canvas,
+      antialias: true,
+    })
+
     renderer.setSize(this.size.width, this.size.height)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     renderer.shadowMap.enabled = true
@@ -101,8 +113,10 @@ export class Experience {
   }
 
   private tick = () => {
+    if (this.debug) this.stats?.begin()
     this.controls.update()
     this.renderer.render(this.scene, this.camera)
+    if (this.debug) this.stats?.end()
   }
 
   private handleResize = () => {

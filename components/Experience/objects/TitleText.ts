@@ -1,7 +1,7 @@
-import { FontLoader, Font } from "three/examples/jsm/loaders/FontLoader"
+import { Font } from "three/examples/jsm/loaders/FontLoader"
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry"
 import { Experience } from "../Experience"
-import ppNeueMontrealBold from "./PP_Neue Montreal_Bold.json"
+import typeface from "../assets/Koulen_regular.json"
 import * as THREE from "three"
 
 export class TitleText {
@@ -17,22 +17,22 @@ export class TitleText {
   }
 
   private createText() {
-    const font = new Font(ppNeueMontrealBold)
+    const font = new Font(typeface)
 
-    const color = 0x0000ff
+    const color = 0xffffff
     const text = new THREE.Mesh(
       new TextGeometry(this.text, {
         font,
         size: 0.5,
-        height: 0.2,
-        curveSegments: 12,
+        height: 0.15,
+        curveSegments: 32,
         bevelEnabled: true,
-        bevelThickness: 0.03,
-        bevelSize: 0.02,
+        bevelThickness: 0.005,
+        bevelSize: 0.005,
         bevelOffset: 0,
-        bevelSegments: 5,
+        bevelSegments: 8,
       }),
-      new THREE.MeshStandardMaterial({ color, side: THREE.DoubleSide })
+      new THREE.MeshStandardMaterial({ color })
     )
     text.castShadow = true
     text.geometry.computeBoundingBox()

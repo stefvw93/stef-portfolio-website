@@ -38,8 +38,12 @@ export class Stage {
     directionalLight.position.set(0.8, 2, 1)
     directionalLight.castShadow = true
     directionalLight.shadow.camera
-    directionalLight.shadow.mapSize.width = 1024
-    directionalLight.shadow.mapSize.height = 1024
+    directionalLight.shadow.mapSize.width = 512
+    directionalLight.shadow.mapSize.height = 512
+    directionalLight.shadow.camera.top = 0.8
+    directionalLight.shadow.camera.right = 0.8
+    directionalLight.shadow.camera.bottom = -0.4
+    directionalLight.shadow.camera.left = -0.8
 
     const directionalLightHelper = new THREE.DirectionalLightHelper(
       directionalLight
