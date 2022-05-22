@@ -11,6 +11,7 @@ export class Experience {
   guiFolder = this.gui?.addFolder("Scene")
   size = new THREE.Vector2(globalThis.innerWidth, globalThis.innerHeight)
   clock = new THREE.Clock()
+  center = new THREE.Vector3(0, 0, 0)
   canvas: HTMLCanvasElement
   renderer: THREE.WebGLRenderer
   scene: THREE.Scene
