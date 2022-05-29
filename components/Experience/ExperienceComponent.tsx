@@ -6,7 +6,7 @@ export type ExperienceProps = {}
 
 export const ExperienceComponent = (props: ExperienceProps) => {
   useEffect(() => {
-    const experience = new Experience("canvas.webgl", "div.css-webgl")
+    const experience = new Experience("canvas.webgl")
     return experience.destroy
   }, [])
 

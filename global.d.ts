@@ -10,4 +10,8 @@ declare module "*.graphql" {
   export = Schema
 }
 
+declare module "*.glsl" {
+  export = string
+}
+
 declare module "stats-js"

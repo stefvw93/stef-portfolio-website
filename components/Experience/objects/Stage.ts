@@ -4,6 +4,8 @@ import { Experience } from "../Experience"
 export class Stage {
   private gui = this.experience.gui?.addFolder("Stage")
 
+  static floorColor = 0xcfff33
+
   static create(experience: Experience) {
     return new Stage(experience)
   }
@@ -15,14 +17,30 @@ export class Stage {
   }
 
   private createLights() {
-    const color = 0xfffff
+    const color = 0xffffff
     const axes = ["x", "y", "z"]
+
+    /**
+     * Hemisphere light
+     */
+    const hemisphereLight = new THREE.HemisphereLight(
+      Experience.backgroundColor,
+      Stage.floorColor,
+      0.3
+    )
+
+    this.gui
+      ?.add(hemisphereLight, "intensity")
+      .name("Hemisphere light intensity")
+      .min(0)
+      .max(1)
+      .step(0.01)
 
     /**
      * Ambient light
      */
-    const ambientLight = new THREE.AmbientLight(color, 0.5)
-    const ambientLightFolder = this.gui?.addFolder("Directional light")
+    const ambientLight = new THREE.AmbientLight(color, 0.45)
+    const ambientLightFolder = this.gui?.addFolder("Ambient light")
 
     ambientLightFolder?.add(ambientLight, "intensity").min(0).max(1).step(0.01)
 
@@ -34,15 +52,15 @@ export class Stage {
     /**
      * Directional light
      */
-    const directionalLight = new THREE.DirectionalLight(color, 0.5)
-    directionalLight.position.set(0.8, 2, 1)
+    const directionalLight = new THREE.DirectionalLight(color, 0.6)
+    directionalLight.position.set(0.8, 0.4, 1)
     directionalLight.castShadow = true
     directionalLight.shadow.camera
     directionalLight.shadow.mapSize.width = 512
     directionalLight.shadow.mapSize.height = 512
-    directionalLight.shadow.camera.top = 0.8
+    directionalLight.shadow.camera.top = 1
     directionalLight.shadow.camera.right = 0.8
-    directionalLight.shadow.camera.bottom = -0.4
+    directionalLight.shadow.camera.bottom = -0.3
     directionalLight.shadow.camera.left = -0.8
 
     const directionalLightHelper = new THREE.DirectionalLightHelper(
@@ -75,6 +93,7 @@ export class Stage {
       .onChange((value: number) => directionalLight.color.set(value))
 
     this.experience.scene.add(
+      hemisphereLight,
       ambientLight,
       directionalLight,
       directionalLight.target
@@ -89,7 +108,7 @@ export class Stage {
   }
 
   private createFloor() {
-    const color = 0xbada55
+    const color = Stage.floorColor
     const material = new THREE.MeshStandardMaterial({ color })
     const plane = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), material)
     plane.rotation.x = Math.PI * -0.5

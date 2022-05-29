@@ -13,10 +13,14 @@ export class ParagraphText {
   static create(
     experience: Experience,
     text: string[] = [
-      "Hello, world! What is up?",
-      "The quick brown fox jumps over the lazy dog.",
+      "2021 - current",
+      "Stijlbreuk \\\\ front-end developer",
       "",
-      "Another one",
+      "2019 - 2021",
+      "Hulan \\\\ lead front-end developer",
+      "",
+      "2018 - 2019",
+      "Hulan \\\\ front-end developer",
     ]
   ) {
     return new ParagraphText(experience, text)
@@ -34,14 +38,14 @@ export class ParagraphText {
     const text = new THREE.Group()
     const geometryParams: TextGeometryParameters = {
       font,
-      size: 0.1,
+      size: 0.13,
       height: 0,
       curveSegments: 4,
     }
 
     const material = new THREE.MeshStandardMaterial({ color })
     const space = geometryParams.size! * 0.4
-    const lineHeight = geometryParams.size! * 1.5
+    const lineHeight = geometryParams.size! * 1.6
     const offset = new THREE.Vector2()
 
     for (let i = 0, l = this.text.length; i < l; i++) {
@@ -65,8 +69,13 @@ export class ParagraphText {
       offset.y -= lineHeight
     }
 
-    text.position.y = 0.01
+    const bbox = new THREE.Box3()
+    bbox.setFromObject(text)
+
+    text.position.set(-(bbox.max.x - bbox.min.x) * 0.5, 0.01, 1)
+
     text.rotation.x = -Math.PI * 0.5
     this.experience.scene.add(text)
+    this.experience.camera.lookAt(text.position)
   }
 }
