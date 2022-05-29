@@ -142,7 +142,7 @@ export class Experience {
     gsap.to(this.size, {
       width: window.innerWidth,
       height: window.innerHeight,
-      duration: 0.3,
+      duration: 0.2,
       ease: Power1.easeInOut,
       onUpdate: () => {
         this.camera.aspect = this.size.width / this.size.height;
@@ -152,8 +152,6 @@ export class Experience {
         this.resizeListeners.forEach((f) => f());
       },
     });
-    // this.size.width = window.innerWidth;
-    // this.size.height = window.innerHeight;
   };
 
   destroy = () => {

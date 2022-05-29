@@ -8,14 +8,18 @@ import type { ReactElement } from "react";
 const Home: NextPage = () => {
   const style = {
     height: "100vh",
+    paddingLeft: "50%",
+    display: "flex",
+    alignItems: "center",
   };
+  const lorem = `Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis, ut esse? Laborum repellat error recusandae ut quis? Quam in ea odio mollitia dicta neque iure doloremque, ullam eveniet, nam vitae?`;
   return (
     <>
       <ExperienceComponent />
       <div style={{ position: "relative" }}>
-        <div style={style}></div>
-        <div style={style}></div>
-        <div style={style}></div>
+        <div style={style}>{lorem}</div>
+        <div style={style}>{lorem}</div>
+        <div style={style}>{lorem}</div>
       </div>
     </>
   );

@@ -15,8 +15,25 @@ export class TitleText {
 
   constructor(public experience: Experience, public readonly text: string) {
     experience.addTickListener(this.handleTick);
+    experience.addResizeListener(this.handleResize);
     this.gui?.close();
   }
+
+  getOffsetX(mesh = this.mesh) {
+    const boundingBox = mesh.geometry.boundingBox!;
+    const width = Math.abs(boundingBox.max.x - boundingBox.min.x);
+    const small = window.innerWidth < 800;
+
+    if (small) {
+      return 0;
+    }
+
+    return -width * 0.5;
+  }
+
+  private handleResize = () => {
+    this.mesh.position.x = this.getOffsetX();
+  };
 
   private handleTick = () => {
     this.mesh.lookAt(this.experience.camera.position);
@@ -47,11 +64,7 @@ export class TitleText {
 
     mesh.geometry.computeBoundingBox();
     mesh.geometry.center();
-
-    const boundingBox = mesh.geometry.boundingBox!;
-    const width = Math.abs(boundingBox.max.x - boundingBox.min.x);
-    const height = Math.abs(boundingBox.max.y - boundingBox.min.y);
-    mesh.position.x = -2 + width * 0.5;
+    mesh.position.x = this.getOffsetX(mesh);
 
     this.gui?.add(mesh.material, "wireframe");
     this.gui
