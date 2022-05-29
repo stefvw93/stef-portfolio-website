@@ -2,7 +2,7 @@ import gsap from "gsap";
 import GUI from "lil-gui";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { BorderEffect } from "./objects/BorderEffect/BorderEffect";
+import { HeadsUpLayer } from "./objects/HeadsUpLayer/HeadsUpLayer";
 import { ParagraphText } from "./objects/ParagraphText";
 import { Stage } from "./objects/Stage";
 import { TitleText } from "./objects/TitleText";
@@ -17,7 +17,7 @@ export class Experience {
   renderer: THREE.WebGLRenderer;
   scene: THREE.Scene;
   camera: THREE.PerspectiveCamera;
-  controls: OrbitControls;
+  controls?: OrbitControls;
   loadingManager = new THREE.LoadingManager();
   textureLoader = new THREE.TextureLoader(this.loadingManager);
 
@@ -27,7 +27,7 @@ export class Experience {
   /**
    * Object references
    */
-  borderEffect: BorderEffect;
+  borderEffect: HeadsUpLayer;
 
   static backgroundColor = 0xffffff;
 
@@ -36,7 +36,7 @@ export class Experience {
     this.renderer = this.createRenderer();
     this.scene = this.createScene();
     this.camera = this.createCamera();
-    this.controls = this.createControls();
+    // this.controls = this.createControls();
     this.gui?.close();
     this.guiFolder?.close();
 
@@ -47,10 +47,25 @@ export class Experience {
     /**
      * Objects
      */
+    this.borderEffect = HeadsUpLayer.create(this);
+
     Stage.create(this);
-    TitleText.create(this, "Stef");
-    ParagraphText.create(this);
-    this.borderEffect = BorderEffect.create(this);
+
+    const group = new THREE.Group();
+
+    ["Stef van Wijchen", "Experience", "Contact"].forEach((title, index) => {
+      const object = new TitleText(this, title);
+      object.mesh.position.y += -2 * index;
+      group.add(object.mesh);
+    });
+
+    this.scene.add(group);
+
+    window.addEventListener("wheel", (event) => {
+      group.position.y += event.deltaY * 0.001;
+    });
+
+    // ParagraphText.create(this);
 
     /**
      * Listeners
@@ -72,7 +87,7 @@ export class Experience {
       0.1,
       100
     );
-    camera.position.set(-1.06, 2.38, 4.1);
+    camera.position.set(0, 0, 4.1);
     camera.lookAt(center);
 
     const controls = ["x", "y", "z"];
@@ -127,7 +142,7 @@ export class Experience {
   }
 
   private tick = () => {
-    this.controls.update();
+    this.controls?.update();
     this.tickListeners.forEach((f) => f());
     this.renderer.render(this.scene, this.camera);
   };

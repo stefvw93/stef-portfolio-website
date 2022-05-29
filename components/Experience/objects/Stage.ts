@@ -100,10 +100,10 @@ export class Stage {
     );
 
     if (this.experience.debug) {
-      this.experience.scene.add(
-        directionalLightHelper,
-        directionalLightShadowCameraHelper
-      );
+      // this.experience.scene.add(
+      //   directionalLightHelper,
+      //   directionalLightShadowCameraHelper
+      // );
     }
   }
 

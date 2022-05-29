@@ -5,6 +5,8 @@ import typeface from "../assets/Koulen_regular.json";
 import * as THREE from "three";
 
 export class TitleText {
+  mesh = this.createMesh();
+
   private gui = this.experience.gui?.addFolder("Title text");
 
   static create(experience: Experience, text: string = "Hello, world!") {
@@ -12,18 +14,24 @@ export class TitleText {
   }
 
   constructor(public experience: Experience, public readonly text: string) {
-    this.createText();
+    experience.addTickListener(this.handleTick);
     this.gui?.close();
   }
 
-  private createText() {
+  private handleTick = () => {
+    this.mesh.lookAt(this.experience.camera.position);
+    // this.mesh.rotation.y = 0;
+    this.mesh.rotation.z = 0;
+  };
+
+  private createMesh() {
     const font = new Font(typeface);
 
-    const color = 0xffffff;
-    const text = new THREE.Mesh(
+    const color = 0x0000ff;
+    const mesh = new THREE.Mesh(
       new TextGeometry(this.text, {
         font,
-        size: 0.5,
+        size: 0.15,
         height: 0.15,
         curveSegments: 32,
         bevelEnabled: true,
@@ -37,17 +45,22 @@ export class TitleText {
       })
     );
 
-    text.castShadow = true;
-    text.geometry.computeBoundingBox();
-    text.geometry.center();
-    text.position.y = text.geometry.boundingBox?.max.y || 0;
+    mesh.geometry.computeBoundingBox();
+    mesh.geometry.center();
 
-    this.gui?.add(text.material, "wireframe");
+    const boundingBox = mesh.geometry.boundingBox!;
+    const width = Math.abs(boundingBox.max.x - boundingBox.min.x);
+    mesh.position.y = boundingBox.max.y;
+    mesh.position.x = -2 + width * 0.5;
+
+    this.gui?.add(mesh.material, "wireframe");
     this.gui
       ?.addColor({ int: color }, "int")
       .name("text color")
-      .onChange((value: number) => text.material.color.set(value));
+      .onChange((value: number) => mesh.material.color.set(value));
 
-    this.experience.scene.add(text);
+    this.experience.scene.add(mesh);
+
+    return mesh;
   }
 }

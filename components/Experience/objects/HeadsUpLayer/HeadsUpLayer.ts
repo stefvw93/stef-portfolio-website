@@ -3,8 +3,8 @@ import { Experience } from "../../Experience";
 import vertexShader from "./border.vert.glsl";
 import fragmentShader from "./border.frag.glsl";
 
-export class BorderEffect {
-  gui = this.experience.gui?.addFolder("BorderEffect");
+export class HeadsUpLayer {
+  gui = this.experience.gui?.addFolder("HeadsUpLayer");
   mesh?: THREE.Mesh;
   material = new THREE.ShaderMaterial({
     transparent: true,
@@ -12,17 +12,17 @@ export class BorderEffect {
     fragmentShader,
     uniforms: {
       uAspect: { value: this.experience.camera.aspect },
-      uColor: { value: new THREE.Color(0xff0000) },
+      uColor: { value: new THREE.Color(0x141414) },
       uGradient: { value: 1.2 },
       uLimit: { value: 0.95 },
-      uNoiseScale: { value: 0.22 },
-      uSpeed: { value: new THREE.Vector2(0.35, 0.35) },
+      uNoiseScale: { value: 0.6 },
+      uSpeed: { value: new THREE.Vector2(-0.25, 0.25) },
       uTime: { value: 0 },
     },
   });
 
   static create(experience: Experience) {
-    return new BorderEffect(experience);
+    return new HeadsUpLayer(experience);
   }
 
   constructor(public experience: Experience) {
@@ -89,10 +89,9 @@ export class BorderEffect {
 
   private createMesh() {
     if (this.mesh) return;
-
+    const z = this.experience.camera.position.z + 10;
     const fovY =
-      (this.experience.camera.position.z *
-        this.experience.camera.getFilmHeight()) /
+      (z * this.experience.camera.getFilmHeight()) /
       this.experience.camera.getFocalLength();
 
     const mesh = new THREE.Mesh(
@@ -100,7 +99,7 @@ export class BorderEffect {
       this.material
     );
 
-    mesh.position.set(0, 0, -4.1);
+    mesh.position.set(0, 0, -z);
     this.experience.camera.add(mesh);
 
     return mesh;

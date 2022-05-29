@@ -91,12 +91,18 @@ void main() {
     1.0
   ));
 
+  /**
+   * Rectangular gradient
+   */
   vec2 center = abs(vUv - 0.5) * 2.0;
   float maxDist = max(abs(center.x), abs(center.y));
   float circular = length(center);
   float square = maxDist;
-  float alpha = mix(circular, square, maxDist);
 
+  /**
+   * Mix gradient with noise pattern
+   */
+  float alpha = mix(circular, square, maxDist);
   alpha = exponentialIn(alpha);
   alpha = mix(noise, alpha, uGradient);
   alpha = step(uLimit, alpha);
