@@ -1,4 +1,4 @@
-import gsap from "gsap";
+import gsap, { Power1 } from "gsap";
 import GUI from "lil-gui";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
@@ -6,6 +6,7 @@ import { HeadsUpLayer } from "./objects/HeadsUpLayer/HeadsUpLayer";
 import { ParagraphText } from "./objects/ParagraphText";
 import { Stage } from "./objects/Stage";
 import { TitleText } from "./objects/TitleText";
+import { TitleTexts } from "./objects/TitleTexts";
 export class Experience {
   debug = true;
   gui = this.debug ? new GUI() : null;
@@ -23,6 +24,7 @@ export class Experience {
 
   private resizeListeners = new Set<() => any>();
   private tickListeners = new Set<() => any>();
+  private destroyListeners = new Set<() => any>();
 
   /**
    * Object references
@@ -50,20 +52,7 @@ export class Experience {
     this.borderEffect = HeadsUpLayer.create(this);
 
     Stage.create(this);
-
-    const group = new THREE.Group();
-
-    ["Stef van Wijchen", "Experience", "Contact"].forEach((title, index) => {
-      const object = new TitleText(this, title);
-      object.mesh.position.y += -2 * index;
-      group.add(object.mesh);
-    });
-
-    this.scene.add(group);
-
-    window.addEventListener("wheel", (event) => {
-      group.position.y += event.deltaY * 0.001;
-    });
+    TitleTexts.create(this, ["Stef van Wijchen", "Experience", "Contact"]);
 
     // ParagraphText.create(this);
 
@@ -78,6 +67,7 @@ export class Experience {
 
   addResizeListener = (fn: () => any) => this.resizeListeners.add(fn);
   addTickListener = (fn: () => any) => this.tickListeners.add(fn);
+  addDestroyListener = (fn: () => any) => this.destroyListeners.add(fn);
 
   private createCamera() {
     const center = new THREE.Vector3(0, 0, 0);
@@ -129,7 +119,7 @@ export class Experience {
     });
 
     renderer.setSize(this.size.width, this.size.height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 3));
+    renderer.setPixelRatio(window.devicePixelRatio || 1);
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     return renderer;
@@ -148,18 +138,28 @@ export class Experience {
   };
 
   private handleResize = () => {
-    this.size.width = window.innerWidth;
-    this.size.height = window.innerHeight;
-    this.camera.aspect = this.size.width / this.size.height;
-    this.camera.updateProjectionMatrix();
-    this.renderer.setSize(this.size.width, this.size.height);
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    this.resizeListeners.forEach((f) => f());
+    gsap.killTweensOf(this.size);
+    gsap.to(this.size, {
+      width: window.innerWidth,
+      height: window.innerHeight,
+      duration: 0.3,
+      ease: Power1.easeInOut,
+      onUpdate: () => {
+        this.camera.aspect = this.size.width / this.size.height;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(this.size.width, this.size.height);
+        this.renderer.setPixelRatio(window.devicePixelRatio || 1);
+        this.resizeListeners.forEach((f) => f());
+      },
+    });
+    // this.size.width = window.innerWidth;
+    // this.size.height = window.innerHeight;
   };
 
   destroy = () => {
     gsap.ticker.remove(this.tick);
     window.removeEventListener("resize", this.handleResize);
+    this.destroyListeners.forEach((f) => f());
     this.gui?.destroy();
   };
 }

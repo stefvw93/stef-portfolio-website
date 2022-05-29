@@ -50,7 +50,7 @@ export class TitleText {
 
     const boundingBox = mesh.geometry.boundingBox!;
     const width = Math.abs(boundingBox.max.x - boundingBox.min.x);
-    mesh.position.y = boundingBox.max.y;
+    const height = Math.abs(boundingBox.max.y - boundingBox.min.y);
     mesh.position.x = -2 + width * 0.5;
 
     this.gui?.add(mesh.material, "wireframe");

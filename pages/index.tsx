@@ -1,17 +1,25 @@
-import type { NextPage, InferGetStaticPropsType } from "next"
-import { gqlClient } from "../graphql/gql-client"
-import { gql } from "@urql/core"
-import { Query, QueryPostsArgs } from "../generated/graphql"
-import { ExperienceComponent } from "../components/Experience/ExperienceComponent"
-import type { ReactElement } from "react"
+import type { NextPage, InferGetStaticPropsType } from "next";
+import { gqlClient } from "../graphql/gql-client";
+import { gql } from "@urql/core";
+import { Query, QueryPostsArgs } from "../generated/graphql";
+import { ExperienceComponent } from "../components/Experience/ExperienceComponent";
+import type { ReactElement } from "react";
 
 const Home: NextPage = () => {
+  const style = {
+    height: "100vh",
+  };
   return (
     <>
       <ExperienceComponent />
+      <div style={{ position: "relative" }}>
+        <div style={style}></div>
+        <div style={style}></div>
+        <div style={style}></div>
+      </div>
     </>
-  )
-}
+  );
+};
 
 // const Home: NextPage = ({
 //   posts,
@@ -48,4 +56,4 @@ const Home: NextPage = () => {
 //   return { props: { posts: data.posts } };
 // }
 
-export default Home
+export default Home;

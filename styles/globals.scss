@@ -10,6 +10,11 @@
   --color-snow-dark: #f5e6e0;
   --color-wintergreen-dream: #6a8e7fff;
   --color-azure: #3185fcff;
+
+  --safe-inset-area-top: env(safe-area-inset-top);
+  --safe-area-inset-right: env(safe-area-inset-right);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom);
+  --safe-area-inset-left: env(safe-area-inset-left);
 }
 
 html {
@@ -18,7 +23,7 @@ html {
     BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans,
     Droid Sans, sans-serif;
   color: var(--color-eerie-black);
-  background: var(--color-snow);
+  background: var(--color-eerie-black);
 }
 
 html,
