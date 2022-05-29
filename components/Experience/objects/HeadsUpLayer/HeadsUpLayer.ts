@@ -13,10 +13,10 @@ export class HeadsUpLayer {
     uniforms: {
       uAspect: { value: this.experience.camera.aspect },
       uColor: { value: new THREE.Color(0x141414) },
-      uGradient: { value: 1.2 },
-      uLimit: { value: 0.95 },
-      uNoiseScale: { value: 0.6 },
-      uSpeed: { value: new THREE.Vector2(-0.25, 0.25) },
+      uGradient: { value: 1.07 },
+      uLimit: { value: 0.975 },
+      uNoiseScale: { value: 5 },
+      uSpeed: { value: new THREE.Vector2(-0.15, 0.15) },
       uTime: { value: 0 },
     },
   });
@@ -84,7 +84,8 @@ export class HeadsUpLayer {
   };
 
   private handleTick = () => {
-    this.material.uniforms.uTime.value = this.experience.clock.getElapsedTime();
+    this.material.uniforms.uTime.value =
+      this.experience.clock.getElapsedTime() + window.scrollY * 0.006;
   };
 
   private createMesh() {

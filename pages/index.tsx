@@ -12,7 +12,8 @@ const Home: NextPage = () => {
     display: "flex",
     alignItems: "center",
   };
-  const lorem = `Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis, ut esse? Laborum repellat error recusandae ut quis? Quam in ea odio mollitia dicta neque iure doloremque, ullam eveniet, nam vitae?`;
+  let lorem = `Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis, ut esse? Laborum repellat error recusandae ut quis? Quam in ea odio mollitia dicta neque iure doloremque, ullam eveniet, nam vitae?`;
+  lorem = "";
   return (
     <>
       <ExperienceComponent />

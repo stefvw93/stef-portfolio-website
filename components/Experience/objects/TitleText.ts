@@ -48,7 +48,7 @@ export class TitleText {
     const mesh = new THREE.Mesh(
       new TextGeometry(this.text, {
         font,
-        size: 0.15,
+        size: 0.25,
         height: 0.15,
         curveSegments: 32,
         bevelEnabled: true,
@@ -57,8 +57,9 @@ export class TitleText {
         bevelOffset: 0,
         bevelSegments: 8,
       }),
-      new THREE.MeshStandardMaterial({
-        color,
+      // new THREE.MeshNormalMaterial({})
+      new THREE.MeshMatcapMaterial({
+        matcap: this.experience.textureLoader.load("/matcap4.png"),
       })
     );
 
