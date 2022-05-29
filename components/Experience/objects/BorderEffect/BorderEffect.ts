@@ -10,15 +10,14 @@ export class BorderEffect {
     transparent: true,
     vertexShader,
     fragmentShader,
-    depthTest: false,
     uniforms: {
-      uNoiseScale: { value: 4 },
       uAspect: { value: this.experience.camera.aspect },
-      uTime: { value: 0 },
-      uSpeed: { value: 0.3 },
+      uColor: { value: new THREE.Color(0xff0000) },
       uGradient: { value: 1.2 },
       uLimit: { value: 0.95 },
-      uColor: { value: new THREE.Color("red") },
+      uNoiseScale: { value: 0.22 },
+      uSpeed: { value: new THREE.Vector2(0.35, 0.35) },
+      uTime: { value: 0 },
     },
   });
 
@@ -31,6 +30,10 @@ export class BorderEffect {
     experience.addResizeListener(this.handleResize);
     experience.addTickListener(this.handleTick);
 
+    this.gui?.addColor({ int: 0xff0000 }, "int").onChange((value: number) => {
+      this.material.uniforms.uColor.value.set(value);
+    });
+
     ["uNoiseScale"].map((u) => {
       this.gui
         ?.add(this.material.uniforms[u], "value")
@@ -40,7 +43,22 @@ export class BorderEffect {
         .step(0.01);
     });
 
-    ["uSpeed", "uGradient", "uLimit"].forEach((u) => {
+    ["x", "y"].forEach((axis) => {
+      this.gui
+        ?.add(
+          new THREE.Vector2(this.material.uniforms.uSpeed.value[axis]),
+          axis
+        )
+        .name(`uSpeed.${axis}`)
+        .min(-2)
+        .max(2)
+        .step(0.005)
+        .onChange((value: number) => {
+          this.material.uniforms.uSpeed.value[axis] = value;
+        });
+    });
+
+    ["uGradient", "uLimit"].forEach((u) => {
       this.gui
         ?.add(this.material.uniforms[u], "value")
         .name(u)

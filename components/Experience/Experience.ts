@@ -47,7 +47,7 @@ export class Experience {
     /**
      * Objects
      */
-    // Stage.create(this);
+    Stage.create(this);
     TitleText.create(this, "Stef");
     ParagraphText.create(this);
     this.borderEffect = BorderEffect.create(this);

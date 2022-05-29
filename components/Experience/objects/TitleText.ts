@@ -34,14 +34,9 @@ export class TitleText {
       }),
       new THREE.MeshStandardMaterial({
         color,
-        depthTest: false,
-        depthWrite: false,
       })
     );
-    text.renderOrder = 9999;
-    text.onBeforeRender = function (renderer) {
-      renderer.clearDepth();
-    };
+
     text.castShadow = true;
     text.geometry.computeBoundingBox();
     text.geometry.center();

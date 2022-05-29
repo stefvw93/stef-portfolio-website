@@ -3,7 +3,7 @@ varying vec2 vUv;
 uniform float uNoiseScale;
 uniform float uAspect;
 uniform float uTime;
-uniform float uSpeed;
+uniform vec2 uSpeed;
 uniform float uGradient;
 uniform float uLimit;
 uniform vec3 uColor;
@@ -80,26 +80,14 @@ float cnoise(vec3 P) {
   return 2.2 * n_xyz;
 }
 
-float circularOut(float t) {
-  return sqrt((2.0 - t) * t);
-}
-
-float circularIn(float t) {
-  return 1.0 - sqrt(1.0 - t * t);
-}
-
-float exponentialOut(float t) {
-  return t == 1.0 ? t : 1.0 - pow(2.0, -10.0 * t);
-}
-
 float exponentialIn(float t) {
   return t == 0.0 ? t : pow(2.0, 10.0 * (t - 1.0));
 }
 
 void main() {
   float noise = cnoise(vec3(
-    vUv.x * uNoiseScale * uAspect,
-    vUv.y * uNoiseScale + uTime * uSpeed,
+    vUv.x * uNoiseScale + uTime * uSpeed.x,
+    vUv.y * uNoiseScale + uTime * uSpeed.y,
     1.0
   ));
 
