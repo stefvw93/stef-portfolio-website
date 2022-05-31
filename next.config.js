@@ -11,15 +11,16 @@ const nextConfig = {
       include: [dir],
       exclude: /node_modules/,
       use: [{ loader: "graphql-tag/loader" }],
-    })
+    });
 
     config.module.rules.push({
       test: /\.glsl/,
-      type: "asset/source",
-    })
+      exclude: /node_modules/,
+      use: ["raw-loader", "glslify-loader"],
+    });
 
-    return config
+    return config;
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

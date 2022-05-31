@@ -2,7 +2,7 @@ import gsap, { Power1 } from "gsap";
 import GUI from "lil-gui";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { HeadsUpLayer } from "./objects/HeadsUpLayer/HeadsUpLayer";
+import { HeadsUpLayer } from "./objects/HeadsUpLayer";
 import { ParagraphText } from "./objects/ParagraphText";
 import { Stage } from "./objects/Stage";
 import { TitleText } from "./objects/TitleText";
@@ -38,21 +38,26 @@ export class Experience {
     this.renderer = this.createRenderer();
     this.scene = this.createScene();
     this.camera = this.createCamera();
-    // this.controls = this.createControls();
+    this.controls = this.createControls();
     this.gui?.close();
     this.guiFolder?.close();
 
     if (this.debug) {
-      this.scene.add(new THREE.AxesHelper(2));
+      // this.scene.add(new THREE.AxesHelper(2));
     }
 
     /**
      * Objects
      */
-    this.borderEffect = HeadsUpLayer.create(this);
+    // this.borderEffect = HeadsUpLayer.create(this);
 
-    Stage.create(this);
-    TitleTexts.create(this, ["Stef van Wijchen", "Experience", "Contact"]);
+    // Stage.create(this);
+    TitleText.create(this, "CREATIVE");
+    // TitleTexts.create(this, [
+    //   "Hello, world!",
+    //   "And other generic",
+    //   "Sentences...",
+    // ]);
 
     // ParagraphText.create(this);
 

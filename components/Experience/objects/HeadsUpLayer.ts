@@ -1,7 +1,7 @@
 import * as THREE from "three";
-import { Experience } from "../../Experience";
-import vertexShader from "./border.vert.glsl";
-import fragmentShader from "./border.frag.glsl";
+import { Experience } from "../Experience";
+import vertexShader from "../shaders/heads-up.vert.glsl";
+import fragmentShader from "../shaders/heads-up.frag.glsl";
 
 export class HeadsUpLayer {
   gui = this.experience.gui?.addFolder("HeadsUpLayer");
@@ -13,11 +13,13 @@ export class HeadsUpLayer {
     uniforms: {
       uAspect: { value: this.experience.camera.aspect },
       uColor: { value: new THREE.Color(0x141414) },
-      uGradient: { value: 1.07 },
-      uLimit: { value: 0.975 },
-      uNoiseScale: { value: 5 },
+      uNoiseMix: { value: 0.63 },
+      uNoiseScale: { value: 2.68 },
+      uSharpness: { value: 0.92 },
       uSpeed: { value: new THREE.Vector2(-0.15, 0.15) },
+      uSpread: { value: 64 / window.innerWidth },
       uTime: { value: 0 },
+      uWidth: { value: 0 },
     },
   });
 
@@ -43,6 +45,13 @@ export class HeadsUpLayer {
         .step(0.01);
     });
 
+    this.gui
+      ?.add(this.material.uniforms.uSharpness, "value")
+      .name("uSharpness")
+      .min(0)
+      .max(1)
+      .step(0.001);
+
     ["x", "y"].forEach((axis) => {
       this.gui
         ?.add(
@@ -58,12 +67,12 @@ export class HeadsUpLayer {
         });
     });
 
-    ["uGradient", "uLimit"].forEach((u) => {
+    ["uWidth", "uSpread", "uNoiseMix"].forEach((u) => {
       this.gui
         ?.add(this.material.uniforms[u], "value")
         .name(u)
-        .min(0.01)
-        .max(2)
+        .min(0)
+        .max(1)
         .step(0.005);
     });
   }
@@ -80,6 +89,7 @@ export class HeadsUpLayer {
 
   private handleResize = () => {
     this.material.uniforms.uAspect.value = this.experience.camera.aspect;
+    this.material.uniforms.uSpread.value = 64 / window.innerWidth;
     this.updateMesh();
   };
 

@@ -1,13 +1,3 @@
-varying vec2 vUv;
-
-uniform float uNoiseScale;
-uniform float uAspect;
-uniform float uTime;
-uniform vec2 uSpeed;
-uniform float uGradient;
-uniform float uLimit;
-uniform vec3 uColor;
-
 vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
 vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
 vec3 fade(vec3 t) {return t*t*t*(t*(t*6.0-15.0)+10.0);}
@@ -80,32 +70,4 @@ float cnoise(vec3 P) {
   return 2.2 * n_xyz;
 }
 
-float exponentialIn(float t) {
-  return t == 0.0 ? t : pow(2.0, 10.0 * (t - 1.0));
-}
-
-void main() {
-  float noise = cnoise(vec3(
-    vUv.x * uNoiseScale + uTime * uSpeed.x,
-    vUv.y * uNoiseScale + uTime * uSpeed.y,
-    1.0
-  ));
-
-  /**
-   * Rectangular gradient
-   */
-  vec2 center = abs(vUv - 0.5) * 2.0;
-  float maxDist = max(abs(center.x), abs(center.y));
-  float circular = length(center);
-  float square = maxDist;
-
-  /**
-   * Mix gradient with noise pattern
-   */
-  float alpha = mix(circular, square, maxDist);
-  alpha = exponentialIn(alpha);
-  alpha = mix(noise, alpha, uGradient);
-  alpha = step(uLimit, alpha);
-
-  gl_FragColor = vec4(uColor.rgb, alpha);
-}
+#pragma glslify: export(cnoise)

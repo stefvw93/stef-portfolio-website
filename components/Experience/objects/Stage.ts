@@ -12,7 +12,7 @@ export class Stage {
 
   constructor(public experience: Experience) {
     this.createLights();
-    // this.createFloor()
+    this.createFloor();
     this.gui?.close();
   }
 

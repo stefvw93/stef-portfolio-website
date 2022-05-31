@@ -51,10 +51,6 @@ export class TitleTexts {
     const relative = normal * this.spacing;
     this.deltaY = relative;
 
-    // if (isTouchDevice()) {
-    //   return void (this.group.position.y = this.deltaY);
-    // }
-
     this.smoothDeltaY = gsap.utils.interpolate(
       this.smoothDeltaY,
       this.deltaY,

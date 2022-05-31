@@ -17,7 +17,7 @@ const Home: NextPage = () => {
   return (
     <>
       <ExperienceComponent />
-      <div style={{ position: "relative" }}>
+      <div style={{ position: "relative", display: "none" }}>
         <div style={style}>{lorem}</div>
         <div style={style}>{lorem}</div>
         <div style={style}>{lorem}</div>
