@@ -2,11 +2,7 @@ import gsap, { Power1 } from "gsap";
 import GUI from "lil-gui";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { HeadsUpLayer } from "./objects/HeadsUpLayer";
-import { ParagraphText } from "./objects/ParagraphText";
-import { Stage } from "./objects/Stage";
 import { TitleText } from "./objects/TitleText";
-import { TitleTexts } from "./objects/TitleTexts";
 export class Experience {
   debug = true;
   gui = this.debug ? new GUI() : null;
@@ -26,11 +22,6 @@ export class Experience {
   private tickListeners = new Set<() => any>();
   private destroyListeners = new Set<() => any>();
 
-  /**
-   * Object references
-   */
-  borderEffect: HeadsUpLayer;
-
   static backgroundColor = 0xffffff;
 
   constructor(query: string) {
@@ -49,17 +40,11 @@ export class Experience {
     /**
      * Objects
      */
-    // this.borderEffect = HeadsUpLayer.create(this);
-
-    // Stage.create(this);
-    TitleText.create(this, "CREATIVE");
-    // TitleTexts.create(this, [
-    //   "Hello, world!",
-    //   "And other generic",
-    //   "Sentences...",
-    // ]);
-
-    // ParagraphText.create(this);
+    TitleText.create(this, {
+      main: "CREATIVE",
+      top: "STEF VAN WIJCHEN",
+      bottom: "DEVELOPER",
+    });
 
     /**
      * Listeners
@@ -133,11 +118,12 @@ export class Experience {
   private createControls() {
     const controls = new OrbitControls(this.camera, this.canvas);
     controls.enableDamping = true;
+    controls.enabled = false;
     return controls;
   }
 
   private tick = () => {
-    this.controls?.update();
+    if (this.controls?.enabled) this.controls.update();
     this.tickListeners.forEach((f) => f());
     this.renderer.render(this.scene, this.camera);
   };
