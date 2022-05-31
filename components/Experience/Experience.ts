@@ -4,7 +4,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { TitleText } from "./objects/TitleText";
 export class Experience {
-  debug = true;
+  debug = false;
   gui = this.debug ? new GUI() : null;
   guiFolder = this.gui?.addFolder("Scene");
   size = new THREE.Vector2(globalThis.innerWidth, globalThis.innerHeight);
