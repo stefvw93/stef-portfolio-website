@@ -2,9 +2,11 @@ import gsap, { Power1 } from "gsap";
 import GUI from "lil-gui";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { getCssVar } from "../../utils/getCssVar";
+import { HeadsUpLayer } from "./objects/HeadsUpLayer";
 import { TitleText } from "./objects/TitleText";
 export class Experience {
-  debug = false;
+  debug = true;
   gui = this.debug ? new GUI() : null;
   guiFolder = this.gui?.addFolder("Scene");
   size = new THREE.Vector2(globalThis.innerWidth, globalThis.innerHeight);
@@ -17,12 +19,12 @@ export class Experience {
   controls?: OrbitControls;
   loadingManager = new THREE.LoadingManager();
   textureLoader = new THREE.TextureLoader(this.loadingManager);
-
+  referenceFps = 60;
+  referenceFrameMs = 1000 / this.referenceFps;
   private resizeListeners = new Set<() => any>();
-  private tickListeners = new Set<() => any>();
+  private tickListeners = new Set<(t: number, dt: number) => any>();
   private destroyListeners = new Set<() => any>();
-
-  static backgroundColor = 0xffffff;
+  private backgroundColor = 0xffffff;
 
   constructor(query: string) {
     this.canvas = document.querySelector(query)!;
@@ -34,12 +36,13 @@ export class Experience {
     this.guiFolder?.close();
 
     if (this.debug) {
-      // this.scene.add(new THREE.AxesHelper(2));
+      this.scene.add(new THREE.AxesHelper(2));
     }
 
     /**
      * Objects
      */
+    HeadsUpLayer.create(this);
     TitleText.create(this, {
       main: "CREATIVE",
       top: "STEF VAN WIJCHEN",
@@ -56,7 +59,8 @@ export class Experience {
   }
 
   addResizeListener = (fn: () => any) => this.resizeListeners.add(fn);
-  addTickListener = (fn: () => any) => this.tickListeners.add(fn);
+  addTickListener = (fn: (t: number, dt: number) => any) =>
+    this.tickListeners.add(fn);
   addDestroyListener = (fn: () => any) => this.destroyListeners.add(fn);
 
   private createCamera() {
@@ -88,11 +92,11 @@ export class Experience {
 
   private createScene() {
     const scene = new THREE.Scene();
-    scene.fog = new THREE.Fog(Experience.backgroundColor, 0.1, 20);
-    scene.background = new THREE.Color(Experience.backgroundColor);
+    scene.background = new THREE.Color(this.backgroundColor);
 
     this.guiFolder
-      ?.addColor({ int: Experience.backgroundColor }, "int")
+      ?.addColor({ int: this.backgroundColor }, "int")
+      .name("backgroundColor")
       .onChange((value: number) => {
         scene.fog?.color.set(value);
         (scene.background as THREE.Color).set(value);
@@ -118,13 +122,13 @@ export class Experience {
   private createControls() {
     const controls = new OrbitControls(this.camera, this.canvas);
     controls.enableDamping = true;
-    controls.enabled = false;
+    controls.enabled = true;
     return controls;
   }
 
-  private tick = () => {
+  private tick = (time: number, deltaTime: number) => {
     if (this.controls?.enabled) this.controls.update();
-    this.tickListeners.forEach((f) => f());
+    this.tickListeners.forEach((f) => f(time, deltaTime));
     this.renderer.render(this.scene, this.camera);
   };
 

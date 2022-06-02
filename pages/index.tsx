@@ -1,6 +1,7 @@
 import type { NextPage, InferGetStaticPropsType } from "next";
 import { ExperienceComponent } from "../components/Experience/ExperienceComponent";
 import { Hud } from "../components/Hud/Hud";
+import { isClient } from "../utils/isClient";
 
 const Home: NextPage = () => {
   return (
