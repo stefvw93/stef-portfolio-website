@@ -16,16 +16,11 @@ type TitleTextConfig = {
   bottom: string;
 };
 
-/**
- * ORIGINAL DIMENSIONS
- * x: 3.4255001544952393
- * y: 0.5184999704360962
- * aspect 6.612
- */
 export class TitleText {
   pointerPosition = new THREE.Vector2();
   group = new THREE.Group();
 
+  baseUniformSpeed = new THREE.Vector2(0.15, 0.15);
   material = new THREE.ShaderMaterial({
     transparent: true,
     vertexShader,
@@ -42,7 +37,7 @@ export class TitleText {
       uDimensions: { value: new THREE.Vector2() },
       uPointer: { value: new THREE.Vector2() },
       uTime: { value: 0 },
-      uSpeed: { value: new THREE.Vector2(0.25, 0.14) },
+      uSpeed: { value: new THREE.Vector2().copy(this.baseUniformSpeed) },
       uNoiseScale: { value: 1.025 },
       uFragmentation: { value: 2.01 },
       uColor1: { value: new THREE.Color(0xff206e) },
@@ -144,7 +139,9 @@ export class TitleText {
       this.experience.scene.children
     );
 
-    const uPointer = uniforms.uPointer.value;
+    const uPointer: THREE.Vector2 = uniforms.uPointer.value;
+    const uDentSize: { value: number } = uniforms.uDentSize;
+
     let intersectionPoint: THREE.Vector3 | undefined;
 
     for (let i = 0, l = intersects.length; i < l; i++) {
@@ -155,21 +152,13 @@ export class TitleText {
     }
 
     if (intersectionPoint) {
-      uniforms.uDentSize.value = gsap.utils.interpolate(
-        uniforms.uDentSize.value,
-        1,
-        progress
-      );
+      uDentSize.value = gsap.utils.interpolate(uDentSize.value, 1, progress);
       uPointer.set(
         gsap.utils.interpolate(uPointer.x, intersectionPoint.x, progress),
         gsap.utils.interpolate(uPointer.y, intersectionPoint.y, progress)
       );
     } else {
-      uniforms.uDentSize.value = gsap.utils.interpolate(
-        uniforms.uDentSize.value,
-        0,
-        progress
-      );
+      uDentSize.value = gsap.utils.interpolate(uDentSize.value, 0, progress);
     }
   };
 

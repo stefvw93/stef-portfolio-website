@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { isClient } from "../../utils/isClient";
+import { join } from "../../utils/join";
 import { Experience } from "./Experience";
 import styles from "./Experience.module.scss";
 
@@ -13,7 +14,7 @@ export const ExperienceComponent = (props: ExperienceProps) => {
   }, []);
 
   return (
-    <div className={styles.container}>
+    <div className={join(styles.container, "experience")}>
       <canvas className="webgl" />
       <div className="css-webgl" />
     </div>

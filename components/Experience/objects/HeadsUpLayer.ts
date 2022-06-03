@@ -112,7 +112,7 @@ export class HeadsUpLayer {
         top: "STEF VAN WIJCHEN",
         bottom: "DEVELOPER",
       },
-      Math.min(bounds.width * 0.6, 4)
+      Math.min(bounds.width * (window.innerWidth > 800 ? 0.6 : 0.9), 4)
     );
 
     titleText.group.position.z = textZ;

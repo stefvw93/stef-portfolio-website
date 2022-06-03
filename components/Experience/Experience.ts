@@ -4,12 +4,14 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { getCssVar } from "../../utils/getCssVar";
 import { HeadsUpLayer } from "./objects/HeadsUpLayer";
-import { TitleText } from "./objects/TitleText";
+
 export class Experience {
-  debug = true;
+  debug = false;
   gui = this.debug ? new GUI() : null;
   guiFolder = this.gui?.addFolder("Scene");
-  size = new THREE.Vector2(globalThis.innerWidth, globalThis.innerHeight);
+
+  container: HTMLElement;
+  size = new THREE.Vector2(window.innerWidth, window.innerHeight);
   clock = new THREE.Clock();
   center = new THREE.Vector3(0, 0, 0);
   canvas: HTMLCanvasElement;
@@ -21,17 +23,19 @@ export class Experience {
   textureLoader = new THREE.TextureLoader(this.loadingManager);
   referenceFps = 60;
   referenceFrameMs = 1000 / this.referenceFps;
-  private resizeListeners = new Set<() => any>();
-  private tickListeners = new Set<(t: number, dt: number) => any>();
-  private destroyListeners = new Set<() => any>();
-  private backgroundColor = 0xffffff;
+  resizeListeners = new Set<() => any>();
+  tickListeners = new Set<(t: number, dt: number) => any>();
+  destroyListeners = new Set<() => any>();
+  backgroundColor = 0xffffff;
 
   constructor(query: string) {
+    this.container = document.querySelector(".experience")!;
     this.canvas = document.querySelector(query)!;
     this.renderer = this.createRenderer();
     this.scene = this.createScene();
     this.camera = this.createCamera();
     this.controls = this.createControls();
+
     this.gui?.close();
     this.guiFolder?.close();
 
@@ -50,7 +54,10 @@ export class Experience {
     gsap.ticker.add(this.tick);
     window.addEventListener("resize", this.handleResize);
 
-    console.log(this);
+    /**
+     * other setup
+     */
+    this.setContainerSize();
   }
 
   addResizeListener = (fn: () => any) => this.resizeListeners.add(fn);
@@ -58,7 +65,18 @@ export class Experience {
     this.tickListeners.add(fn);
   addDestroyListener = (fn: () => any) => this.destroyListeners.add(fn);
 
-  private createCamera() {
+  setContainerSize() {
+    gsap.set(this.container, {
+      width: this.size.width,
+      height: this.size.height,
+      // top: -parseInt(getCssVar("--safe-area-inset-top")),
+      // right: -parseInt(getCssVar("--safe-area-inset-right")),
+      // bottom: -parseInt(getCssVar("--safe-area-inset-bottom")),
+      // left: -parseInt(getCssVar("--safe-area-inset-left")),
+    });
+  }
+
+  createCamera() {
     const center = new THREE.Vector3(0, 0, 0);
     const camera = new THREE.PerspectiveCamera(
       55,
@@ -85,7 +103,7 @@ export class Experience {
     return camera;
   }
 
-  private createScene() {
+  createScene() {
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(this.backgroundColor);
 
@@ -101,7 +119,7 @@ export class Experience {
     return scene;
   }
 
-  private createRenderer() {
+  createRenderer() {
     const renderer = new THREE.WebGLRenderer({
       canvas: this.canvas,
       antialias: true,
@@ -114,34 +132,28 @@ export class Experience {
     return renderer;
   }
 
-  private createControls() {
+  createControls() {
     const controls = new OrbitControls(this.camera, this.canvas);
     controls.enableDamping = true;
     controls.enabled = this.debug;
     return controls;
   }
 
-  private tick = (time: number, deltaTime: number) => {
+  tick = (time: number, deltaTime: number) => {
     if (this.controls?.enabled) this.controls.update();
     this.tickListeners.forEach((f) => f(time, deltaTime));
     this.renderer.render(this.scene, this.camera);
   };
 
-  private handleResize = () => {
-    gsap.killTweensOf(this.size);
-    gsap.to(this.size, {
-      width: window.innerWidth,
-      height: window.innerHeight,
-      duration: 0.2,
-      ease: Power1.easeInOut,
-      onUpdate: () => {
-        this.camera.aspect = this.size.width / this.size.height;
-        this.camera.updateProjectionMatrix();
-        this.renderer.setSize(this.size.width, this.size.height);
-        this.renderer.setPixelRatio(window.devicePixelRatio || 1);
-        this.resizeListeners.forEach((f) => f());
-      },
-    });
+  handleResize = () => {
+    this.size.width = window.innerWidth;
+    this.size.height = window.innerHeight;
+    this.setContainerSize();
+    this.camera.aspect = this.size.width / this.size.height;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(this.size.width, this.size.height);
+    this.renderer.setPixelRatio(window.devicePixelRatio || 1);
+    this.resizeListeners.forEach((f) => f());
   };
 
   destroy = () => {
