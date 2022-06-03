@@ -38,7 +38,7 @@ export function Preloader({ onComplete }: PreloaderProps) {
 
   return (
     <div ref={container} className={styles.preloader}>
-      <h1>Stef van Wijchen</h1>
+      <h1>Stef van Wiechen</h1>
     </div>
   );
 }
