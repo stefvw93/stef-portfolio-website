@@ -6,7 +6,7 @@ import { getCssVar } from "../../utils/getCssVar";
 import { HeadsUpLayer } from "./objects/HeadsUpLayer";
 import { TitleText } from "./objects/TitleText";
 export class Experience {
-  debug = false;
+  debug = true;
   gui = this.debug ? new GUI() : null;
   guiFolder = this.gui?.addFolder("Scene");
   size = new THREE.Vector2(globalThis.innerWidth, globalThis.innerHeight);
@@ -43,11 +43,6 @@ export class Experience {
      * Objects
      */
     HeadsUpLayer.create(this);
-    TitleText.create(this, {
-      main: "CREATIVE",
-      top: "STEF VAN WIJCHEN",
-      bottom: "DEVELOPER",
-    });
 
     /**
      * Listeners

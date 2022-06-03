@@ -24,6 +24,7 @@ type TitleTextConfig = {
  */
 export class TitleText {
   pointerPosition = new THREE.Vector2();
+  group = new THREE.Group();
 
   material = new THREE.ShaderMaterial({
     transparent: true,
@@ -49,26 +50,26 @@ export class TitleText {
     },
   });
 
-  // geometry = new TextGeometry(this.texts.main, {
-  //   font: new Font(typeface),
-  //   size: 0.5,
-  //   height: 0,
-  //   curveSegments: 8,
-  // });
-  geometry = new THREE.PlaneGeometry(3.43, 3.43 * 0.25, 80, 20);
-  mesh = this.createMesh();
+  dimensions: THREE.Vector2;
+  geometry: THREE.PlaneGeometry;
+  mesh: THREE.Mesh;
   raycaster = new THREE.Raycaster();
   private gui = this.experience.gui?.addFolder("Title text");
   private pointerActive = false;
 
-  static create(experience: Experience, texts: TitleTextConfig) {
-    return new TitleText(experience, texts);
-  }
-
   constructor(
     public experience: Experience,
-    public readonly texts: TitleTextConfig
+    public readonly texts: TitleTextConfig,
+    size: number
   ) {
+    this.dimensions = new THREE.Vector2(size, size * 0.25);
+    this.geometry = new THREE.PlaneGeometry(
+      this.dimensions.width,
+      this.dimensions.height,
+      80,
+      20
+    );
+    this.mesh = this.createMesh();
     SubtitleText.create(this, this.texts.top, this.texts.bottom);
     experience.addTickListener(this.handleTick);
     experience.addResizeListener(this.handleResize);
@@ -176,8 +177,7 @@ export class TitleText {
     const mesh = new THREE.Mesh(this.geometry, this.material);
     mesh.geometry.computeBoundingBox();
     mesh.geometry.center();
-
-    this.experience.scene.add(mesh);
+    this.group.add(mesh);
     return mesh;
   }
 }
@@ -191,7 +191,7 @@ class SubtitleText {
 
   readonly geometryParams: TextGeometryParameters = {
     font: new Font(typeface),
-    size: 0.15,
+    size: this.titleText.dimensions.height * 0.15,
     height: 0,
     curveSegments: 8,
   };
@@ -222,13 +222,11 @@ class SubtitleText {
 
     const bbox = mesh.geometry.boundingBox!;
     const width = Math.abs(bbox.max.x - bbox.min.x);
+    const height = Math.abs(bbox.max.y - bbox.min.y);
     // const titleBbox = this.titleText.mesh.geometry.boundingBox!;
     // const titleHeight = Math.abs(titleBbox.max.y - titleBbox.min.y);
 
-    const parentDimensions = new THREE.Vector2(
-      3.4255001544952393,
-      0.5184999704360962
-    );
+    const parentDimensions = this.titleText.dimensions;
 
     mesh.position.z = 0.01;
     mesh.position.x =
@@ -239,8 +237,8 @@ class SubtitleText {
 
     mesh.position.y =
       destination === "top"
-        ? parentDimensions.height
-        : -parentDimensions.height;
+        ? parentDimensions.height - height * 3
+        : -parentDimensions.height + height * 3;
 
     // mesh.position.x =
     //   (destination === "top" ? titleBbox.min.x : titleBbox.max.x - width) +
@@ -248,7 +246,7 @@ class SubtitleText {
 
     // mesh.position.y = destination === "top" ? titleHeight : -titleHeight;
 
-    this.titleText.experience.scene.add(mesh);
+    this.titleText.group.add(mesh);
     return mesh;
   }
 }

@@ -21,6 +21,6 @@ void main() {
 
   gl_FragColor = vec4(mix(uColor1, uColor2, vec3(strength)), alphaMap.r);
   // gl_FragColor = vec4(mix(uColor1, uColor2, vec3(strength)), 1.0);
-  gl_FragColor = mix(gl_FragColor, vec4(0.0), vZ);
+  gl_FragColor = mix(gl_FragColor, vec4(vec3(1.0), 0.0), vZ);
   // gl_FragColor = vec4(vec3(uDentSize), 1.0);
 }
