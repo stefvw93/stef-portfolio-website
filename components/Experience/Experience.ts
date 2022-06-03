@@ -45,7 +45,7 @@ export class Experience {
     HeadsUpLayer.create(this);
     TitleText.create(this, {
       main: "CREATIVE",
-      top: "STEF VAN WIJCHEN",
+      top: "STEF VAN WIECHEN",
       bottom: "DEVELOPER",
     });
 

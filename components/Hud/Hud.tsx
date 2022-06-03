@@ -6,7 +6,7 @@ export function Hud({}: HudProps) {
   return (
     <div className={styles.container}>
       <nav className={styles.navigation}>
-        <div>Stef van Wijchen</div>
+        <div>Stef van Wiechen</div>
         <div className={styles.links}>
           <div>About</div>
           <div>Career</div>

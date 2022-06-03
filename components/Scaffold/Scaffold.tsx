@@ -24,7 +24,7 @@ export function Scaffold({ children }: ScaffoldProps) {
     <>
       <nav className={styles.topMenu}>
         <Link href="/">
-          <a className={styles.animateLink}>Stef van Wijchen</a>
+          <a className={styles.animateLink}>Stef van Wiechen</a>
         </Link>
         <div className={styles.topMenu_navigation}>
           <Link href="/about">
