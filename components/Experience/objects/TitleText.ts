@@ -33,7 +33,9 @@ export class TitleText {
     side: THREE.DoubleSide,
     uniforms: {
       uAlphaMap: {
-        value: this.experience.textureLoader.load("/text-alpha-map-2048.png"),
+        value: this.experience.textureLoader.load(
+          "/text-alpha-map-2048x512.png"
+        ),
       },
       uDentSize: { value: 0 },
       uDimensions: { value: new THREE.Vector2() },
@@ -53,13 +55,11 @@ export class TitleText {
   //   height: 0,
   //   curveSegments: 8,
   // });
-  geometry = new THREE.PlaneGeometry(3.43, 3.43, 256, 128);
-
+  geometry = new THREE.PlaneGeometry(3.43, 3.43 * 0.25, 80, 20);
   mesh = this.createMesh();
-
   raycaster = new THREE.Raycaster();
-
   private gui = this.experience.gui?.addFolder("Title text");
+  private pointerActive = false;
 
   static create(experience: Experience, texts: TitleTextConfig) {
     return new TitleText(experience, texts);
@@ -73,9 +73,11 @@ export class TitleText {
     experience.addTickListener(this.handleTick);
     experience.addResizeListener(this.handleResize);
 
-    window.addEventListener("mousemove", this.handleMouseMove);
+    window.addEventListener("pointermove", this.handlePointerMove);
+    window.addEventListener("touchend", this.handleTouchEnd);
     experience.addDestroyListener(() => {
-      window.removeEventListener("mousemove", this.handleMouseMove);
+      window.removeEventListener("pointermove", this.handlePointerMove);
+      window.removeEventListener("touchend", this.handleTouchEnd);
     });
 
     ["uNoiseScale", "uFragmentation"].forEach((u) => {
@@ -108,11 +110,17 @@ export class TitleText {
     this.gui?.close();
   }
 
-  private handleMouseMove = (event: MouseEvent) => {
+  private handlePointerMove = (event: MouseEvent) => {
+    this.pointerActive = true;
     this.pointerPosition.set(
       (event.clientX / window.innerWidth) * 2 - 1,
       -(event.clientY / window.innerHeight) * 2 + 1
     );
+  };
+
+  private handleTouchEnd = () => {
+    this.pointerActive = false;
+    console.log("touch end");
   };
 
   private handleResize = () => {};
@@ -121,6 +129,14 @@ export class TitleText {
     const progress = 0.1 * (this.experience.referenceFrameMs / deltaTime);
     const uniforms = this.material.uniforms;
     uniforms.uTime.value = this.experience.clock.getElapsedTime();
+
+    if (!this.pointerActive) {
+      return (uniforms.uDentSize.value = gsap.utils.interpolate(
+        uniforms.uDentSize.value,
+        0,
+        progress
+      ));
+    }
 
     this.raycaster.setFromCamera(this.pointerPosition, this.experience.camera);
     const intersects = this.raycaster.intersectObjects(
