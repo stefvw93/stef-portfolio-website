@@ -11,12 +11,11 @@ uniform sampler2D uAlphaMap;
 
 void main() {
   vec4 modelPosition = modelMatrix * vec4(position, 1.0);
-  float noiseIntensity = texture2D(uAlphaMap, uv).r;
   float dist = distance(uPointer, modelPosition.xy);
   float offset = smoothstep(0.0, 1.0, max(0.0, .5 - dist)) * 1.0;
-  float noise = cnoise((modelPosition.xyz + vec3(uTime / 6.)) * 6.) * (1. + offset) * noiseIntensity;
+  float noise = cnoise((modelPosition.xyz + vec3(uTime / 6.)) * 6.) * (1. + offset);
   
-  offset -= noise * 0.3;
+  offset -= noise * 0.2;
   offset *= uDentSize;
   modelPosition.z -= offset;
 

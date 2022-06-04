@@ -30,7 +30,7 @@ export class TitleText {
     uniforms: {
       uAlphaMap: {
         value: this.experience.textureLoader.load(
-          "/text-alpha-map-2048x512.png"
+          "/text-alpha-map-arlen-2048x512.png"
         ),
       },
       uDentSize: { value: 0 },
@@ -38,7 +38,7 @@ export class TitleText {
       uPointer: { value: new THREE.Vector2() },
       uTime: { value: 0 },
       uSpeed: { value: new THREE.Vector2().copy(this.baseUniformSpeed) },
-      uNoiseScale: { value: 1.025 },
+      uNoiseScale: { value: 1.3 },
       uFragmentation: { value: 2.01 },
       uColor1: { value: new THREE.Color(0xff206e) },
       uColor2: { value: new THREE.Color(0xfbff12) },
@@ -61,8 +61,8 @@ export class TitleText {
     this.geometry = new THREE.PlaneGeometry(
       this.dimensions.width,
       this.dimensions.height,
-      80,
-      20
+      160,
+      40
     );
     this.mesh = this.createMesh();
     SubtitleText.create(this, this.texts.top, this.texts.bottom);
@@ -176,6 +176,7 @@ class SubtitleText {
     color: 0x0c0f0a,
     transparent: true,
     opacity: 0.1,
+    // wireframe: true,
   });
 
   readonly geometryParams: TextGeometryParameters = {
@@ -217,7 +218,7 @@ class SubtitleText {
 
     const parentDimensions = this.titleText.dimensions;
 
-    mesh.position.z = 0.01;
+    mesh.position.z = -0.1;
     mesh.position.x =
       (destination === "top"
         ? -parentDimensions.width * 0.5

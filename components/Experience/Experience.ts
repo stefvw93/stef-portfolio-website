@@ -6,7 +6,7 @@ import { getCssVar } from "../../utils/getCssVar";
 import { HeadsUpLayer } from "./objects/HeadsUpLayer";
 
 export class Experience {
-  debug = false;
+  debug = true;
   gui = this.debug ? new GUI() : null;
   guiFolder = this.gui?.addFolder("Scene");
 
