@@ -18,7 +18,6 @@ type TitleTextConfig = {
 };
 
 export class TitleText {
-  offsetY = 0;
   y = 0;
   pointerPosition = new THREE.Vector2();
   group = new THREE.Group();
@@ -146,12 +145,15 @@ export class TitleText {
   private handleResize = () => {};
 
   private handleTick = (time: number, deltaTime: number) => {
-    const progress = 0.1 * (this.experience.referenceFrameMs / deltaTime);
+    const progress = 0.1 * (deltaTime / this.experience.referenceFrameMs);
     const uniforms = this.material.uniforms;
     uniforms.uTime.value = this.experience.clock.getElapsedTime();
-    this.y = SmoothScroll.instance ? SmoothScroll.instance.y * 0.003 : this.y;
 
-    this.group.position.y = this.y + this.offsetY;
+    this.y = SmoothScroll.instance
+      ? SmoothScroll.instance.smoothY * 0.004
+      : this.y;
+
+    this.group.position.y = this.y;
     this.group.rotation.x = this.y * 0.5;
 
     if (!this.pointerActive) {
@@ -162,7 +164,6 @@ export class TitleText {
       ));
     }
 
-    // console.log(this.pointerPosition);
     this.raycaster.setFromCamera(this.pointerPosition, this.experience.camera);
     const intersects = this.raycaster.intersectObjects(
       this.experience.scene.children
