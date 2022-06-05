@@ -1,4 +1,6 @@
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+import { ScrollToPlugin } from "gsap/dist/ScrollToPlugin";
 import { isTouchDevice } from "./isTouchDevice";
 
 export type SmoothScrollConfig = {
@@ -22,14 +24,32 @@ export class SmoothScroll {
   referenceFps = 60;
   referenceFrameMs = 1000 / this.referenceFps;
 
+  get scrollingElement() {
+    return isTouchDevice() ? this.container : window;
+  }
+
   constructor(readonly container: HTMLElement, readonly content: HTMLElement) {
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.registerPlugin(ScrollToPlugin);
     this.appendCSS();
     this.prepareAncestors();
     this.prepareContainer();
     this.prepareContent();
     this.start();
     SmoothScroll.instance = this;
+    document.documentElement.classList.add("hide-scroll-bar");
+    window.addEventListener("resize", this.handleResize);
   }
+
+  handleResize = () => {
+    this.stop();
+    this.destroy();
+    this.appendCSS();
+    this.prepareAncestors();
+    this.prepareContainer();
+    this.prepareContent();
+    this.start();
+  };
 
   updatePosition = (_: number, deltaTime: number) => {
     this.smoothY = gsap.utils.interpolate(
@@ -79,11 +99,11 @@ export class SmoothScroll {
     for (const child of this.content.children) {
       if (!(child instanceof HTMLElement)) continue;
       const rect = child.getBoundingClientRect();
-      child.style.width = rect.width + "px";
-      child.style.height = rect.height + "px";
+      child.setAttribute("style", "");
+      child.style.width = "100%";
       child.style.position = "fixed";
-      child.style.left = rect.left + "px";
-      child.style.top = child.offsetTop + "px";
+      child.style.left = "0";
+      child.style.top = "0";
     }
   }
 
@@ -127,7 +147,7 @@ export class SmoothScroll {
   }
 
   removeCSS() {
-    if (!this.style) return;
+    if (!this.style || window.document.head.contains(this.style)) return;
     window.document.head.removeChild(this.style);
   }
 }

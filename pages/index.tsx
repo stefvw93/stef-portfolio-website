@@ -8,6 +8,8 @@ import { ScrollContainer } from "../components/ScrollContainer/ScrollContainer";
 import { Query, QueryPostArgs } from "../generated/graphql";
 import { gqlClient } from "../graphql/gql-client";
 import { isClient } from "../utils/isClient";
+import { About } from "../components/About/About";
+import { Career } from "../components/Career/Career";
 
 const Home: NextPage = ({
   posts,
@@ -20,10 +22,13 @@ const Home: NextPage = ({
       <ScrollContainer>
         <main className="main">
           {posts?.map((post, index) => (
-            <Section key={post.id} id={post.slug ?? undefined}>
-              <h1>
-                {index}. {post.title}
-              </h1>
+            <Section
+              key={post.id}
+              id={post.slug ?? undefined}
+              title={post.title ?? undefined}
+            >
+              {post.slug === "about" && <About post={post} />}
+              {post.slug === "career" && <Career post={post} />}
             </Section>
           ))}
         </main>

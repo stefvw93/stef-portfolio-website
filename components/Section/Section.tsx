@@ -10,7 +10,6 @@ export function Section({
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
     ScrollTrigger.create({
       trigger: ref.current!,
       onEnter() {
@@ -20,8 +19,11 @@ export function Section({
   }, []);
 
   return (
-    <div ref={ref} className={styles.container} {...rest}>
-      {children}
-    </div>
+    <section ref={ref} className={styles.container} {...rest}>
+      <header>
+        <h2 className={styles.title}>{rest.title}</h2>
+      </header>
+      <article>{children}</article>
+    </section>
   );
 }

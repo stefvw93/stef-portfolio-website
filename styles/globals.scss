@@ -1,6 +1,19 @@
+@import url("//hello.myfonts.net/count/4cea82");
+
 @font-face {
-  font-family: "PP Neue Montreal";
+  font-family: "TT Arlen Chunky";
+  src: url("/fonts/TTArlenChunky.woff2") format("woff2"),
+    url("/fonts/TTArlenChunky.woff") format("woff");
+}
+
+@font-face {
+  font-family: "PP Neue Montreal Book";
   src: url("/fonts/PPNeueMontreal-Book.otf");
+}
+
+@font-face {
+  font-family: "PP Neue Montreal Medium";
+  src: url("/fonts/PPNeueMontreal-Medium.otf");
 }
 
 :root {
@@ -18,10 +31,14 @@
 
 html {
   font-size: 18px;
-  font-family: "PP Neue Montreal", Helvetica Neue, -apple-system,
+  line-height: 1.5;
+  color: var(--smoky-black);
+  font-family: "PP Neue Montreal Book", Helvetica Neue, -apple-system,
     BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans,
     Droid Sans, sans-serif;
   color: var(--color-eerie-black);
+  -moz-osx-font-smoothing: grayscale; /*(For Firefox)*/
+  -webkit-font-smoothing: antialiased; /*(For Chrome and Safari)*/
 }
 
 html,

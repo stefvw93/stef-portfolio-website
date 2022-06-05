@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
+import { MouseEvent, useEffect, useRef } from "react";
+import gsap, { Power1 } from "gsap";
 import { SmoothScroll } from "../../utils/SmoothScroll";
 import styles from "./Hud.module.scss";
 import { classes } from "../../utils/classes";
@@ -9,13 +9,34 @@ type HudProps = {
 };
 
 export function Hud({ links }: HudProps) {
+  const handleAnchorClick = useRef(
+    (event: MouseEvent<HTMLAnchorElement, Event>) => {
+      event.preventDefault();
+      if (!SmoothScroll.instance) return;
+      const query = event.currentTarget.getAttribute("href");
+      if (!query) return;
+      const target = document.querySelector(query);
+      if (!target) return;
+      const scrollTo = (target as HTMLElement).offsetTop;
+      gsap.to(SmoothScroll.instance.scrollingElement, {
+        scrollTo,
+        duration: 1,
+        ease: Power1.easeInOut,
+      });
+    }
+  );
+
   return (
     <>
       <nav className={classes(styles.navigation, styles.top)}>
         <div>Stef van Wijchen</div>
         <div className={styles.links}>
           {links?.map((link) => (
-            <a key={link.href} href={"#" + link.href}>
+            <a
+              key={link.href}
+              href={"#" + link.href}
+              onClick={handleAnchorClick.current}
+            >
               {link.name}
             </a>
           ))}

@@ -1,0 +1,44 @@
+.container {
+  padding: 2rem 6rem;
+
+  hr {
+    width: 100%;
+    border-style: solid;
+    border-width: 0.5px;
+    padding: 0;
+    margin-block: 0.5rem;
+  }
+}
+
+.yearSeparator {
+  hr {
+    border-color: var(--winter-sky);
+  }
+}
+
+.job {
+  padding-left: 20%;
+  margin-block: 1.5rem;
+
+  hr {
+    margin-block: 1.5rem;
+    border-color: var(--turquoise);
+  }
+}
+
+.jobInfo {
+  display: flex;
+  header {
+    font-size: 1.5rem;
+    font-family: "PP Neue Montreal Medium";
+    flex: 3;
+  }
+}
+
+.jobRole {
+  flex: 2;
+}
+
+.jobSkills {
+  flex: 2;
+}
