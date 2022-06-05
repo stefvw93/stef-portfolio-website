@@ -39,6 +39,7 @@ function ScrollBar() {
 
   const updateScrollBar = useRef((time: number, deltaTime: number) => {
     if (!SmoothScroll.instance) return;
+
     const progress =
       SmoothScroll.instance.smoothY /
       (SmoothScroll.instance.scrollHeight - window.innerHeight);

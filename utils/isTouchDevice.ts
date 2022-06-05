@@ -1,7 +1,12 @@
+let state: boolean;
+
 export function isTouchDevice() {
-  return (
-    "ontouchstart" in window ||
-    navigator.maxTouchPoints > 0 ||
-    navigator["msMaxTouchPoints" as unknown as "maxTouchPoints"] > 0
-  );
+  if (!state) {
+    state =
+      "ontouchstart" in window ||
+      navigator.maxTouchPoints > 0 ||
+      navigator["msMaxTouchPoints" as unknown as "maxTouchPoints"] > 0;
+  }
+
+  return state;
 }

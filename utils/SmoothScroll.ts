@@ -34,10 +34,11 @@ export class SmoothScroll {
   updatePosition = (_: number, deltaTime: number) => {
     this.smoothY = gsap.utils.interpolate(
       this.smoothY,
-      window.scrollY,
+      isTouchDevice() ? this.container.scrollTop : window.scrollY,
       0.2 * (this.referenceFrameMs / deltaTime)
     );
 
+    if (isTouchDevice()) return;
     for (const child of this.content.children) {
       if (!(child instanceof HTMLElement)) continue;
       gsap.set(child, { y: -this.smoothY });
@@ -69,10 +70,11 @@ export class SmoothScroll {
 
   prepareContent() {
     this.content.classList.add("scroll-content");
-    if (isTouchDevice()) return;
 
     this.content.style.height =
       (this.scrollHeight = this.content.offsetHeight) + "px";
+
+    if (isTouchDevice()) return;
 
     for (const child of this.content.children) {
       if (!(child instanceof HTMLElement)) continue;
