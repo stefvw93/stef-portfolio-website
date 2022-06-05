@@ -36,18 +36,15 @@ function ScrollBar() {
   const setBodyGradient = useRef<Function>();
   const setDocumentGradient = useRef<Function>();
   const bar = useRef<HTMLDivElement>(null);
+
   const updateScrollBar = useRef((time: number, deltaTime: number) => {
     if (!SmoothScroll.instance) return;
     const progress =
       SmoothScroll.instance.smoothY /
       (SmoothScroll.instance.scrollHeight - window.innerHeight);
-    console.log(progress);
+
     const cssValue = `${gsap.utils.clamp(0, 100, progress * 100).toFixed(3)}%`;
     setWidth.current!(cssValue);
-
-    // const gradient = `linear-gradient(to right, var(--winter-sky) 0%, var(--winter-sky) ${cssValue}, var(--lemon-glacier) ${cssValue}, var(--lemon-glacier) 100%)`;
-    // gsap.set(document.body, { background: gradient });
-    // gsap.set(document.documentElement, { background: gradient });
   });
 
   useEffect(() => {

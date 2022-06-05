@@ -19,6 +19,8 @@ export class SmoothScroll {
   y = 0;
   smoothY = this.y;
   scrollHeight = 0;
+  referenceFps = 60;
+  referenceFrameMs = 1000 / this.referenceFps;
 
   constructor(readonly container: HTMLElement, readonly content: HTMLElement) {
     this.appendCSS();
@@ -30,7 +32,12 @@ export class SmoothScroll {
   }
 
   updatePosition = (_: number, deltaTime: number) => {
-    this.smoothY = gsap.utils.interpolate(this.smoothY, window.scrollY, 0.2);
+    this.smoothY = gsap.utils.interpolate(
+      this.smoothY,
+      window.scrollY,
+      0.2 * (this.referenceFrameMs / deltaTime)
+    );
+
     for (const child of this.content.children) {
       if (!(child instanceof HTMLElement)) continue;
       gsap.set(child, { y: -this.smoothY });
