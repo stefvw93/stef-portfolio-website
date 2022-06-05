@@ -9,6 +9,7 @@ import typeface from "../assets/PP_Neue Montreal_Bold.json";
 import fragmentShader from "../shaders/text.frag.glsl";
 import vertexShader from "../shaders/text.vert.glsl";
 import gsap from "gsap";
+import { SmoothScroll } from "../../../utils/SmoothScroll";
 
 type TitleTextConfig = {
   main: string;
@@ -17,11 +18,15 @@ type TitleTextConfig = {
 };
 
 export class TitleText {
+  offsetY = 0;
+  y = 0;
   pointerPosition = new THREE.Vector2();
   group = new THREE.Group();
 
   baseUniformSpeed = new THREE.Vector2(0.15, 0.15);
   material = new THREE.ShaderMaterial({
+    depthWrite: false,
+    depthTest: false,
     transparent: true,
     vertexShader,
     fragmentShader,
@@ -61,18 +66,22 @@ export class TitleText {
     this.geometry = new THREE.PlaneGeometry(
       this.dimensions.width,
       this.dimensions.height,
-      160,
-      40
+      80,
+      20
     );
     this.mesh = this.createMesh();
     SubtitleText.create(this, this.texts.top, this.texts.bottom);
     experience.addTickListener(this.handleTick);
     experience.addResizeListener(this.handleResize);
 
-    window.addEventListener("pointermove", this.handlePointerMove);
+    window.addEventListener("mousemove", this.handleMouseMove);
+    window.addEventListener("touchmove", this.handleTouchMove);
+    window.addEventListener("touchstart", this.handleTouchStart);
     window.addEventListener("touchend", this.handleTouchEnd);
     experience.addDestroyListener(() => {
-      window.removeEventListener("pointermove", this.handlePointerMove);
+      window.removeEventListener("mousemove", this.handleMouseMove);
+      window.removeEventListener("touchmove", this.handleTouchMove);
+      window.removeEventListener("touchstart", this.handleTouchStart);
       window.removeEventListener("touchend", this.handleTouchEnd);
     });
 
@@ -106,7 +115,7 @@ export class TitleText {
     this.gui?.close();
   }
 
-  private handlePointerMove = (event: MouseEvent) => {
+  private handleMouseMove = (event: MouseEvent) => {
     this.pointerActive = true;
     this.pointerPosition.set(
       (event.clientX / window.innerWidth) * 2 - 1,
@@ -114,9 +123,24 @@ export class TitleText {
     );
   };
 
+  private handleTouchMove = (event: TouchEvent) => {
+    const touch = event.touches[0];
+    if (!touch) return;
+
+    this.pointerActive = true;
+
+    this.pointerPosition.set(
+      (touch.screenX / window.innerWidth) * 2 - 1,
+      -(touch.screenY / window.innerHeight) * 2 + 1
+    );
+  };
+
+  private handleTouchStart = () => {
+    this.pointerActive = true;
+  };
+
   private handleTouchEnd = () => {
     this.pointerActive = false;
-    console.log("touch end");
   };
 
   private handleResize = () => {};
@@ -125,6 +149,10 @@ export class TitleText {
     const progress = 0.1 * (this.experience.referenceFrameMs / deltaTime);
     const uniforms = this.material.uniforms;
     uniforms.uTime.value = this.experience.clock.getElapsedTime();
+    this.y = SmoothScroll.instance ? SmoothScroll.instance.y * 0.003 : this.y;
+
+    this.group.position.y = this.y + this.offsetY;
+    this.group.rotation.x = this.y * 0.5;
 
     if (!this.pointerActive) {
       return (uniforms.uDentSize.value = gsap.utils.interpolate(
@@ -134,6 +162,7 @@ export class TitleText {
       ));
     }
 
+    // console.log(this.pointerPosition);
     this.raycaster.setFromCamera(this.pointerPosition, this.experience.camera);
     const intersects = this.raycaster.intersectObjects(
       this.experience.scene.children

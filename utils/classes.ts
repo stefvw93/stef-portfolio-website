@@ -1,3 +1,3 @@
-export function join(...values: any[]) {
+export function classes(...values: any[]) {
   return values.filter(Boolean).join(" ");
 }

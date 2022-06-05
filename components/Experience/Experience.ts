@@ -6,7 +6,7 @@ import { getCssVar } from "../../utils/getCssVar";
 import { HeadsUpLayer } from "./objects/HeadsUpLayer";
 
 export class Experience {
-  debug = true;
+  debug = false;
   gui = this.debug ? new GUI() : null;
   guiFolder = this.gui?.addFolder("Scene");
 
@@ -146,6 +146,7 @@ export class Experience {
   };
 
   handleResize = () => {
+    if (this.size.width === window.innerWidth) return;
     this.size.width = window.innerWidth;
     this.size.height = window.innerHeight;
     this.setContainerSize();

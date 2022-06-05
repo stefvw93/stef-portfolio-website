@@ -22,15 +22,13 @@ html {
     BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans,
     Droid Sans, sans-serif;
   color: var(--color-eerie-black);
-  background: var(--color-eerie-black);
 }
 
 html,
 body {
-  background: var(--lemon-glacier);
+  background: var(--turquoise);
   padding: 0;
   margin: 0;
-  overscroll-behavior-y: none;
 }
 
 h1,
@@ -63,6 +61,19 @@ p {
   box-sizing: border-box;
 }
 
-.no-scroll {
-  overflow: hidden;
+.main {
+  padding-top: 100vh;
+  position: relative;
+}
+
+.hide-scroll-bar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar {
+    display: none;
+    -webkit-appearance: none;
+    width: 0;
+    height: 0;
+    background: transparent;
+  }
 }
