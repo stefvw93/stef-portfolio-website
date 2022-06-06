@@ -24,12 +24,12 @@ export class TitleText {
 
   baseUniformSpeed = new THREE.Vector2(0.15, 0.15);
   material = new THREE.ShaderMaterial({
+    // wireframe: true,
     depthWrite: false,
     depthTest: false,
     transparent: true,
     vertexShader,
     fragmentShader,
-    // wireframe: true,
     side: THREE.DoubleSide,
     uniforms: {
       uAlphaMap: {
@@ -65,8 +65,8 @@ export class TitleText {
     this.geometry = new THREE.PlaneGeometry(
       this.dimensions.width,
       this.dimensions.height,
-      80,
-      20
+      100,
+      25
     );
     this.mesh = this.createMesh();
     SubtitleText.create(this, this.texts.top, this.texts.bottom);

@@ -10,6 +10,7 @@ import { gqlClient } from "../graphql/gql-client";
 import { isClient } from "../utils/isClient";
 import { About } from "../components/About/About";
 import { Career } from "../components/Career/Career";
+import { Contact } from "../components/Contact/Contact";
 
 const Home: NextPage = ({
   posts,
@@ -26,9 +27,11 @@ const Home: NextPage = ({
               key={post.id}
               id={post.slug ?? undefined}
               title={post.title ?? undefined}
+              contentComponent={post.slug === "contact" ? "footer" : undefined}
             >
               {post.slug === "about" && <About post={post} />}
               {post.slug === "career" && <Career post={post} />}
+              {post.slug === "contact" && <Contact post={post} />}
             </Section>
           ))}
         </main>
