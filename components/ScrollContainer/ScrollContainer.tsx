@@ -16,11 +16,7 @@ export function ScrollContainer({ children }: ScrollContainerProps) {
       content.current!
     ));
 
-    console.log("mount");
-    return () => {
-      console.log("destroy");
-      destroy();
-    };
+    return destroy;
   }, []);
 
   return (

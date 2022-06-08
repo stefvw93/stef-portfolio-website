@@ -1,8 +1,12 @@
 export type SplitTextConfig = {
+  charSpanAttrs?: Record<string, string>;
   wordSpanAttrs?: Record<string, string>;
   lineSpanAttrs?: Record<string, string>;
   wrapLines?: boolean;
+  wrapChars?: boolean;
+  onComplete?(instance: SplitText): void;
 };
+
 class SplitText {
   static instances = new Map<HTMLElement, SplitText>();
 
@@ -11,6 +15,7 @@ class SplitText {
   }
 
   text?: string;
+  chars: HTMLSpanElement[] = [];
   words: HTMLSpanElement[] = [];
   lines: HTMLSpanElement[] = [];
 
@@ -18,7 +23,8 @@ class SplitText {
   private config: SplitTextConfig = {
     wordSpanAttrs: {},
     lineSpanAttrs: {},
-    wrapLines: true,
+    wrapLines: false,
+    wrapChars: false,
   };
 
   private resizeObserver = new ResizeObserver((entries) => {
@@ -55,17 +61,36 @@ class SplitText {
     this.resizeObserver.unobserve(this.element);
 
     {
+      this.chars = [];
       this.words = this.text.split(" ").map((word) => {
         const span = document.createElement("span");
-        Object.entries(this.config.wordSpanAttrs!).forEach(([k, v]) =>
+        Object.entries(this.config.wordSpanAttrs || {}).forEach(([k, v]) =>
           span.setAttribute(k, v)
         );
-        span.innerText = word + " ";
+
+        if (this.config.wrapChars) {
+          span.append(
+            ...word.split("").map((char) => {
+              const span = document.createElement("span");
+              Object.entries(this.config.charSpanAttrs || {}).forEach(
+                ([k, v]) => span.setAttribute(k, v)
+              );
+              span.innerText = char;
+              this.chars.push(span);
+              return span;
+            }),
+            " "
+          );
+        } else {
+          span.innerText = word + " ";
+        }
+
         return span;
       });
 
       fragment.append(...this.words);
       this.element.replaceChildren(fragment);
+      this.config.onComplete?.(this);
     }
 
     if (this.config.wrapLines) {

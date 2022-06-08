@@ -18,11 +18,17 @@ export class SmoothScroll {
     (event: any) => any
   ][] = [];
 
-  y = 0;
+  y = this.scrollY;
   smoothY = this.y;
   scrollHeight = 0;
   referenceFps = 60;
   referenceFrameMs = 1000 / this.referenceFps;
+
+  get scrollY() {
+    return this.scrollingElement instanceof Window
+      ? this.scrollingElement.scrollY
+      : this.scrollingElement.scrollTop;
+  }
 
   get scrollingElement() {
     return isTouchDevice() ? this.container : window;
@@ -36,6 +42,7 @@ export class SmoothScroll {
     this.prepareContainer();
     this.prepareContent();
     this.start();
+
     SmoothScroll.instance = this;
     document.documentElement.classList.add("hide-scroll-bar");
     window.addEventListener("resize", this.handleResize);
@@ -59,9 +66,10 @@ export class SmoothScroll {
     );
 
     if (isTouchDevice()) return;
+
     for (const child of this.content.children) {
       if (!(child instanceof HTMLElement)) continue;
-      gsap.set(child, { y: -this.smoothY });
+      gsap.set(child, { y: -this.smoothY, force3D: true });
     }
   };
 

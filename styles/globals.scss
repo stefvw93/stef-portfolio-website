@@ -81,6 +81,7 @@ p {
 .main {
   padding-top: 100vh;
   position: relative;
+  will-change: transform;
 }
 
 .hide-scroll-bar {

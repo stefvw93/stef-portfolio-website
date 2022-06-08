@@ -9,14 +9,14 @@ export type ExperienceProps = {};
 export const ExperienceComponent = (props: ExperienceProps) => {
   useEffect(() => {
     if (!isClient()) return;
-    const experience = new Experience("canvas.webgl");
+    const experience = new Experience();
     return experience.destroy;
   }, []);
 
   return (
     <div className={classes(styles.container, "experience")}>
-      <canvas className="webgl" />
-      <div className="css-webgl" />
+      <canvas className={classes(styles.canvas, "webgl background")} />
+      <canvas className={classes(styles.canvas, "webgl foreground")} />
     </div>
   );
 };

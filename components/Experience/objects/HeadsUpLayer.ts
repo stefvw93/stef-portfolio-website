@@ -10,6 +10,7 @@ export class HeadsUpLayer {
   text?: TitleText;
 
   material = new THREE.ShaderMaterial({
+    // wireframe: true,
     transparent: true,
     vertexShader,
     fragmentShader,
@@ -134,7 +135,7 @@ export class HeadsUpLayer {
     );
 
     const mesh = new THREE.Mesh(
-      new THREE.PlaneGeometry(
+      new THREE.PlaneBufferGeometry(
         backgroundDimensions.width,
         backgroundDimensions.height
       ),
@@ -142,7 +143,7 @@ export class HeadsUpLayer {
     );
 
     mesh.position.set(0, 0, backgroundZ);
-    this.experience.camera.add(mesh);
+    this.experience.backgroundCamera.add(mesh);
 
     return mesh;
   }

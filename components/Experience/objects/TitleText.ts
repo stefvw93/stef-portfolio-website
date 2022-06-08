@@ -62,7 +62,7 @@ export class TitleText {
     size: number
   ) {
     this.dimensions = new THREE.Vector2(size, size * 0.25);
-    this.geometry = new THREE.PlaneGeometry(
+    this.geometry = new THREE.PlaneBufferGeometry(
       this.dimensions.width,
       this.dimensions.height,
       100,
@@ -153,7 +153,23 @@ export class TitleText {
       ? SmoothScroll.instance.smoothY * 0.004
       : this.y;
 
-    this.group.position.y = this.y;
+    const newPosition = new THREE.Vector3().copy(this.group.position);
+    newPosition.y = this.y;
+
+    const frustum = new THREE.Frustum();
+
+    frustum.setFromProjectionMatrix(
+      new THREE.Matrix4().multiplyMatrices(
+        this.experience.camera.projectionMatrix,
+        this.experience.camera.matrixWorldInverse
+      )
+    );
+
+    const isVisible = frustum.containsPoint(newPosition);
+
+    if (!isVisible) return;
+
+    this.group.position.copy(newPosition);
     this.group.rotation.x = this.y * 0.5;
 
     if (!this.pointerActive) {
@@ -163,24 +179,19 @@ export class TitleText {
         progress
       ));
     }
-
     this.raycaster.setFromCamera(this.pointerPosition, this.experience.camera);
     const intersects = this.raycaster.intersectObjects(
       this.experience.scene.children
     );
-
     const uPointer: THREE.Vector2 = uniforms.uPointer.value;
     const uDentSize: { value: number } = uniforms.uDentSize;
-
     let intersectionPoint: THREE.Vector3 | undefined;
-
     for (let i = 0, l = intersects.length; i < l; i++) {
       if (intersects[i].object === this.mesh) {
         intersectionPoint = intersects[i].point;
         break;
       }
     }
-
     if (intersectionPoint) {
       uDentSize.value = gsap.utils.interpolate(uDentSize.value, 1, progress);
       uPointer.set(

@@ -15,10 +15,14 @@ export class Experience {
   clock = new THREE.Clock();
   center = new THREE.Vector3(0, 0, 0);
   canvas: HTMLCanvasElement;
+  backgroundCanvas: HTMLCanvasElement;
   renderer: THREE.WebGLRenderer;
+  backgroundRenderer: THREE.WebGLRenderer;
   scene: THREE.Scene;
-  camera: THREE.PerspectiveCamera;
+  backgroundScene: THREE.Scene;
   controls?: OrbitControls;
+  camera: THREE.PerspectiveCamera;
+  backgroundCamera: THREE.PerspectiveCamera;
   loadingManager = new THREE.LoadingManager();
   textureLoader = new THREE.TextureLoader(this.loadingManager);
   referenceFps = 60;
@@ -28,12 +32,23 @@ export class Experience {
   destroyListeners = new Set<() => any>();
   backgroundColor = 0xffffff;
 
-  constructor(query: string) {
+  get dpr() {
+    return Math.min(window.devicePixelRatio || 1, 2);
+  }
+
+  constructor() {
     this.container = document.querySelector(".experience")!;
-    this.canvas = document.querySelector(query)!;
-    this.renderer = this.createRenderer();
+    this.backgroundCanvas = document.querySelector("canvas.webgl.background")!;
+    this.canvas = document.querySelector("canvas.webgl.foreground")!;
+    this.renderer = this.createRenderer({ alpha: true });
+    this.backgroundRenderer = this.createRenderer({
+      dpr: 0.01,
+      canvas: this.backgroundCanvas,
+    });
     this.scene = this.createScene();
+    this.backgroundScene = this.createScene(true);
     this.camera = this.createCamera();
+    this.backgroundCamera = this.createCamera(this.backgroundScene);
     this.controls = this.createControls();
 
     this.gui?.close();
@@ -76,13 +91,13 @@ export class Experience {
     });
   }
 
-  createCamera() {
+  createCamera(scene = this.scene) {
     const center = new THREE.Vector3(0, 0, 0);
     const camera = new THREE.PerspectiveCamera(
       55,
       this.size.width / this.size.height,
       0.1,
-      100
+      20
     );
     camera.position.set(0, 0, 4.1);
     camera.lookAt(center);
@@ -98,50 +113,51 @@ export class Experience {
         .onChange(() => camera.lookAt(center));
     });
 
-    this.scene.add(camera);
+    scene.add(camera);
 
     return camera;
   }
 
-  createScene() {
+  createScene(hasBackground = false) {
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(this.backgroundColor);
-
-    this.guiFolder
-      ?.addColor({ int: this.backgroundColor }, "int")
-      .name("backgroundColor")
-      .onChange((value: number) => {
-        scene.fog?.color.set(value);
-        (scene.background as THREE.Color).set(value);
-      })
-      .name("scene background");
-
+    if (hasBackground) scene.background = new THREE.Color(this.backgroundColor);
     return scene;
   }
 
-  createRenderer() {
+  createRenderer({
+    alpha = false,
+    canvas = this.canvas,
+    dpr = this.dpr,
+    highPerformance = true,
+  }: {
+    alpha?: boolean;
+    canvas?: HTMLCanvasElement;
+    dpr?: number;
+    highPerformance?: boolean;
+  } = {}) {
     const renderer = new THREE.WebGLRenderer({
-      canvas: this.canvas,
-      antialias: true,
+      canvas,
+      alpha,
+      powerPreference: highPerformance ? "high-performance" : "default",
     });
 
     renderer.setSize(this.size.width, this.size.height);
-    renderer.setPixelRatio(window.devicePixelRatio || 1);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.setPixelRatio(dpr);
+
     return renderer;
   }
 
   createControls() {
+    if (!this.debug) return;
     const controls = new OrbitControls(this.camera, this.canvas);
     controls.enableDamping = true;
-    controls.enabled = this.debug;
     return controls;
   }
 
   tick = (time: number, deltaTime: number) => {
-    if (this.controls?.enabled) this.controls.update();
+    // if (this.controls?.enabled) this.controls.update();
     this.tickListeners.forEach((f) => f(time, deltaTime));
+    this.backgroundRenderer.render(this.backgroundScene, this.backgroundCamera);
     this.renderer.render(this.scene, this.camera);
   };
 
@@ -152,8 +168,12 @@ export class Experience {
     this.setContainerSize();
     this.camera.aspect = this.size.width / this.size.height;
     this.camera.updateProjectionMatrix();
+    this.backgroundCamera.aspect = this.size.width / this.size.height;
+    this.backgroundCamera.updateProjectionMatrix();
     this.renderer.setSize(this.size.width, this.size.height);
-    this.renderer.setPixelRatio(window.devicePixelRatio || 1);
+    this.renderer.setPixelRatio(this.dpr);
+    this.backgroundRenderer.setSize(this.size.width, this.size.height);
+    this.backgroundRenderer.setPixelRatio(this.dpr);
     this.resizeListeners.forEach((f) => f());
   };
 

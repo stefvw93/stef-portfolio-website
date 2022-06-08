@@ -7,3 +7,13 @@
     font-size: 1.5rem;
   }
 }
+
+.animateWord,
+.animateChar,
+.animateLine {
+  display: inline-block;
+  white-space: break-spaces;
+  backface-visibility: hidden;
+  will-change: transform, color;
+  transform-origin: left center;
+}

@@ -7,14 +7,16 @@ import { Section } from "../components/Section/Section";
 import { ScrollContainer } from "../components/ScrollContainer/ScrollContainer";
 import { Query, QueryPostArgs } from "../generated/graphql";
 import { gqlClient } from "../graphql/gql-client";
-import { isClient } from "../utils/isClient";
 import { About } from "../components/About/About";
 import { Career } from "../components/Career/Career";
 import { Contact } from "../components/Contact/Contact";
+import { useEffect } from "react";
 
 const Home: NextPage = ({
   posts,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
+  useEffect(() => {}, []);
+
   return (
     <>
       <MainHead />
