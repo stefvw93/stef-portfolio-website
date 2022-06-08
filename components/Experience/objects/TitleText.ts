@@ -65,8 +65,8 @@ export class TitleText {
     this.geometry = new THREE.PlaneBufferGeometry(
       this.dimensions.width,
       this.dimensions.height,
-      100,
-      25
+      256,
+      64
     );
     this.mesh = this.createMesh();
     SubtitleText.create(this, this.texts.top, this.texts.bottom);

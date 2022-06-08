@@ -84,10 +84,6 @@ export class Experience {
     gsap.set(this.container, {
       width: this.size.width,
       height: this.size.height,
-      // top: -parseInt(getCssVar("--safe-area-inset-top")),
-      // right: -parseInt(getCssVar("--safe-area-inset-right")),
-      // bottom: -parseInt(getCssVar("--safe-area-inset-bottom")),
-      // left: -parseInt(getCssVar("--safe-area-inset-left")),
     });
   }
 
