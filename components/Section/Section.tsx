@@ -1,5 +1,7 @@
 import { HTMLAttributes, PropsWithChildren, useEffect, useRef } from "react";
+import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import styles from "./Section.module.scss";
+import { SmoothScroll } from "../../utils/SmoothScroll";
 
 type SectionProps = {
   contentComponent?: keyof JSX.IntrinsicElements;
@@ -13,7 +15,12 @@ export function Section({
   const ref = useRef<HTMLDivElement>(null);
   const ContentNode = contentComponent;
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const scrollTrigger = ScrollTrigger.create({
+      trigger: ref.current!,
+    });
+    return () => scrollTrigger.kill();
+  }, []);
 
   return (
     <section ref={ref} className={styles.container} {...rest} title={undefined}>
