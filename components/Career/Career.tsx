@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { Experience, Post } from "../../generated/graphql";
 import {
   animateLine,
+  animateLines,
   animateLineStartValues,
 } from "../../utils/animations/text";
 import { classes } from "../../utils/classes";
@@ -63,7 +64,12 @@ function CareerItem({ year }: CareerItemProps) {
       skills: Array.from(
         container.current!.querySelectorAll(`p.${styles.jobSkills}`)
       ) as HTMLElement[],
+      rulers: Array.from(container.current!.querySelectorAll("hr")),
+      paragraphs: Array.from(container.current!.querySelectorAll("p")),
     };
+
+    gsap.set(elements.rulers, { width: "0%" });
+    gsap.set(elements.paragraphs, { left: -30, opacity: 0 });
 
     const splitText = {
       year: new SplitText(elements.year, {
@@ -77,26 +83,7 @@ function CareerItem({ year }: CareerItemProps) {
           new SplitText(company, {
             wrapChars: true,
             charSpanAttrs: { class: styles.animateChar },
-            onComplete({ chars }) {
-              gsap.set(chars, startValues.year);
-            },
-          })
-      ),
-      roles: elements.roles.map(
-        (role) =>
-          new SplitText(role, {
-            wrapChars: true,
-            charSpanAttrs: { class: styles.animateChar },
-            onComplete({ chars }) {
-              gsap.set(chars, startValues.year);
-            },
-          })
-      ),
-      skills: elements.skills.map(
-        (skill) =>
-          new SplitText(skill, {
-            wrapChars: true,
-            charSpanAttrs: { class: styles.animateChar },
+            wordSpanAttrs: { class: styles.animateWord },
             onComplete({ chars }) {
               gsap.set(chars, startValues.year);
             },
@@ -106,35 +93,48 @@ function CareerItem({ year }: CareerItemProps) {
 
     const scrollTriggers: ScrollTrigger[] = [];
 
-    // scrollTriggers.push(
-    //   ScrollTrigger.create({
-    //     once: true,
-    //     trigger: elements.year,
-    //     start: "top 75%",
-    //     onEnter() {
-    //       gsap.fromTo(
-    //         elements.year.querySelector("span"),
-    //         { opacity: 0, y: 30 },
-    //         { opacity: 1, y: 0, duration: 0.5, ease: Power1.easeInOut }
-    //       );
-    //     },
-    //   }),
+    scrollTriggers.push(
+      ScrollTrigger.create({
+        once: true,
+        trigger: container.current!,
+        start: "top 75%",
+        onEnter() {
+          const duration = 0.5;
+          const ease = Power1.easeInOut;
+          gsap.to(elements.rulers, {
+            width: "100%",
+            duration,
+            ease,
+          });
+          gsap.to(elements.paragraphs, {
+            left: 0,
+            opacity: 1,
+            duration,
+            ease,
+          });
+          gsap.fromTo(
+            elements.year.querySelector("span"),
+            { opacity: 0, top: 30 },
+            { opacity: 1, top: 0, duration, ease }
+          );
+        },
+      }),
 
-    //   ...elements.companies.map((trigger, index) =>
-    //     ScrollTrigger.create({
-    //       once: true,
-    //       trigger,
-    //       start: "top 75%",
-    //       onEnter() {
-    //         animateLine({
-    //           line: trigger.querySelectorAll("span"),
-    //           stagger: 0.1,
-    //           delay: 0.3 * index,
-    //         });
-    //       },
-    //     })
-    //   )
-    // );
+      ...elements.companies.map((trigger, index) =>
+        ScrollTrigger.create({
+          once: true,
+          trigger,
+          start: "top 75%",
+          onEnter() {
+            animateLines({
+              lines: trigger.querySelectorAll(`.${styles.animateWord}`),
+              stagger: 0.05,
+              delay: 0,
+            });
+          },
+        })
+      )
+    );
 
     return () => scrollTriggers.forEach((trigger) => trigger.kill());
   }, []);
@@ -142,7 +142,7 @@ function CareerItem({ year }: CareerItemProps) {
   return (
     <article ref={container}>
       <div className={classes(styles.yearSeparator, "year")}>
-        <footer>{year[0].year}</footer>
+        <footer className={styles.year}>{year[0].year}</footer>
         <hr />
       </div>
 

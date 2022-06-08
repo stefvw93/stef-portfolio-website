@@ -41,6 +41,7 @@
 .jobSkills {
   flex: 2;
   margin: 0;
+  position: relative;
 }
 
 .animateWord,
@@ -50,5 +51,11 @@
   white-space: break-spaces;
   backface-visibility: hidden;
   will-change: transform, color;
-  transform-origin: left center;
+  transform-origin: top left;
+}
+
+.year {
+  span {
+    position: relative;
+  }
 }

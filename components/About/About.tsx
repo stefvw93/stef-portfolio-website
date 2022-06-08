@@ -20,49 +20,48 @@ export function About({ post }: AboutProps) {
   const splitTexts = useRef<Map<HTMLParagraphElement, SplitText>>();
 
   useEffect(() => {
-    // if (!container.current) return;
-    // gsap.registerPlugin(ScrollTrigger);
-    // const paragraphs = Array.from(container.current.querySelectorAll("p"));
-    // /**
-    //  * Animation settings
-    //  */
-    // const duration = 0.5;
-    // const stagger = 0.01;
-    // splitTexts.current = new Map(
-    //   paragraphs.map((p) => [
-    //     p,
-    //     new SplitText(p, {
-    //       wrapLines: true,
-    //       wordSpanAttrs: { class: styles.animateWord },
-    //       lineSpanAttrs: { class: styles.animateLine },
-    //       onComplete({ words }) {
-    //         gsap.set(words, animateLineStartValues);
-    //       },
-    //     }),
-    //   ])
-    // );
-    // const scrollTriggers: ScrollTrigger[] = paragraphs.map((p) => {
-    //   return ScrollTrigger.create({
-    //     // markers: true,
-    //     trigger: p,
-    //     start: "top 75%",
-    //     once: true,
-    //     onEnter() {
-    //       console.log("enter");
-    //       const lines = splitTexts.current?.get(p)?.lines ?? [];
-    //       animateLines({ lines, duration, stagger });
-    //     },
-    //     onEnterBack() {
-    //       console.log("enter back");
-    //       const lines = splitTexts.current?.get(p)?.lines ?? [];
-    //       animateLines({ lines, duration, stagger });
-    //     },
-    //   });
-    // });
-    // console.log(SmoothScroll.instance?.scrollY, { scrollTriggers });
-    // return () => {
-    //   scrollTriggers.forEach((st) => st.kill());
-    // };
+    if (!container.current) return;
+    gsap.registerPlugin(ScrollTrigger);
+    const paragraphs = Array.from(container.current.querySelectorAll("p"));
+    /**
+     * Animation settings
+     */
+    const duration = 0.3;
+    const stagger = 0.1;
+    splitTexts.current = new Map(
+      paragraphs.map((p) => [
+        p,
+        new SplitText(p, {
+          wrapLines: true,
+          wordSpanAttrs: { class: styles.animateWord },
+          lineSpanAttrs: { class: styles.animateLine },
+          onComplete({ words }) {
+            gsap.set(words, animateLineStartValues);
+          },
+        }),
+      ])
+    );
+
+    const scrollTriggers: ScrollTrigger[] = paragraphs.map((p) => {
+      return ScrollTrigger.create({
+        // markers: true,
+        trigger: p,
+        start: "top 75%",
+        once: true,
+        onEnter() {
+          const lines = splitTexts.current?.get(p)?.lines ?? [];
+          animateLines({ lines, duration, stagger });
+        },
+        onEnterBack() {
+          const lines = splitTexts.current?.get(p)?.lines ?? [];
+          animateLines({ lines, duration, stagger });
+        },
+      });
+    });
+
+    return () => {
+      scrollTriggers.forEach((st) => st.kill());
+    };
   }, []);
 
   return (

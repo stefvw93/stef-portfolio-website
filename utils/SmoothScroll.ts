@@ -62,7 +62,7 @@ export class SmoothScroll {
     this.smoothY = gsap.utils.interpolate(
       this.smoothY,
       isTouchDevice() ? this.container.scrollTop : window.scrollY,
-      0.2 * (deltaTime / this.referenceFrameMs)
+      0.25 * (deltaTime / this.referenceFrameMs)
     );
 
     if (isTouchDevice()) return;

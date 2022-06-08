@@ -156,19 +156,6 @@ export class TitleText {
     const newPosition = new THREE.Vector3().copy(this.group.position);
     newPosition.y = this.y;
 
-    const frustum = new THREE.Frustum();
-
-    frustum.setFromProjectionMatrix(
-      new THREE.Matrix4().multiplyMatrices(
-        this.experience.camera.projectionMatrix,
-        this.experience.camera.matrixWorldInverse
-      )
-    );
-
-    const isVisible = frustum.containsPoint(newPosition);
-
-    if (!isVisible) return;
-
     this.group.position.copy(newPosition);
     this.group.rotation.x = this.y * 0.5;
 

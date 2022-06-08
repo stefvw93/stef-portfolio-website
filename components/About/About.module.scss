@@ -14,6 +14,6 @@
   display: inline-block;
   white-space: break-spaces;
   backface-visibility: hidden;
-  will-change: transform, color;
-  transform-origin: left center;
+  will-change: transform;
+  transform-origin: bottom left;
 }
