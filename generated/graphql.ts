@@ -22,10 +22,67 @@ export type CreateInitialUserInput = {
   password?: InputMaybe<Scalars['String']>;
 };
 
+export type Employer = {
+  __typename?: 'Employer';
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+  url?: Maybe<Scalars['String']>;
+};
+
+export type EmployerCreateInput = {
+  description?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  url?: InputMaybe<Scalars['String']>;
+};
+
+export type EmployerOrderByInput = {
+  description?: InputMaybe<OrderDirection>;
+  id?: InputMaybe<OrderDirection>;
+  name?: InputMaybe<OrderDirection>;
+  url?: InputMaybe<OrderDirection>;
+};
+
+export type EmployerRelateToOneForCreateInput = {
+  connect?: InputMaybe<EmployerWhereUniqueInput>;
+  create?: InputMaybe<EmployerCreateInput>;
+};
+
+export type EmployerRelateToOneForUpdateInput = {
+  connect?: InputMaybe<EmployerWhereUniqueInput>;
+  create?: InputMaybe<EmployerCreateInput>;
+  disconnect?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type EmployerUpdateArgs = {
+  data: EmployerUpdateInput;
+  where: EmployerWhereUniqueInput;
+};
+
+export type EmployerUpdateInput = {
+  description?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  url?: InputMaybe<Scalars['String']>;
+};
+
+export type EmployerWhereInput = {
+  AND?: InputMaybe<Array<EmployerWhereInput>>;
+  NOT?: InputMaybe<Array<EmployerWhereInput>>;
+  OR?: InputMaybe<Array<EmployerWhereInput>>;
+  description?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IdFilter>;
+  name?: InputMaybe<StringFilter>;
+  url?: InputMaybe<StringFilter>;
+};
+
+export type EmployerWhereUniqueInput = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
 export type Experience = {
   __typename?: 'Experience';
-  company?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
+  employer?: Maybe<Employer>;
   id: Scalars['ID'];
   role?: Maybe<Scalars['String']>;
   skills?: Maybe<Array<Skill>>;
@@ -47,7 +104,7 @@ export type ExperienceSkillsCountArgs = {
 };
 
 export type ExperienceCreateInput = {
-  company?: InputMaybe<Scalars['String']>;
+  employer?: InputMaybe<EmployerRelateToOneForCreateInput>;
   role?: InputMaybe<Scalars['String']>;
   skills?: InputMaybe<SkillRelateToManyForCreateInput>;
   year?: InputMaybe<Scalars['Int']>;
@@ -60,7 +117,6 @@ export type ExperienceManyRelationFilter = {
 };
 
 export type ExperienceOrderByInput = {
-  company?: InputMaybe<OrderDirection>;
   id?: InputMaybe<OrderDirection>;
   role?: InputMaybe<OrderDirection>;
   year?: InputMaybe<OrderDirection>;
@@ -84,7 +140,7 @@ export type ExperienceUpdateArgs = {
 };
 
 export type ExperienceUpdateInput = {
-  company?: InputMaybe<Scalars['String']>;
+  employer?: InputMaybe<EmployerRelateToOneForUpdateInput>;
   role?: InputMaybe<Scalars['String']>;
   skills?: InputMaybe<SkillRelateToManyForUpdateInput>;
   year?: InputMaybe<Scalars['Int']>;
@@ -94,7 +150,7 @@ export type ExperienceWhereInput = {
   AND?: InputMaybe<Array<ExperienceWhereInput>>;
   NOT?: InputMaybe<Array<ExperienceWhereInput>>;
   OR?: InputMaybe<Array<ExperienceWhereInput>>;
-  company?: InputMaybe<StringFilter>;
+  employer?: InputMaybe<EmployerWhereInput>;
   id?: InputMaybe<IdFilter>;
   role?: InputMaybe<StringFilter>;
   skills?: InputMaybe<SkillManyRelationFilter>;
@@ -230,6 +286,8 @@ export type KeystoneMeta = {
 export type Mutation = {
   __typename?: 'Mutation';
   authenticateUserWithPassword?: Maybe<UserAuthenticationWithPasswordResult>;
+  createEmployer?: Maybe<Employer>;
+  createEmployers?: Maybe<Array<Maybe<Employer>>>;
   createExperience?: Maybe<Experience>;
   createExperiences?: Maybe<Array<Maybe<Experience>>>;
   createInitialUser: UserAuthenticationWithPasswordSuccess;
@@ -241,6 +299,8 @@ export type Mutation = {
   createSkills?: Maybe<Array<Maybe<Skill>>>;
   createUser?: Maybe<User>;
   createUsers?: Maybe<Array<Maybe<User>>>;
+  deleteEmployer?: Maybe<Employer>;
+  deleteEmployers?: Maybe<Array<Maybe<Employer>>>;
   deleteExperience?: Maybe<Experience>;
   deleteExperiences?: Maybe<Array<Maybe<Experience>>>;
   deletePost?: Maybe<Post>;
@@ -252,6 +312,8 @@ export type Mutation = {
   deleteUser?: Maybe<User>;
   deleteUsers?: Maybe<Array<Maybe<User>>>;
   endSession: Scalars['Boolean'];
+  updateEmployer?: Maybe<Employer>;
+  updateEmployers?: Maybe<Array<Maybe<Employer>>>;
   updateExperience?: Maybe<Experience>;
   updateExperiences?: Maybe<Array<Maybe<Experience>>>;
   updatePost?: Maybe<Post>;
@@ -268,6 +330,16 @@ export type Mutation = {
 export type MutationAuthenticateUserWithPasswordArgs = {
   email: Scalars['String'];
   password: Scalars['String'];
+};
+
+
+export type MutationCreateEmployerArgs = {
+  data: EmployerCreateInput;
+};
+
+
+export type MutationCreateEmployersArgs = {
+  data: Array<EmployerCreateInput>;
 };
 
 
@@ -326,6 +398,16 @@ export type MutationCreateUsersArgs = {
 };
 
 
+export type MutationDeleteEmployerArgs = {
+  where: EmployerWhereUniqueInput;
+};
+
+
+export type MutationDeleteEmployersArgs = {
+  where: Array<EmployerWhereUniqueInput>;
+};
+
+
 export type MutationDeleteExperienceArgs = {
   where: ExperienceWhereUniqueInput;
 };
@@ -373,6 +455,17 @@ export type MutationDeleteUserArgs = {
 
 export type MutationDeleteUsersArgs = {
   where: Array<UserWhereUniqueInput>;
+};
+
+
+export type MutationUpdateEmployerArgs = {
+  data: EmployerUpdateInput;
+  where: EmployerWhereUniqueInput;
+};
+
+
+export type MutationUpdateEmployersArgs = {
+  data: Array<EmployerUpdateArgs>;
 };
 
 
@@ -516,6 +609,9 @@ export type Post_Content_DocumentDocumentArgs = {
 export type Query = {
   __typename?: 'Query';
   authenticatedItem?: Maybe<AuthenticatedItem>;
+  employer?: Maybe<Employer>;
+  employers?: Maybe<Array<Employer>>;
+  employersCount?: Maybe<Scalars['Int']>;
   experience?: Maybe<Experience>;
   experiences?: Maybe<Array<Experience>>;
   experiencesCount?: Maybe<Scalars['Int']>;
@@ -532,6 +628,24 @@ export type Query = {
   user?: Maybe<User>;
   users?: Maybe<Array<User>>;
   usersCount?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryEmployerArgs = {
+  where: EmployerWhereUniqueInput;
+};
+
+
+export type QueryEmployersArgs = {
+  orderBy?: Array<EmployerOrderByInput>;
+  skip?: Scalars['Int'];
+  take?: InputMaybe<Scalars['Int']>;
+  where?: EmployerWhereInput;
+};
+
+
+export type QueryEmployersCountArgs = {
+  where?: EmployerWhereInput;
 };
 
 
@@ -845,10 +959,10 @@ export default {
       },
       {
         "kind": "OBJECT",
-        "name": "Experience",
+        "name": "Employer",
         "fields": [
           {
-            "name": "company",
+            "name": "description",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
@@ -856,10 +970,53 @@ export default {
             "args": []
           },
           {
+            "name": "id",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "name",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "url",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Experience",
+        "fields": [
+          {
             "name": "description",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "employer",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Employer",
+              "ofType": null
             },
             "args": []
           },
@@ -1490,6 +1647,55 @@ export default {
             ]
           },
           {
+            "name": "createEmployer",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Employer",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "data",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "createEmployers",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "Employer",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "data",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "createExperience",
             "type": {
               "kind": "OBJECT",
@@ -1741,6 +1947,55 @@ export default {
             "args": [
               {
                 "name": "data",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "deleteEmployer",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Employer",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "where",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "deleteEmployers",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "Employer",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "where",
                 "type": {
                   "kind": "NON_NULL",
                   "ofType": {
@@ -2012,6 +2267,65 @@ export default {
               }
             },
             "args": []
+          },
+          {
+            "name": "updateEmployer",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Employer",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "data",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              },
+              {
+                "name": "where",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "updateEmployers",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "Employer",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "data",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
           },
           {
             "name": "updateExperience",
@@ -2422,6 +2736,104 @@ export default {
               "ofType": null
             },
             "args": []
+          },
+          {
+            "name": "employer",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Employer",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "where",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "employers",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "Employer",
+                  "ofType": null
+                }
+              }
+            },
+            "args": [
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "name": "skip",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              },
+              {
+                "name": "take",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "where",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "employersCount",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": [
+              {
+                "name": "where",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
           },
           {
             "name": "experience",

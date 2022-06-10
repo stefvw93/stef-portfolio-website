@@ -2,6 +2,7 @@ import gsap, { Power1 } from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { useEffect, useMemo, useRef } from "react";
 import { Experience, Post } from "../../generated/graphql";
+import { slideUp } from "../../utils/animations/slideIn";
 import {
   animateLine,
   animateLines,
@@ -32,8 +33,6 @@ export function Career({ post }: CareerProps) {
     }, [] as Experience[][]);
   }, [post.resume]);
 
-  console.log(content);
-
   return (
     <section className={styles.container}>
       {content?.map((year) => (
@@ -50,93 +49,6 @@ function CareerItem({ year }: CareerItemProps) {
 
   useEffect(() => {
     if (!container.current) return;
-
-    const startValues = {
-      year: animateLineStartValues,
-    };
-
-    const elements = {
-      year: container.current!.querySelector("footer") as HTMLElement,
-      companies: Array.from(container.current!.querySelectorAll("header")),
-      roles: Array.from(
-        container.current!.querySelectorAll(`p.${styles.jobRole}`)
-      ) as HTMLElement[],
-      skills: Array.from(
-        container.current!.querySelectorAll(`p.${styles.jobSkills}`)
-      ) as HTMLElement[],
-      rulers: Array.from(container.current!.querySelectorAll("hr")),
-      paragraphs: Array.from(container.current!.querySelectorAll("p")),
-    };
-
-    gsap.set(elements.rulers, { width: "0%" });
-    gsap.set(elements.paragraphs, { left: -30, opacity: 0 });
-
-    const splitText = {
-      year: new SplitText(elements.year, {
-        wordSpanAttrs: { class: styles.animateWord },
-        onComplete({ words }) {
-          gsap.set(words, { opacity: 0 });
-        },
-      }),
-      companies: elements.companies.map(
-        (company) =>
-          new SplitText(company, {
-            wrapChars: true,
-            charSpanAttrs: { class: styles.animateChar },
-            wordSpanAttrs: { class: styles.animateWord },
-            onComplete({ chars }) {
-              gsap.set(chars, startValues.year);
-            },
-          })
-      ),
-    };
-
-    const scrollTriggers: ScrollTrigger[] = [];
-
-    scrollTriggers.push(
-      ScrollTrigger.create({
-        once: true,
-        trigger: container.current!,
-        start: "top 75%",
-        onEnter() {
-          const duration = 0.5;
-          const ease = Power1.easeInOut;
-          gsap.to(elements.rulers, {
-            width: "100%",
-            duration,
-            ease,
-          });
-          gsap.to(elements.paragraphs, {
-            left: 0,
-            opacity: 1,
-            duration,
-            ease,
-          });
-          gsap.fromTo(
-            elements.year.querySelector("span"),
-            { opacity: 0, top: 30 },
-            { opacity: 1, top: 0, duration, ease }
-          );
-        },
-      }),
-
-      ...elements.companies.map((trigger, index) =>
-        ScrollTrigger.create({
-          once: true,
-          trigger,
-          start: "top 75%",
-          onEnter() {
-            animateLines({
-              lines: trigger.querySelectorAll(`.${styles.animateWord}`),
-              stagger: 0.05,
-              delay: 0,
-            });
-          },
-        })
-      )
-    );
-
-    return () => scrollTriggers.forEach((trigger) => trigger.kill());
   }, []);
 
   return (
@@ -147,17 +59,70 @@ function CareerItem({ year }: CareerItemProps) {
       </div>
 
       {year.map((experience) => (
-        <div key={experience.id} className={styles.job}>
-          <div className={styles.jobInfo}>
-            <header>{experience.company}</header>
-            <p className={styles.jobRole}>{experience.role}</p>
-            <p className={styles.jobSkills}>
-              {experience.skills?.map((skill) => skill.name).join(" / ")}
-            </p>
-          </div>
-          <hr />
-        </div>
+        <CareerExperience key={experience.id} experience={experience} />
       ))}
     </article>
+  );
+}
+
+function CareerExperience({ experience }: { experience: Experience }) {
+  const container = useRef<HTMLDivElement>(null);
+
+  const animationMap = useRef<
+    WeakMap<
+      HTMLElement,
+      { animations?: gsap.core.Animation[]; splitText?: SplitText }
+    >
+  >(new WeakMap());
+
+  useEffect(() => {
+    if (!container.current) return;
+
+    const header = container.current.querySelector("h2")!;
+
+    animationMap.current.set(header, {
+      splitText: new SplitText(header, {
+        wrapChars: true,
+        charSpanAttrs: { class: styles.animateChar },
+        onComplete({ element, chars }) {
+          const obj = animationMap.current.get(element);
+          if (!obj) return;
+          obj.animations = [slideUp(chars, { duration: 0.8, stagger: 0.06 })];
+        },
+      }),
+    });
+
+    const scrollTrigger = ScrollTrigger.create({
+      markers: true,
+      trigger: container.current,
+      once: true,
+      start: "top 75%",
+      onEnter() {
+        animationMap.current.get(header)?.animations?.forEach((a) => a.play());
+      },
+    });
+
+    return () => scrollTrigger.kill();
+  }, []);
+
+  return (
+    <div ref={container} className={styles.job}>
+      <div className={styles.jobInfo}>
+        <header>
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href={experience.employer?.url ?? undefined}
+          >
+            <h2>{experience.employer?.name}</h2>
+          </a>
+        </header>
+        <p className={styles.jobRole}>{experience.role}</p>
+        <p className={styles.jobSkills}>
+          {experience.skills?.map((skill) => skill.name).join(" / ")}
+        </p>
+      </div>
+      <hr />
+    </div>
   );
 }

@@ -25,7 +25,7 @@ export function Section({
   return (
     <section ref={ref} className={styles.container} {...rest} title={undefined}>
       <header>
-        <h2 className={styles.title}>{rest.title}</h2>
+        <h1 className={styles.title}>{rest.title}</h1>
       </header>
       <ContentNode className={styles.content}>{children}</ContentNode>
     </section>

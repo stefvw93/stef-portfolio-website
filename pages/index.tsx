@@ -11,12 +11,23 @@ import { About } from "../components/About/About";
 import { Career } from "../components/Career/Career";
 import { Contact } from "../components/Contact/Contact";
 import { useEffect } from "react";
+import { slideUp } from "../utils/animations/slideIn";
 
 const Home: NextPage = ({
   posts,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  useEffect(() => {}, []);
+  // useEffect(() => {
+  //   const tween = slideUp(".box");
+  //   tween.play();
+  //   return () => void tween.kill();
+  // }, []);
 
+  // return (
+  //   <div
+  //     className="box"
+  //     style={{ width: 100, height: 100, margin: 500, background: "green" }}
+  //   ></div>
+  // );
   return (
     <>
       <MainHead />
@@ -63,7 +74,11 @@ export async function getStaticProps() {
               experiences {
                 id
                 year
-                company
+                employer {
+                  name
+                  url
+                  description
+                }
                 role
                 skills {
                   id

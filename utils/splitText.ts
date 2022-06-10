@@ -41,7 +41,10 @@ class SplitText {
     }
   });
 
-  constructor(private element: HTMLElement, config: SplitTextConfig = {}) {
+  constructor(
+    public readonly element: HTMLElement,
+    config: SplitTextConfig = {}
+  ) {
     if (SplitText.instances.has(element)) {
       return SplitText.instances.get(element)!;
     }
@@ -90,7 +93,6 @@ class SplitText {
 
       fragment.append(...this.words);
       this.element.replaceChildren(fragment);
-      this.config.onComplete?.(this);
     }
 
     if (this.config.wrapLines) {
@@ -118,6 +120,7 @@ class SplitText {
       this.element.replaceChildren(fragment);
     }
 
+    requestAnimationFrame(() => this.config.onComplete?.(this));
     this.resizeObserver.observe(this.element.parentElement || document.body);
   }
 

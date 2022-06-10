@@ -34,6 +34,10 @@
     font-size: 1.5rem;
     font-family: "PP Neue Montreal Medium";
     flex: 3;
+
+    * {
+      margin: 0;
+    }
   }
 }
 
@@ -49,9 +53,6 @@
 .animateLine {
   display: inline-block;
   white-space: break-spaces;
-  backface-visibility: hidden;
-  will-change: transform, color;
-  transform-origin: top left;
 }
 
 .year {
