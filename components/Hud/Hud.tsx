@@ -29,7 +29,7 @@ export function Hud({ links }: HudProps) {
   return (
     <>
       <nav className={classes(styles.navigation, styles.top)}>
-        <div>Stef van Wijchen</div>
+        <h1 className={styles.myName}>Stef van Wijchen</h1>
         <div className={styles.links}>
           {links?.map((link) => (
             <a
@@ -44,7 +44,7 @@ export function Hud({ links }: HudProps) {
       </nav>
 
       <nav className={classes(styles.navigation, styles.bottom)}>
-        <div>2022</div>
+        <div>Portfolio {new Date().getFullYear()}</div>
       </nav>
 
       <ScrollBar />

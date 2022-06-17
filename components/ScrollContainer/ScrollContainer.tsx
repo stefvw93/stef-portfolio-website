@@ -1,4 +1,6 @@
 import { PropsWithChildren, useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { classes } from "../../utils/classes";
 import { SmoothScroll } from "../../utils/SmoothScroll";
 import styles from "./ScrollContainer.module.scss";
@@ -11,6 +13,7 @@ export function ScrollContainer({ children }: ScrollContainerProps) {
   const smoothScroll = useRef<SmoothScroll>();
 
   useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
     const { destroy } = (smoothScroll.current = new SmoothScroll(
       container.current!,
       content.current!

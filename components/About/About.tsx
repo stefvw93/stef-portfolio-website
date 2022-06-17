@@ -30,20 +30,19 @@ export function About({ post }: AboutProps) {
   >(new WeakMap());
 
   useEffect(() => {
-    if (!container.current) return;
     gsap.registerPlugin(ScrollTrigger);
+    if (!container.current) return;
+
     const paragraphs = Array.from(container.current.querySelectorAll("p"));
 
     paragraphs.forEach((p) => {
-      if (animationMap.current?.get(p)) return;
-
-      const splitText = new SplitText(p, {
+      new SplitText(p, {
         wrapLines: true,
         wordSpanAttrs: { class: styles.animateWord },
-        onComplete({ element, lines }) {
-          const animationObject = animationMap.current?.get(element);
-          if (!animationObject) return;
-          animationObject.animations = lines.map((line, index) => {
+        onComplete(instance) {
+          const { element, lines } = instance;
+
+          const animations = lines.map((line, index) => {
             const words = line.querySelectorAll(`.${styles.animateWord}`);
             return slideUp(words, {
               duration: 1,
@@ -51,31 +50,35 @@ export function About({ post }: AboutProps) {
               delay: 0.1 * index,
             });
           });
+
+          animationMap.current.set(element, {
+            splitText: instance,
+            animations,
+            scrollTrigger: ScrollTrigger.create({
+              markers: true,
+              scroller: SmoothScroll.instance?.scrollingElement,
+              trigger: p,
+              start: "top 75%",
+              once: true,
+              onEnter() {
+                animations?.forEach((a) => a.play());
+              },
+              onEnterBack() {
+                animations?.forEach((a) => a.play());
+              },
+            }),
+          });
         },
-      });
-
-      requestAnimationFrame(() => {
-        const scrollTrigger = ScrollTrigger.create({
-          markers: true,
-          scroller: SmoothScroll.instance?.scrollingElement,
-          trigger: p,
-          start: "top 75%",
-          once: true,
-          onEnter() {
-            animationMap.current?.get(p)?.animations?.forEach((a) => a.play());
-          },
-          onEnterBack() {
-            animationMap.current?.get(p)?.animations?.forEach((a) => a.play());
-          },
-        });
-
-        animationMap.current!.set(p, { splitText, scrollTrigger });
       });
     });
 
-    // return () => {
-    //   scrollTriggers.forEach((st) => st.kill());
-    // };
+    return () => {
+      paragraphs.forEach((p) => {
+        const obj = animationMap.current?.get(p);
+        obj?.scrollTrigger?.kill();
+        obj?.splitText?.destroy();
+      });
+    };
   }, []);
 
   return (

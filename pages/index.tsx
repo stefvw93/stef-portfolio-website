@@ -11,7 +11,6 @@ import { About } from "../components/About/About";
 import { Career } from "../components/Career/Career";
 import { Contact } from "../components/Contact/Contact";
 import { useEffect } from "react";
-import { slideUp } from "../utils/animations/slideIn";
 import { PointerChaser } from "../utils/PointerChaser";
 
 const Home: NextPage = ({

@@ -34,7 +34,7 @@ export class TitleText {
     uniforms: {
       uAlphaMap: {
         value: this.experience.textureLoader.load(
-          "/text-alpha-map-arlen-2048x512.png"
+          "images/text-alpha-map-arlen-2048x512.png"
         ),
       },
       uDentSize: { value: 0 },

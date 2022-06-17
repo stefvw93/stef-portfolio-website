@@ -8,6 +8,16 @@
   justify-content: space-between;
 }
 
+.myName {
+  font-size: 1rem;
+  font-weight: 400;
+  margin: 0;
+
+  @media (max-width: 1240px) {
+    display: none;
+  }
+}
+
 .navigation {
   position: fixed;
   width: 100%;
@@ -15,18 +25,35 @@
   justify-content: space-between;
   padding: 2rem;
 
+  @media (max-width: 1240px) {
+    padding: 1rem;
+  }
+
   &.bottom {
     bottom: 0;
+    @media (max-width: 1240px) {
+      bottom: unset;
+      top: 0;
+    }
   }
 
   &.top {
     top: 0;
+    @media (max-width: 1240px) {
+      top: unset;
+      bottom: 0;
+    }
   }
 }
 
 .links {
   display: flex;
   gap: 1rem;
+
+  @media (max-width: 1240px) {
+    flex: 1;
+    justify-content: space-around;
+  }
 }
 
 .scrollBarContainer {

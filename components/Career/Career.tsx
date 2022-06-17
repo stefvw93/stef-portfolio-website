@@ -3,11 +3,6 @@ import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { useEffect, useMemo, useRef } from "react";
 import { Experience, Post, Skill } from "../../generated/graphql";
 import { slideUp } from "../../utils/animations/slideIn";
-import {
-  animateLine,
-  animateLines,
-  animateLineStartValues,
-} from "../../utils/animations/text";
 import { classes } from "../../utils/classes";
 import { SmoothScroll } from "../../utils/SmoothScroll";
 import { SplitText } from "../../utils/splitText";

@@ -1,6 +1,13 @@
 .container {
   padding: 2rem 6rem;
 
+  @media (max-width: 1240px) {
+    padding-left: 0;
+    padding-right: 0;
+    max-width: 800px;
+    margin-inline: auto;
+  }
+
   hr {
     width: 100%;
     border-style: solid;
@@ -16,11 +23,19 @@
   hr {
     border-color: var(--winter-sky);
   }
+
+  @media (max-width: 1240px) {
+    margin-top: 3rem;
+  }
 }
 
 .job {
   padding-left: 20%;
   margin-block: 1.5rem;
+
+  @media (max-width: 1240px) {
+    padding-left: 0;
+  }
 
   hr {
     margin-block: 1.5rem;
@@ -31,6 +46,12 @@
 .jobInfo {
   display: flex;
   gap: 1rem;
+
+  @media (max-width: 1240px) {
+    display: grid;
+    grid-auto-rows: max-content;
+  }
+
   header {
     font-size: 1.5rem;
     font-family: "PP Neue Montreal Medium";
@@ -47,6 +68,12 @@
   flex: 2;
   margin: 0;
   position: relative;
+}
+
+.jobSkills {
+  @media (max-width: 1240px) {
+    font-size: 0.8rem;
+  }
 }
 
 .animateWord,
