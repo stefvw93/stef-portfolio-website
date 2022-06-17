@@ -1,7 +1,7 @@
 import gsap, { Power1 } from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { useEffect, useMemo, useRef } from "react";
-import { Experience, Post } from "../../generated/graphql";
+import { Experience, Post, Skill } from "../../generated/graphql";
 import { slideUp } from "../../utils/animations/slideIn";
 import {
   animateLine,
@@ -78,7 +78,7 @@ function CareerExperience({ experience }: { experience: Experience }) {
   useEffect(() => {
     if (!container.current) return;
 
-    const header = container.current.querySelector("h2")!;
+    const header = container.current.querySelector("h2 > a") as HTMLElement;
 
     animationMap.current.set(header, {
       splitText: new SplitText(header, {
@@ -109,20 +109,68 @@ function CareerExperience({ experience }: { experience: Experience }) {
     <div ref={container} className={styles.job}>
       <div className={styles.jobInfo}>
         <header>
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href={experience.employer?.url ?? undefined}
-          >
-            <h2>{experience.employer?.name}</h2>
-          </a>
+          <h2>
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href={experience.employer?.url ?? undefined}
+            >
+              {experience.employer?.name}
+            </a>
+          </h2>
         </header>
         <p className={styles.jobRole}>{experience.role}</p>
         <p className={styles.jobSkills}>
-          {experience.skills?.map((skill) => skill.name).join(" / ")}
+          {experience.skills?.map((skill, index, arr) => {
+            const last = index === arr.length - 1;
+            return (
+              <span key={skill.id}>
+                <Skill {...skill} />
+                {!last && " / "}
+              </span>
+            );
+          })}
         </p>
       </div>
       <hr />
     </div>
+  );
+}
+
+function Skill({ id, name }: Skill) {
+  const element = useRef<HTMLSpanElement>(null);
+  const className = `skill-${id}`;
+
+  useEffect(() => {
+    const span = element.current;
+    if (!span) return;
+
+    const related = document.getElementsByClassName(className);
+
+    const handleMouseEnter = (event: MouseEvent) => {
+      for (const el of related) {
+        el.classList.add(styles.active);
+      }
+    };
+
+    const handleMouseLeave = (event: MouseEvent) => {
+      for (const el of related) {
+        el.classList.remove(styles.active);
+      }
+    };
+
+    span.addEventListener("mouseenter", handleMouseEnter);
+    span.addEventListener("mouseleave", handleMouseLeave);
+
+    return () => {
+      span.removeEventListener("mouseenter", handleMouseEnter);
+      span.removeEventListener("mouseleave", handleMouseLeave);
+    };
+  }, [className]);
+
+  return (
+    <span ref={element} className={classes(className, styles.skill)}>
+      {name}{" "}
+    </span>
   );
 }

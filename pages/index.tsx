@@ -12,22 +12,17 @@ import { Career } from "../components/Career/Career";
 import { Contact } from "../components/Contact/Contact";
 import { useEffect } from "react";
 import { slideUp } from "../utils/animations/slideIn";
+import { PointerChaser } from "../utils/PointerChaser";
 
 const Home: NextPage = ({
   posts,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  // useEffect(() => {
-  //   const tween = slideUp(".box");
-  //   tween.play();
-  //   return () => void tween.kill();
-  // }, []);
-
-  // return (
-  //   <div
-  //     className="box"
-  //     style={{ width: 100, height: 100, margin: 500, background: "green" }}
-  //   ></div>
-  // );
+  useEffect(() => {
+    const foo = new PointerChaser(["a"], {
+      container: document.querySelector(".scroll-container") as HTMLElement,
+    });
+    return () => foo.destroy();
+  }, []);
   return (
     <>
       <MainHead />
