@@ -93,7 +93,6 @@ function CareerExperience({ experience }: { experience: Experience }) {
     });
 
     const scrollTrigger = ScrollTrigger.create({
-      markers: true,
       trigger: container.current,
       once: true,
       start: "top 75%",

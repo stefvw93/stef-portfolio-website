@@ -56,7 +56,6 @@ export function About({ post }: AboutProps) {
       });
 
       const scrollTrigger = new ScrollTrigger({
-        markers: true,
         trigger: p,
         start: "top 75%",
         once: true,
