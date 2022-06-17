@@ -56,7 +56,7 @@ export class PointerChaser {
   };
 
   handleTick = (_: number, deltaTime: number) => {
-    const progress = 0.2 * (deltaTime / this.referenceFrameMs);
+    const progress = 0.1 * (deltaTime / this.referenceFrameMs);
     this.chaserX = gsap.utils.interpolate(
       this.chaserX,
       this.pointerX,

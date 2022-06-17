@@ -20,17 +20,20 @@ export function Career({ post }: CareerProps) {
   const content = useMemo(() => {
     if (!post.resume?.experiences) return;
 
-    return post.resume.experiences.reduce((acc, experience) => {
-      const previous = acc[acc.length - 1]?.[0];
+    return post.resume.experiences
+      .slice()
+      .sort((a, b) => (b.year ?? 0) - (a.year ?? 0))
+      .reduce((acc, experience) => {
+        const previous = acc[acc.length - 1]?.[0];
 
-      if (!previous || previous.year !== experience.year) {
-        acc.push([experience]);
+        if (!previous || previous.year !== experience.year) {
+          acc.push([experience]);
+          return acc;
+        }
+
+        acc[acc.length - 1].push(experience);
         return acc;
-      }
-
-      acc[acc.length - 1].push(experience);
-      return acc;
-    }, [] as Experience[][]);
+      }, [] as Experience[][]);
   }, [post.resume]);
 
   return (
