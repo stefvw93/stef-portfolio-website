@@ -43,12 +43,14 @@ export class PointerChaser {
     if (!isTouchDevice()) {
       this.updateTargets();
       window.addEventListener("mousemove", this.handleMouseMove);
+      window.addEventListener("scroll", this.handleScroll);
       gsap.ticker.add(this.handleTick);
     }
   }
 
   destroy = () => {
     window.removeEventListener("mousemove", this.handleMouseMove);
+    window.removeEventListener("scroll", this.handleScroll);
     gsap.ticker.remove(this.handleTick);
     this.chaser?.remove();
   };
@@ -87,6 +89,15 @@ export class PointerChaser {
       this.ctx.closePath();
       this.ctx.fill();
     }
+  };
+
+  handleScroll = () => {
+    if (this.bubbleTween?.progress() !== 1) return;
+    this.bubbleTween = gsap.to(this, {
+      chaserSize: this.baseChaserSize,
+      duration: 0.5,
+      ease: Power1.easeOut,
+    });
   };
 
   handleMouseMove = (event: MouseEvent) => {
