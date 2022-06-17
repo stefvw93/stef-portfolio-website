@@ -17,7 +17,7 @@ export class PointerChaser {
   canvasSize = 200;
   pointerX = 0;
   pointerY = 0;
-  baseChaserSize = 10;
+  baseChaserSize = 20;
   chaserSize = this.baseChaserSize;
   maxChaserSize = 150;
   chaserX = this.pointerX;
@@ -95,7 +95,7 @@ export class PointerChaser {
     if (this.bubbleTween?.progress() !== 1) return;
     this.bubbleTween = gsap.to(this, {
       chaserSize: this.baseChaserSize,
-      duration: 0.5,
+      duration: 0.2,
       ease: Power1.easeOut,
     });
   };
@@ -130,7 +130,7 @@ export class PointerChaser {
         this.bubbleTween.kill();
         this.bubbleTween = gsap.to(this, {
           chaserSize: this.baseChaserSize,
-          duration: 0.5,
+          duration: 0.2,
           ease: Power1.easeOut,
         });
       }
