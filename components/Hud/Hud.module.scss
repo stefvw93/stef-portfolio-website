@@ -46,6 +46,17 @@
   }
 }
 
+.external {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+
+  img {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
 .links {
   display: flex;
   gap: 1rem;

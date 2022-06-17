@@ -55,7 +55,6 @@ export function About({ post }: AboutProps) {
             splitText: instance,
             animations,
             scrollTrigger: ScrollTrigger.create({
-              markers: true,
               scroller: SmoothScroll.instance?.scrollingElement,
               trigger: p,
               start: "top 75%",

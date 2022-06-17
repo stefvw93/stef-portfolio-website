@@ -45,6 +45,22 @@ export function Hud({ links }: HudProps) {
 
       <nav className={classes(styles.navigation, styles.bottom)}>
         <div>Portfolio {new Date().getFullYear()}</div>
+        <div className={styles.external}>
+          <a
+            href="https://github.com/stefvw93/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <img src="/images/icon-github.svg" alt="Github" />
+          </a>
+          <a
+            href="https://www.linkedin.com/in/stef-van-wijchen-81206861/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <img src="/images/icon-linkedin.svg" alt="LinkedIn" />
+          </a>
+        </div>
       </nav>
 
       <ScrollBar />
