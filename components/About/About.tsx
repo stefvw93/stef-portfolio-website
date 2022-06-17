@@ -35,7 +35,6 @@ export function About({ post }: AboutProps) {
     const paragraphs = Array.from(container.current.querySelectorAll("p"));
 
     paragraphs.forEach((p) => {
-      console.log("setup p", animationMap.current?.get(p));
       if (animationMap.current?.get(p)) return;
 
       const splitText = new SplitText(p, {
@@ -55,19 +54,23 @@ export function About({ post }: AboutProps) {
         },
       });
 
-      const scrollTrigger = new ScrollTrigger({
-        trigger: p,
-        start: "top 75%",
-        once: true,
-        onEnter() {
-          animationMap.current?.get(p)?.animations?.forEach((a) => a.play());
-        },
-        onEnterBack() {
-          animationMap.current?.get(p)?.animations?.forEach((a) => a.play());
-        },
-      });
+      requestAnimationFrame(() => {
+        const scrollTrigger = ScrollTrigger.create({
+          markers: true,
+          scroller: SmoothScroll.instance?.scrollingElement,
+          trigger: p,
+          start: "top 75%",
+          once: true,
+          onEnter() {
+            animationMap.current?.get(p)?.animations?.forEach((a) => a.play());
+          },
+          onEnterBack() {
+            animationMap.current?.get(p)?.animations?.forEach((a) => a.play());
+          },
+        });
 
-      animationMap.current!.set(p, { splitText, scrollTrigger });
+        animationMap.current!.set(p, { splitText, scrollTrigger });
+      });
     });
 
     // return () => {

@@ -9,6 +9,7 @@ import {
   animateLineStartValues,
 } from "../../utils/animations/text";
 import { classes } from "../../utils/classes";
+import { SmoothScroll } from "../../utils/SmoothScroll";
 import { SplitText } from "../../utils/splitText";
 import styles from "./Career.module.scss";
 
@@ -96,6 +97,7 @@ function CareerExperience({ experience }: { experience: Experience }) {
     });
 
     const scrollTrigger = ScrollTrigger.create({
+      scroller: SmoothScroll.instance?.scrollingElement,
       trigger: container.current,
       once: true,
       start: "top 75%",
