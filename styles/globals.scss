@@ -42,6 +42,10 @@ html {
   color: var(--color-eerie-black);
   -moz-osx-font-smoothing: grayscale; /*(For Firefox)*/
   -webkit-font-smoothing: antialiased; /*(For Chrome and Safari)*/
+
+  @media (max-width: 500px) {
+    font-size: 12pt;
+  }
 }
 
 html,

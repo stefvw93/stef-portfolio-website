@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { Experience, Post, Skill } from "../../generated/graphql";
 import { slideUp } from "../../utils/animations/slideIn";
 import { classes } from "../../utils/classes";
+import { SCROLL_TRIGGER_START_DEFAULT } from "../../utils/shared";
 import { SmoothScroll } from "../../utils/SmoothScroll";
 import { SplitText } from "../../utils/splitText";
 import styles from "./Career.module.scss";
@@ -95,7 +96,7 @@ function CareerExperience({ experience }: { experience: Experience }) {
       scroller: SmoothScroll.instance?.scrollingElement,
       trigger: container.current,
       once: true,
-      start: "top 75%",
+      start: SCROLL_TRIGGER_START_DEFAULT,
       onEnter() {
         animationMap.current.get(header)?.animations?.forEach((a) => a.play());
       },

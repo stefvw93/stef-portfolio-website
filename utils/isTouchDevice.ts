@@ -1,6 +1,9 @@
+import { isClient } from "./isClient";
+
 let state: boolean;
 
-export function isTouchDevice() {
+export function isTouchDevice(): boolean {
+  if (!isClient()) return false;
   if (!state) {
     state =
       "ontouchstart" in window ||

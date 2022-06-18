@@ -46,7 +46,7 @@ export function Hud({ links }: HudProps) {
       <nav className={classes(styles.navigation, styles.bottom)}>
         <div>&copy; {new Date().getFullYear()}</div>
         <div className={styles.external}>
-          Code &amp; design by me
+          <span className={styles.by}>Code &amp; design by me</span>
           <a
             href="https://github.com/stefvw93/"
             target="_blank"

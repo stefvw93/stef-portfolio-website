@@ -50,10 +50,21 @@
   display: flex;
   gap: 1rem;
   align-items: center;
+  font-size: 0.8rem;
+
+  a {
+    display: inherit;
+  }
 
   img {
     width: 1rem;
     height: 1rem;
+  }
+}
+
+.by {
+  @media (max-width: 500px) {
+    display: none;
   }
 }
 
@@ -74,6 +85,10 @@
   position: fixed;
   bottom: 0;
   left: 0;
+
+  @media (max-width: 500px) {
+    height: 5px;
+  }
 }
 
 .scrollBar {

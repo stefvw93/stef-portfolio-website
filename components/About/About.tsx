@@ -8,6 +8,7 @@ import {
   animateLines,
   animateLineStartValues,
 } from "../../utils/animations/text";
+import { SCROLL_TRIGGER_START_DEFAULT } from "../../utils/shared";
 import { SmoothScroll } from "../../utils/SmoothScroll";
 import { SplitText } from "../../utils/splitText";
 import styles from "./About.module.scss";
@@ -57,7 +58,7 @@ export function About({ post }: AboutProps) {
             scrollTrigger: ScrollTrigger.create({
               scroller: SmoothScroll.instance?.scrollingElement,
               trigger: p,
-              start: "top 75%",
+              start: SCROLL_TRIGGER_START_DEFAULT,
               once: true,
               onEnter() {
                 animations?.forEach((a) => a.play());
