@@ -40,6 +40,7 @@ export class PointerChaser {
       useBubbleEffect,
     };
 
+    console.log("new pointerChaser", isTouchDevice());
     if (!isTouchDevice()) {
       this.updateTargets();
       window.addEventListener("mousemove", this.handleMouseMove);
@@ -57,11 +58,13 @@ export class PointerChaser {
 
   handleTick = (_: number, deltaTime: number) => {
     const progress = 0.1 * (deltaTime / this.referenceFrameMs);
+
     this.chaserX = gsap.utils.interpolate(
       this.chaserX,
       this.pointerX,
       progress
     );
+
     this.chaserY = gsap.utils.interpolate(
       this.chaserY,
       this.pointerY,

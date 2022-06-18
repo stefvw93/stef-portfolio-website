@@ -17,10 +17,10 @@ const Home: NextPage = ({
   posts,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   useEffect(() => {
-    const foo = new PointerChaser(["a"], {
+    const chaser = new PointerChaser(["a"], {
       container: document.querySelector(".scroll-container") as HTMLElement,
     });
-    return () => foo.destroy();
+    return () => chaser.destroy();
   }, []);
   return (
     <>
