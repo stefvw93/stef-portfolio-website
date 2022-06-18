@@ -41,7 +41,7 @@
     top: 0;
     @media (max-width: 500px) {
       top: unset;
-      bottom: 0;
+      bottom: 1rem;
     }
   }
 }

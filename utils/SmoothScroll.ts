@@ -49,13 +49,19 @@ export class SmoothScroll {
   }
 
   handleResize = () => {
-    this.stop();
     this.destroy();
     this.appendCSS();
-    this.prepareAncestors();
-    this.prepareContainer();
-    this.prepareContent();
-    this.start();
+    this.content.setAttribute("style", "");
+    for (const child of this.content.children) {
+      if (!(child instanceof HTMLElement)) continue;
+      child.setAttribute("style", "");
+    }
+    requestAnimationFrame(() => {
+      this.prepareAncestors();
+      this.prepareContainer();
+      this.prepareContent();
+      this.start();
+    });
   };
 
   updatePosition = (_: number, deltaTime: number) => {
@@ -78,16 +84,12 @@ export class SmoothScroll {
   };
 
   destroy = () => {
-    this.stop();
+    gsap.ticker.remove(this.updatePosition);
     this.removeCSS();
   };
 
   start = () => {
     gsap.ticker.add(this.updatePosition);
-  };
-
-  stop = () => {
-    gsap.ticker.remove(this.updatePosition);
   };
 
   prepareAncestors(element = this.container.parentElement) {
@@ -110,7 +112,6 @@ export class SmoothScroll {
 
     for (const child of this.content.children) {
       if (!(child instanceof HTMLElement)) continue;
-      const rect = child.getBoundingClientRect();
       child.setAttribute("style", "");
       child.style.width = "100%";
       child.style.position = "fixed";
