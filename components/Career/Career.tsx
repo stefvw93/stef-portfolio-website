@@ -48,14 +48,52 @@ function CareerItem({ year }: CareerItemProps) {
   const container = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    if (!container.current) return;
+    const _container = container.current;
+    if (!_container) return;
+
+    const fadeInTargets = _container.querySelectorAll(".fade-in");
+    const slideInTargets = _container.querySelectorAll(".slide-in");
+    const duration = 1;
+    const ease = Power1.easeInOut;
+
+    const fadeInFrom = { opacity: 0 };
+    const fadeIn = gsap.fromTo(fadeInTargets, fadeInFrom, {
+      opacity: 1,
+      duration,
+      ease,
+      paused: true,
+    });
+
+    const slideInFrom = { x: -30, opacity: 0 };
+    const slideIn = gsap.fromTo(slideInTargets, slideInFrom, {
+      x: 0,
+      opacity: 1,
+      duration,
+      ease,
+      paused: true,
+    });
+
+    const animate = () => {
+      fadeIn.play();
+      slideIn.play();
+    };
+
+    const scrollTrigger = ScrollTrigger.create({
+      scroller: SmoothScroll.instance?.scrollingElement,
+      trigger: _container,
+      start: SCROLL_TRIGGER_START_DEFAULT,
+      onEnter: animate,
+      onEnterBack: animate,
+    });
+
+    return () => scrollTrigger.kill();
   }, []);
 
   return (
     <article ref={container}>
-      <div className={classes(styles.yearSeparator, "year")}>
+      <div className={classes(styles.yearSeparator, "year", "fade-in")}>
         <footer className={styles.year}>{year[0].year}</footer>
-        <hr />
+        <hr className="slide-in" />
       </div>
 
       {year.map((experience) => (
@@ -119,8 +157,8 @@ function CareerExperience({ experience }: { experience: Experience }) {
             </a>
           </h2>
         </header>
-        <p className={styles.jobRole}>{experience.role}</p>
-        <p className={styles.jobSkills}>
+        <p className={classes(styles.jobRole, "fade-in")}>{experience.role}</p>
+        <p className={classes(styles.jobSkills, "fade-in")}>
           {experience.skills?.map((skill, index, arr) => {
             const last = index === arr.length - 1;
             return (
@@ -132,7 +170,7 @@ function CareerExperience({ experience }: { experience: Experience }) {
           })}
         </p>
       </div>
-      <hr />
+      <hr className="slide-in" />
     </div>
   );
 }
