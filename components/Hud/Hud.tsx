@@ -82,6 +82,8 @@ function ScrollBar() {
       SmoothScroll.instance.smoothY /
       (SmoothScroll.instance.scrollHeight - window.innerHeight);
 
+    if (isNaN(progress)) return;
+
     const cssValue = `${gsap.utils.clamp(0, 100, progress * 100).toFixed(3)}%`;
     setWidth.current!(cssValue);
   });

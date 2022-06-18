@@ -6,11 +6,12 @@ import styles from "./Experience.module.scss";
 
 export type ExperienceProps = {};
 
+let experience: Experience;
 export const ExperienceComponent = (props: ExperienceProps) => {
   useEffect(() => {
     if (!isClient()) return;
-    const experience = new Experience();
-    return experience.destroy;
+    experience = new Experience();
+    return experience?.destroy;
   }, []);
 
   return (

@@ -65,8 +65,8 @@ export class TitleText {
     this.geometry = new THREE.PlaneBufferGeometry(
       this.dimensions.width,
       this.dimensions.height,
-      256,
-      64
+      Math.round(window.innerWidth * 0.05),
+      Math.round(window.innerHeight * 0.05)
     );
     this.mesh = this.createMesh();
     SubtitleText.create(this, this.texts.top, this.texts.bottom);
@@ -157,7 +157,7 @@ export class TitleText {
     newPosition.y = this.y;
 
     this.group.position.copy(newPosition);
-    this.group.rotation.x = this.y * 0.5;
+    // this.group.rotation.x = this.y * 0.5;
 
     if (!this.pointerActive) {
       return (uniforms.uDentSize.value = gsap.utils.interpolate(

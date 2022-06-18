@@ -33,10 +33,11 @@ export class Experience {
   backgroundColor = 0xffffff;
 
   get dpr() {
-    return Math.min(window.devicePixelRatio || 1, 2);
+    return Math.min(window.devicePixelRatio || 1, 3);
   }
 
   constructor() {
+    console.log("create experience", this.size.width, window.innerWidth);
     this.container = document.querySelector(".experience")!;
     this.backgroundCanvas = document.querySelector("canvas.webgl.background")!;
     this.canvas = document.querySelector("canvas.webgl.foreground")!;
@@ -134,7 +135,6 @@ export class Experience {
     const renderer = new THREE.WebGLRenderer({
       canvas,
       alpha,
-      powerPreference: highPerformance ? "high-performance" : "default",
     });
 
     renderer.setSize(this.size.width, this.size.height);
@@ -159,6 +159,7 @@ export class Experience {
 
   handleResize = () => {
     if (this.size.width === window.innerWidth) return;
+    console.log("handle resize");
     this.size.width = window.innerWidth;
     this.size.height = window.innerHeight;
     this.setContainerSize();
@@ -169,7 +170,7 @@ export class Experience {
     this.renderer.setSize(this.size.width, this.size.height);
     this.renderer.setPixelRatio(this.dpr);
     this.backgroundRenderer.setSize(this.size.width, this.size.height);
-    this.backgroundRenderer.setPixelRatio(this.dpr);
+    this.backgroundRenderer.setPixelRatio(0.01);
     this.resizeListeners.forEach((f) => f());
   };
 
@@ -178,5 +179,6 @@ export class Experience {
     window.removeEventListener("resize", this.handleResize);
     this.destroyListeners.forEach((f) => f());
     this.gui?.destroy();
+    console.log("destroy");
   };
 }
