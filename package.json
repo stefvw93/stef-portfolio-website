@@ -7,15 +7,11 @@
     "build": "next build && next export",
     "start": "next start",
     "lint": "next lint",
-    "codegen": "graphql-codegen --config codegen.yml",
-    "postinstall": "keystone postinstall"
+    "codegen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
     "@graphql-codegen/cli": "^2.6.2",
-    "@keystone-6/auth": "^3.0.0",
-    "@keystone-6/core": "^2.0.0",
-    "@keystone-6/document-renderer": "^1.0.0",
-    "@keystone-6/fields-document": "^3.0.0",
+    "@keystone-6/document-renderer": "^1.1.0",
     "@types/three": "^0.140.0",
     "@urql/core": "^2.4.4",
     "glslify": "^7.1.1",
