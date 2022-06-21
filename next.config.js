@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
+const { withKeystone } = require("@keystone-6/core/next");
 
-const nextConfig = {
+const nextConfig = withKeystone({
   reactStrictMode: true,
   webpack: (
     config,
@@ -21,6 +22,6 @@ const nextConfig = {
 
     return config;
   },
-};
+});
 
 module.exports = nextConfig;
