@@ -2,6 +2,7 @@ import gsap, { Power1 } from "gsap";
 import GUI from "lil-gui";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { debounce } from "../../utils/debounce";
 import { getCssVar } from "../../utils/getCssVar";
 import { HeadsUpLayer } from "./objects/HeadsUpLayer";
 
@@ -157,7 +158,7 @@ export class Experience {
     this.renderer.render(this.scene, this.camera);
   };
 
-  handleResize = () => {
+  handleResize = debounce(() => {
     if (this.size.width === window.innerWidth) return;
     console.log("handle resize");
     this.size.width = window.innerWidth;
@@ -172,7 +173,7 @@ export class Experience {
     this.backgroundRenderer.setSize(this.size.width, this.size.height);
     this.backgroundRenderer.setPixelRatio(0.01);
     this.resizeListeners.forEach((f) => f());
-  };
+  });
 
   destroy = () => {
     gsap.ticker.remove(this.tick);

@@ -71,8 +71,6 @@ export class TitleText {
     this.mesh = this.createMesh();
     SubtitleText.create(this, this.texts.top, this.texts.bottom);
     experience.addTickListener(this.handleTick);
-    experience.addResizeListener(this.handleResize);
-
     window.addEventListener("mousemove", this.handleMouseMove);
     window.addEventListener("touchmove", this.handleTouchMove);
     window.addEventListener("touchstart", this.handleTouchStart);
@@ -141,8 +139,6 @@ export class TitleText {
   private handleTouchEnd = () => {
     this.pointerActive = false;
   };
-
-  private handleResize = () => {};
 
   private handleTick = (time: number, deltaTime: number) => {
     const progress = 0.1 * (deltaTime / this.experience.referenceFrameMs);

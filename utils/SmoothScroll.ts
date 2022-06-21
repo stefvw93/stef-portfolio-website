@@ -2,6 +2,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { ScrollToPlugin } from "gsap/dist/ScrollToPlugin";
 import { isTouchDevice } from "./isTouchDevice";
+import { debounce } from "./debounce";
 
 export type SmoothScrollConfig = {
   smoothness: number;
@@ -48,7 +49,7 @@ export class SmoothScroll {
     window.addEventListener("resize", this.handleResize);
   }
 
-  handleResize = () => {
+  handleResize = debounce(() => {
     this.destroy();
     this.appendCSS();
     this.content.setAttribute("style", "");
@@ -62,17 +63,17 @@ export class SmoothScroll {
       this.prepareContent();
       this.start();
     });
-  };
+  });
 
   updatePosition = (_: number, deltaTime: number) => {
-    this.smoothY = gsap.utils.clamp(
-      0,
-      this.scrollHeight - window.innerHeight,
-      gsap.utils.interpolate(
-        this.smoothY,
-        isTouchDevice() ? this.container.scrollTop : window.scrollY,
-        0.25 * (deltaTime / this.referenceFrameMs)
-      )
+    this.smoothY = gsap.utils.interpolate(
+      this.smoothY,
+      gsap.utils.clamp(
+        0,
+        this.scrollHeight - window.innerHeight,
+        isTouchDevice() ? this.container.scrollTop : window.scrollY
+      ),
+      0.25 * (deltaTime / this.referenceFrameMs)
     );
 
     if (isTouchDevice()) return;

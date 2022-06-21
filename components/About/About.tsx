@@ -59,7 +59,6 @@ export function About({ post }: AboutProps) {
               scroller: SmoothScroll.instance?.scrollingElement,
               trigger: p,
               start: SCROLL_TRIGGER_START_DEFAULT,
-              once: true,
               onEnter() {
                 animations?.forEach((a) => a.play());
               },

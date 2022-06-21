@@ -89,7 +89,6 @@ export async function getStaticProps() {
     )
     .toPromise();
 
-  console.log(data, error);
   if (!data || error) return { props: {} };
   return { props: { posts: data.posts } };
 }

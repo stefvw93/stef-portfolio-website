@@ -3,6 +3,7 @@ import { Experience } from "../Experience";
 import vertexShader from "../shaders/heads-up.vert.glsl";
 import fragmentShader from "../shaders/heads-up.frag.glsl";
 import { TitleText } from "./TitleText";
+import { debounce } from "../../../utils/debounce";
 
 export class HeadsUpLayer {
   gui = this.experience.gui?.addFolder("HeadsUpLayer");
@@ -85,10 +86,10 @@ export class HeadsUpLayer {
     this.text = this.createText();
   };
 
-  private handleResize = () => {
+  private handleResize = debounce(() => {
     this.updateMesh();
     this.updateText();
-  };
+  });
 
   private handleTick = () => {
     const uniforms = this.material.uniforms;

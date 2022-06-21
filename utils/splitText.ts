@@ -1,3 +1,5 @@
+import { debounce } from "./debounce";
+
 export type SplitTextConfig = {
   charSpanAttrs?: Record<string, string>;
   wordSpanAttrs?: Record<string, string>;
@@ -124,12 +126,12 @@ class SplitText {
     this.resizeObserver.observe(this.element.parentElement || document.body);
   }
 
-  private handleResize = (): void => {
+  private handleResize = debounce((): void => {
     if (this.containerWidth === window.innerWidth) return;
     this.containerWidth = window.innerWidth;
     this.reset();
     this.split();
-  };
+  });
 
   reset() {
     this.element.innerText = this.text ?? this.element.innerText;

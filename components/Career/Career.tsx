@@ -130,14 +130,15 @@ function CareerExperience({ experience }: { experience: Experience }) {
       }),
     });
 
+    const animate = () =>
+      animationMap.current.get(header)?.animations?.forEach((a) => a.play());
+
     const scrollTrigger = ScrollTrigger.create({
       scroller: SmoothScroll.instance?.scrollingElement,
       trigger: container.current,
-      once: true,
       start: SCROLL_TRIGGER_START_DEFAULT,
-      onEnter() {
-        animationMap.current.get(header)?.animations?.forEach((a) => a.play());
-      },
+      onEnter: animate,
+      onEnterBack: animate,
     });
 
     return () => scrollTrigger.kill();
