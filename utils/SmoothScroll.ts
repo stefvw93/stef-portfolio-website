@@ -11,6 +11,7 @@ export type SmoothScrollConfig = {
 };
 
 export class SmoothScroll {
+  static dampingEnabled = false;
   static instance?: SmoothScroll;
   style?: HTMLStyleElement;
   liveEvents: [
@@ -71,12 +72,12 @@ export class SmoothScroll {
       gsap.utils.clamp(
         0,
         this.scrollHeight - window.innerHeight,
-        isTouchDevice() ? this.container.scrollTop : window.scrollY
+        SmoothScroll.dampingEnabled ? this.container.scrollTop : window.scrollY
       ),
       0.25 * (deltaTime / this.referenceFrameMs)
     );
 
-    if (isTouchDevice()) return;
+    if (!SmoothScroll.dampingEnabled) return;
 
     for (const child of this.content.children) {
       if (!(child instanceof HTMLElement)) continue;
@@ -109,7 +110,7 @@ export class SmoothScroll {
     this.content.style.height =
       (this.scrollHeight = this.content.offsetHeight) + "px";
 
-    if (isTouchDevice()) return;
+    if (!SmoothScroll.dampingEnabled) return;
 
     for (const child of this.content.children) {
       if (!(child instanceof HTMLElement)) continue;
