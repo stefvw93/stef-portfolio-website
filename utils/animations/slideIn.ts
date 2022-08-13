@@ -22,7 +22,7 @@ export function slideUp(targets: gsap.TweenTarget, config: SlideUpConfig = {}) {
   const { duration = 2, stagger = 0.1, delay = 0 } = config;
   const from = getStartValues();
   const to = getEndValues();
-  const timeline = gsap.timeline({ paused: true, delay });
+  const timeline = gsap.timeline({ paused: true, lazy: false, delay });
 
   gsap.set(targets, from);
 
@@ -31,6 +31,7 @@ export function slideUp(targets: gsap.TweenTarget, config: SlideUpConfig = {}) {
     duration: duration * 0.4,
     stagger,
     opacity: to.opacity,
+    lazy: false,
   });
 
   // animate stretch and squash
@@ -40,6 +41,7 @@ export function slideUp(targets: gsap.TweenTarget, config: SlideUpConfig = {}) {
       duration: duration,
       stagger,
       y: 0,
+      lazy: false,
       ease: Elastic.easeOut.config(1, 0.75),
       onUpdate() {
         const targets = this.targets();
