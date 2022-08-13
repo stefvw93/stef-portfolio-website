@@ -134,10 +134,14 @@ function CareerExperience({ experience }: { experience: Experience }) {
       scroller: SmoothScroll.instance?.scrollingElement,
       trigger: container.current,
       start: SCROLL_TRIGGER_START_DEFAULT,
-      onEnter: () =>
-        animationMap.current.get(header)?.animations?.forEach((a) => a.play()),
-      onEnterBack: () =>
-        animationMap.current.get(header)?.animations?.forEach((a) => a.play()),
+      onEnter() {
+        console.log("on enter", animationMap);
+        animationMap.current.get(header)?.animations?.forEach((a) => a.play());
+      },
+      onEnterBack() {
+        console.log("on enter back", animationMap);
+        animationMap.current.get(header)?.animations?.forEach((a) => a.play());
+      },
     });
 
     return () => scrollTrigger.kill();
