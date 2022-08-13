@@ -114,6 +114,7 @@ function CareerExperience({ experience }: { experience: Experience }) {
   >(new WeakMap());
 
   useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
     if (!container.current) return;
 
     const header = container.current.querySelector("h2 > a") as HTMLElement;
