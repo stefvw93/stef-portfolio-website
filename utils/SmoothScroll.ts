@@ -72,7 +72,7 @@ export class SmoothScroll {
       gsap.utils.clamp(
         0,
         this.scrollHeight - window.innerHeight,
-        SmoothScroll.dampingEnabled ? this.container.scrollTop : window.scrollY
+        isTouchDevice() ? this.container.scrollTop : window.scrollY
       ),
       0.25 * (deltaTime / this.referenceFrameMs)
     );

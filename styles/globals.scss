@@ -90,6 +90,9 @@ p {
 }
 
 .main {
+  @media (hover: none) {
+    padding-top: 100vh;
+  }
   position: relative;
   will-change: transform;
 }
