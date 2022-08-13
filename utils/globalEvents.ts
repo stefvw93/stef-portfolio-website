@@ -8,7 +8,6 @@ export const globalEvents = new Map<AnimationEvent, Event>();
 
 export function createGlobalEvents() {
   if (!doCreateGlobalEvents) return;
-  console.log("create global events");
   doCreateGlobalEvents = false;
   Object.values(AnimationEvent).forEach((value) =>
     globalEvents.set(value, new Event(value))

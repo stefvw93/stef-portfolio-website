@@ -65,7 +65,6 @@ export function animateLines({
   stagger: number;
   delay?: number;
 }) {
-  console.log("animate lines", lines);
   lines.forEach((line, index) => {
     const delay = 0.1 * index;
     animateLine({

@@ -40,7 +40,6 @@ export class PointerChaser {
       useBubbleEffect,
     };
 
-    console.log("new pointerChaser", isTouchDevice());
     if (!isTouchDevice()) {
       this.updateTargets();
       window.addEventListener("mousemove", this.handleMouseMove);

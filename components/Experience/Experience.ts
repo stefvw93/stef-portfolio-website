@@ -38,7 +38,6 @@ export class Experience {
   }
 
   constructor() {
-    console.log("create experience", this.size.width, window.innerWidth);
     this.container = document.querySelector(".experience")!;
     this.backgroundCanvas = document.querySelector("canvas.webgl.background")!;
     this.canvas = document.querySelector("canvas.webgl.foreground")!;
@@ -160,7 +159,6 @@ export class Experience {
 
   handleResize = debounce(() => {
     if (this.size.width === window.innerWidth) return;
-    console.log("handle resize");
     this.size.width = window.innerWidth;
     this.size.height = window.innerHeight;
     this.setContainerSize();
@@ -180,6 +178,5 @@ export class Experience {
     window.removeEventListener("resize", this.handleResize);
     this.destroyListeners.forEach((f) => f());
     this.gui?.destroy();
-    console.log("destroy");
   };
 }

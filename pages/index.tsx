@@ -22,6 +22,13 @@ const Home: NextPage = ({
     });
     return () => chaser.destroy();
   }, []);
+
+  useEffect(() => {
+    console.log(
+      "Hello there. If you also want to sniff around my source code, my website is a public repo: https://github.com/stefvw93/stef-portfolio-website"
+    );
+  }, []);
+
   return (
     <>
       <MainHead />
