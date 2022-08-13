@@ -14,12 +14,12 @@ export class PointerChaser {
   currentHoverTarget?: HTMLElement;
   chaser?: HTMLElement;
   ctx?: CanvasRenderingContext2D;
-  canvasSize = 200;
+  canvasSize = 300;
   pointerX = 0;
   pointerY = 0;
   baseChaserSize = 20;
   chaserSize = this.baseChaserSize;
-  maxChaserSize = 150;
+  maxChaserSize = 200;
   chaserX = this.pointerX;
   chaserY = this.pointerY;
   bubbleTween?: gsap.core.Animation;
