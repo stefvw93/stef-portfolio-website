@@ -144,6 +144,7 @@ function CareerExperience({ experience }: { experience: Experience }) {
       },
     });
 
+    console.log("mounted", { header, animationMap, scrollTrigger });
     return () => scrollTrigger.kill();
   }, []);
 
