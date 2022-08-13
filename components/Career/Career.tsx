@@ -51,42 +51,46 @@ function CareerItem({ year }: CareerItemProps) {
     const _container = container.current;
     if (!_container) return;
 
-    const fadeInTargets = _container.querySelectorAll(".fade-in");
-    const slideInTargets = _container.querySelectorAll(".slide-in");
-    const duration = 1;
-    const ease = Power1.easeInOut;
+    let scrollTrigger: ScrollTrigger;
 
-    const fadeInFrom = { opacity: 0 };
-    const fadeIn = gsap.fromTo(fadeInTargets, fadeInFrom, {
-      opacity: 1,
-      duration,
-      ease,
-      paused: true,
+    requestAnimationFrame(() => {
+      const fadeInTargets = _container.querySelectorAll(".fade-in");
+      const slideInTargets = _container.querySelectorAll(".slide-in");
+      const duration = 1;
+      const ease = Power1.easeInOut;
+
+      const fadeInFrom = { opacity: 0 };
+      const fadeIn = gsap.fromTo(fadeInTargets, fadeInFrom, {
+        opacity: 1,
+        duration,
+        ease,
+        paused: true,
+      });
+
+      const slideInFrom = { x: -30, opacity: 0 };
+      const slideIn = gsap.fromTo(slideInTargets, slideInFrom, {
+        x: 0,
+        opacity: 1,
+        duration,
+        ease,
+        paused: true,
+      });
+
+      const animate = () => {
+        fadeIn.play();
+        slideIn.play();
+      };
+
+      scrollTrigger = ScrollTrigger.create({
+        scroller: SmoothScroll.instance?.scrollingElement,
+        trigger: _container,
+        start: SCROLL_TRIGGER_START_DEFAULT,
+        onEnter: animate,
+        onEnterBack: animate,
+      });
     });
 
-    const slideInFrom = { x: -30, opacity: 0 };
-    const slideIn = gsap.fromTo(slideInTargets, slideInFrom, {
-      x: 0,
-      opacity: 1,
-      duration,
-      ease,
-      paused: true,
-    });
-
-    const animate = () => {
-      fadeIn.play();
-      slideIn.play();
-    };
-
-    const scrollTrigger = ScrollTrigger.create({
-      scroller: SmoothScroll.instance?.scrollingElement,
-      trigger: _container,
-      start: SCROLL_TRIGGER_START_DEFAULT,
-      onEnter: animate,
-      onEnterBack: animate,
-    });
-
-    return () => scrollTrigger.kill();
+    return () => scrollTrigger?.kill();
   }, []);
 
   return (
@@ -109,7 +113,11 @@ function CareerExperience({ experience }: { experience: Experience }) {
   const animationMap = useRef<
     WeakMap<
       HTMLElement,
-      { animations?: gsap.core.Animation[]; splitText?: SplitText }
+      {
+        animations?: gsap.core.Animation[];
+        splitText?: SplitText;
+        scrollTrigger?: ScrollTrigger;
+      }
     >
   >(new WeakMap());
 
@@ -127,26 +135,26 @@ function CareerExperience({ experience }: { experience: Experience }) {
           const obj = animationMap.current.get(element);
           if (!obj) return;
           obj.animations = [slideUp(chars, { duration: 0.8, stagger: 0.06 })];
+          obj.scrollTrigger = ScrollTrigger.create({
+            scroller: SmoothScroll.instance?.scrollingElement,
+            trigger: container.current,
+            start: SCROLL_TRIGGER_START_DEFAULT,
+            onEnter() {
+              animationMap.current
+                .get(header)
+                ?.animations?.forEach((a) => a.play());
+            },
+            onEnterBack() {
+              animationMap.current
+                .get(header)
+                ?.animations?.forEach((a) => a.play());
+            },
+          });
         },
       }),
     });
 
-    const scrollTrigger = ScrollTrigger.create({
-      scroller: SmoothScroll.instance?.scrollingElement,
-      trigger: container.current,
-      start: SCROLL_TRIGGER_START_DEFAULT,
-      onEnter() {
-        console.log("on enter", animationMap);
-        animationMap.current.get(header)?.animations?.forEach((a) => a.play());
-      },
-      onEnterBack() {
-        console.log("on enter back", animationMap);
-        animationMap.current.get(header)?.animations?.forEach((a) => a.play());
-      },
-    });
-
-    console.log("mounted", { header, animationMap, scrollTrigger });
-    return () => scrollTrigger.kill();
+    return () => animationMap.current.get(header)?.scrollTrigger?.kill();
   }, []);
 
   return (
