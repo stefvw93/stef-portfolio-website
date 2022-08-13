@@ -182,7 +182,7 @@ export class TitleText {
         gsap.utils.interpolate(uPointer.y, intersectionPoint.y, progress)
       );
     } else {
-      uDentSize.value = gsap.utils.interpolate(uDentSize.value, 0, progress);
+      uDentSize.value = gsap.utils.interpolate(uDentSize.value, 0.2, progress);
     }
   };
 
