@@ -15,11 +15,8 @@ export function Hud({ links }: HudProps) {
       if (!SmoothScroll.instance) return;
       const query = event.currentTarget.getAttribute("href");
       if (!query) return;
-      const target = document.querySelector(query);
-      if (!target) return;
-      const scrollTo = (target as HTMLElement).offsetTop;
       gsap.to(SmoothScroll.instance.scrollingElement, {
-        scrollTo,
+        scrollTo: query,
         duration: 1,
         ease: Power1.easeInOut,
       });
@@ -29,7 +26,11 @@ export function Hud({ links }: HudProps) {
   return (
     <>
       <nav className={classes(styles.navigation, styles.top)}>
-        <h1 className={styles.myName}>Stef van Wijchen</h1>
+        <h1 className={styles.myName}>
+          <a href="#__next" onClick={handleAnchorClick.current}>
+            Stef van Wijchen
+          </a>
+        </h1>
         <div className={styles.links}>
           {links?.map((link) => (
             <a
