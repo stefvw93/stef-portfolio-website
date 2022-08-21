@@ -13,7 +13,11 @@ export function Section({
   const ContentNode = contentComponent;
 
   return (
-    <section className={styles.container} {...rest} title={undefined}>
+    <section
+      {...rest}
+      title={undefined}
+      className={[styles.container, rest.className].filter(Boolean).join(" ")}
+    >
       <header>
         <h1 className={styles.title}>{rest.title}</h1>
       </header>

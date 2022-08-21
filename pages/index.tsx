@@ -4,52 +4,65 @@ import { ExperienceComponent } from "../components/Experience/ExperienceComponen
 import { Hud } from "../components/Hud/Hud";
 import { MainHead } from "../components/MainHead";
 import { Section } from "../components/Section/Section";
-import { ScrollContainer } from "../components/ScrollContainer/ScrollContainer";
 import { Query, QueryPostArgs } from "../generated/graphql";
 import { gqlClient } from "../graphql/gql-client";
 import { About } from "../components/About/About";
 import { Career } from "../components/Career/Career";
 import { Contact } from "../components/Contact/Contact";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { PointerChaser } from "../utils/PointerChaser";
+import { ScrollMotion } from "../utils/ScrollMotion";
 
 const Home: NextPage = ({
   posts,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  useEffect(() => {
-    const chaser = new PointerChaser(["a"], {
-      container: document.querySelector(".scroll-container") as HTMLElement,
-    });
-    return () => chaser.destroy();
-  }, []);
+  const scrollRoot = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    console.log(
-      "Hello there. If you also want to sniff around my source code, my website is a public repo: https://github.com/stefvw93/stef-portfolio-website"
-    );
-  }, []);
+  useEffect(
+    () =>
+      new PointerChaser(["a"], {
+        container: document.querySelector(".scroll-container") as HTMLElement,
+      }).destroy,
+    []
+  );
+
+  useEffect(
+    () =>
+      console.log(
+        "Hello there. If you also want to sniff around my source code, my website is a public repo: https://github.com/stefvw93/stef-portfolio-website"
+      ),
+    []
+  );
+
+  useEffect(() => new ScrollMotion(scrollRoot.current!).destroy, []);
 
   return (
     <>
       <MainHead />
       <ExperienceComponent />
 
-      <ScrollContainer>
-        <main className="main">
-          {posts?.map((post, index) => (
-            <Section
-              key={post.id}
-              id={post.slug ?? undefined}
-              title={post.title ?? undefined}
-              contentComponent={post.slug === "contact" ? "footer" : undefined}
-            >
-              {post.slug === "about" && <About post={post} />}
-              {post.slug === "career" && <Career post={post} />}
-              {post.slug === "contact" && <Contact post={post} />}
-            </Section>
-          ))}
-        </main>
-      </ScrollContainer>
+      <div ref={scrollRoot}>
+        {/* <main className="main"> */}
+        {posts?.map((post, index) => (
+          <div key={post.id} className={ScrollMotion.outerChildClassName}>
+            <div className={ScrollMotion.innerChildClassName}>
+              <Section
+                id={post.slug ?? undefined}
+                title={post.title ?? undefined}
+                contentComponent={
+                  post.slug === "contact" ? "footer" : undefined
+                }
+                className={ScrollMotion.innerChildClassName}
+              >
+                {post.slug === "about" && <About post={post} />}
+                {post.slug === "career" && <Career post={post} />}
+                {post.slug === "contact" && <Contact post={post} />}
+              </Section>
+            </div>
+          </div>
+        ))}
+        {/* </main> */}
+      </div>
 
       <Hud
         links={posts?.map((post) => ({ name: post.title, href: post.slug }))}
