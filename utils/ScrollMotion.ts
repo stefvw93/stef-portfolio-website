@@ -8,8 +8,8 @@ export class ScrollMotion {
   readonly outerChildren: HTMLElement[];
   readonly innerChildren: HTMLElement[] = [];
   virtuals: ScrollMotionVirtuals;
-  scrollY = 0;
-  smoothY = 0;
+  scrollY = window.scrollY;
+  smoothY = this.scrollY;
   referenceFps = 60;
   referenceFrameMs = 1000 / this.referenceFps;
 
@@ -71,7 +71,7 @@ export class ScrollMotion {
     this.smoothY = gsap.utils.interpolate(
       this.smoothY,
       this.scrollY,
-      0.25 * (deltaTime / this.referenceFrameMs)
+      0.1 * (deltaTime / this.referenceFrameMs)
     );
 
     this.updateChildPositions();
