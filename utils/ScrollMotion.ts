@@ -3,6 +3,7 @@ import gsap from "gsap";
 export class ScrollMotion {
   static outerChildClassName = "smooth-parent";
   static innerChildClassName = "smooth-child";
+  static instance?: ScrollMotion;
 
   readonly outerChildren: HTMLElement[];
   readonly innerChildren: HTMLElement[] = [];
@@ -12,8 +13,7 @@ export class ScrollMotion {
   referenceFps = 60;
   referenceFrameMs = 1000 / this.referenceFps;
 
-  private doReadScrollPosition = true;
-  private doHandleResize = true;
+  private doHandleScroll = true;
   private resizeTimeout?: ReturnType<typeof setTimeout>;
   private setup: gsap.core.Tween[] = [];
 
@@ -33,7 +33,8 @@ export class ScrollMotion {
     gsap.ticker.add(this.handleTick);
     window.addEventListener("scroll", this.handleScroll);
     window.addEventListener("resize", this.handleResize);
-    console.log(this);
+
+    ScrollMotion.instance = this;
   }
 
   destroy = () => {
@@ -56,9 +57,9 @@ export class ScrollMotion {
   };
 
   handleScroll = () => {
-    if (!this.doReadScrollPosition) return;
+    if (!this.doHandleScroll) return;
     this.scrollY = window.scrollY;
-    this.doReadScrollPosition = false;
+    this.doHandleScroll = false;
   };
 
   handleTick = (
@@ -75,7 +76,7 @@ export class ScrollMotion {
 
     this.updateChildPositions();
 
-    this.doReadScrollPosition = true;
+    this.doHandleScroll = true;
   };
 
   private async undoSetup() {
@@ -102,7 +103,10 @@ export class ScrollMotion {
   private setOuterChildDimensions() {
     this.setup.push(
       ...this.outerChildren.map((child) =>
-        gsap.set(child, { height: this.virtuals.heights.get(child) })
+        gsap.set(child, {
+          height: this.virtuals.heights.get(child),
+          position: "relative",
+        })
       )
     );
   }

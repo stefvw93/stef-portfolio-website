@@ -1,4 +1,4 @@
-import gsap, { Back, Elastic, Power1 } from "gsap";
+import gsap, { Back, Power1 } from "gsap";
 import { isTouchDevice } from "./isTouchDevice";
 
 type PointerChaserConfig = {
@@ -26,7 +26,7 @@ export class PointerChaser {
 
   constructor(
     private selectors: string[],
-    config: Partial<PointerChaserConfig>
+    config: Partial<PointerChaserConfig> = {}
   ) {
     const {
       container = document.body,
@@ -166,7 +166,7 @@ export class PointerChaser {
 
     container.classList.add("pointer-chaser");
     container.style.transform = `translate(${this.pointerX}, ${this.pointerY})`;
-    this.config.container?.prepend(container);
+    this.config.container?.append(container);
     this.chaser = container;
   }
 }

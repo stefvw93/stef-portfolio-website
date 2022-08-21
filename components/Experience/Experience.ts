@@ -3,7 +3,7 @@ import GUI from "lil-gui";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { debounce } from "../../utils/debounce";
-import { getCssVar } from "../../utils/getCssVar";
+import { ScrollMotion } from "../../utils/ScrollMotion";
 import { HeadsUpLayer } from "./objects/HeadsUpLayer";
 
 export class Experience {
@@ -152,6 +152,10 @@ export class Experience {
 
   tick = (time: number, deltaTime: number) => {
     // if (this.controls?.enabled) this.controls.update();
+    if (ScrollMotion.instance) {
+      this.camera.position.y = ScrollMotion.instance.smoothY * -0.003;
+    }
+
     this.tickListeners.forEach((f) => f(time, deltaTime));
     this.backgroundRenderer.render(this.backgroundScene, this.backgroundCamera);
     this.renderer.render(this.scene, this.camera);

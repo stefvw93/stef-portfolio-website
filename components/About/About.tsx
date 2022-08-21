@@ -4,12 +4,7 @@ import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { useEffect, useRef } from "react";
 import { Post } from "../../generated/graphql";
 import { slideUp } from "../../utils/animations/slideIn";
-import {
-  animateLines,
-  animateLineStartValues,
-} from "../../utils/animations/text";
 import { SCROLL_TRIGGER_START_DEFAULT } from "../../utils/shared";
-import { SmoothScroll } from "../../utils/SmoothScroll";
 import { SplitText } from "../../utils/splitText";
 import styles from "./About.module.scss";
 
@@ -56,7 +51,6 @@ export function About({ post }: AboutProps) {
             splitText: instance,
             animations,
             scrollTrigger: ScrollTrigger.create({
-              scroller: SmoothScroll.instance?.scrollingElement,
               trigger: p,
               start: SCROLL_TRIGGER_START_DEFAULT,
               onEnter() {

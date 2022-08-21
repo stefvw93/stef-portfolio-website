@@ -9,7 +9,6 @@ import typeface from "../assets/PP_Neue Montreal_Bold.json";
 import fragmentShader from "../shaders/text.frag.glsl";
 import vertexShader from "../shaders/text.vert.glsl";
 import gsap from "gsap";
-import { SmoothScroll } from "../../../utils/SmoothScroll";
 
 type TitleTextConfig = {
   main: string;
@@ -145,16 +144,6 @@ export class TitleText {
     const uniforms = this.material.uniforms;
     uniforms.uTime.value = this.experience.clock.getElapsedTime();
 
-    this.y = SmoothScroll.instance
-      ? SmoothScroll.instance.smoothY * 0.004
-      : this.y;
-
-    const newPosition = new THREE.Vector3().copy(this.group.position);
-    newPosition.y = this.y;
-
-    this.group.position.copy(newPosition);
-    // this.group.rotation.x = this.y * 0.5;
-
     if (!this.pointerActive) {
       return (uniforms.uDentSize.value = gsap.utils.interpolate(
         uniforms.uDentSize.value,
@@ -162,19 +151,24 @@ export class TitleText {
         progress
       ));
     }
+
     this.raycaster.setFromCamera(this.pointerPosition, this.experience.camera);
+
     const intersects = this.raycaster.intersectObjects(
       this.experience.scene.children
     );
+
     const uPointer: THREE.Vector2 = uniforms.uPointer.value;
     const uDentSize: { value: number } = uniforms.uDentSize;
     let intersectionPoint: THREE.Vector3 | undefined;
+
     for (let i = 0, l = intersects.length; i < l; i++) {
       if (intersects[i].object === this.mesh) {
         intersectionPoint = intersects[i].point;
         break;
       }
     }
+
     if (intersectionPoint) {
       uDentSize.value = gsap.utils.interpolate(uDentSize.value, 1, progress);
       uPointer.set(

@@ -117,8 +117,8 @@ export class HeadsUpLayer {
       Math.min(bounds.width * (window.innerWidth > 800 ? 0.6 : 0.9), 4)
     );
 
-    titleText.group.position.z = textZ;
-    this.experience.camera.add(titleText.group);
+    // titleText.group.position.z = textZ;
+    this.experience.scene.add(titleText.group);
 
     return titleText;
   }

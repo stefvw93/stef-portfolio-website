@@ -1,8 +1,8 @@
 import { MouseEvent, useEffect, useRef } from "react";
 import gsap, { Power1 } from "gsap";
-import { SmoothScroll } from "../../utils/SmoothScroll";
 import styles from "./Hud.module.scss";
 import { classes } from "../../utils/classes";
+import { ScrollMotion } from "../../utils/ScrollMotion";
 
 type HudProps = {
   links?: { name?: string | null; href?: string | null }[];
@@ -12,10 +12,9 @@ export function Hud({ links }: HudProps) {
   const handleAnchorClick = useRef(
     (event: MouseEvent<HTMLAnchorElement, Event>) => {
       event.preventDefault();
-      if (!SmoothScroll.instance) return;
       const query = event.currentTarget.getAttribute("href");
       if (!query) return;
-      gsap.to(SmoothScroll.instance.scrollingElement, {
+      gsap.to(document.scrollingElement, {
         scrollTo: query,
         duration: 1,
         ease: Power1.easeInOut,
@@ -77,11 +76,11 @@ function ScrollBar() {
   const bar = useRef<HTMLDivElement>(null);
 
   const updateScrollBar = useRef((time: number, deltaTime: number) => {
-    if (!SmoothScroll.instance) return;
+    if (!ScrollMotion.instance) return;
 
     const progress =
-      SmoothScroll.instance.smoothY /
-      (SmoothScroll.instance.scrollHeight - window.innerHeight);
+      ScrollMotion.instance.smoothY /
+      ScrollMotion.instance.virtuals.scrollHeight;
 
     if (isNaN(progress)) return;
 

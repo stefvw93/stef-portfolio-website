@@ -21,7 +21,7 @@ const Home: NextPage = ({
   useEffect(
     () =>
       new PointerChaser(["a"], {
-        container: document.querySelector(".scroll-container") as HTMLElement,
+        container: document.querySelector(".experience") as HTMLElement,
       }).destroy,
     []
   );
@@ -41,8 +41,7 @@ const Home: NextPage = ({
       <MainHead />
       <ExperienceComponent />
 
-      <div ref={scrollRoot}>
-        {/* <main className="main"> */}
+      <main className="main" ref={scrollRoot}>
         {posts?.map((post, index) => (
           <div key={post.id} className={ScrollMotion.outerChildClassName}>
             <div className={ScrollMotion.innerChildClassName}>
@@ -61,8 +60,7 @@ const Home: NextPage = ({
             </div>
           </div>
         ))}
-        {/* </main> */}
-      </div>
+      </main>
 
       <Hud
         links={posts?.map((post) => ({ name: post.title, href: post.slug }))}

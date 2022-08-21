@@ -5,7 +5,6 @@ import { Experience, Post, Skill } from "../../generated/graphql";
 import { slideUp } from "../../utils/animations/slideIn";
 import { classes } from "../../utils/classes";
 import { SCROLL_TRIGGER_START_DEFAULT } from "../../utils/shared";
-import { SmoothScroll } from "../../utils/SmoothScroll";
 import { SplitText } from "../../utils/splitText";
 import styles from "./Career.module.scss";
 
@@ -82,7 +81,6 @@ function CareerItem({ year }: CareerItemProps) {
       };
 
       scrollTrigger = ScrollTrigger.create({
-        scroller: SmoothScroll.instance?.scrollingElement,
         trigger: _container,
         start: SCROLL_TRIGGER_START_DEFAULT,
         onEnter: animate,
@@ -136,7 +134,6 @@ function CareerExperience({ experience }: { experience: Experience }) {
           if (!obj) return;
           obj.animations = [slideUp(chars, { duration: 0.8, stagger: 0.06 })];
           obj.scrollTrigger = ScrollTrigger.create({
-            scroller: SmoothScroll.instance?.scrollingElement,
             trigger: container.current,
             start: SCROLL_TRIGGER_START_DEFAULT,
             onEnter() {
