@@ -3,6 +3,7 @@ import gsap, { Power1 } from "gsap";
 import styles from "./Hud.module.scss";
 import { classes } from "../../utils/classes";
 import { ScrollMotion } from "../../utils/ScrollMotion";
+import { ScrollToPlugin } from "gsap/dist/ScrollToPlugin";
 
 type HudProps = {
   links?: { name?: string | null; href?: string | null }[];
@@ -13,14 +14,16 @@ export function Hud({ links }: HudProps) {
     (event: MouseEvent<HTMLAnchorElement, Event>) => {
       event.preventDefault();
       const query = event.currentTarget.getAttribute("href");
-      if (!query) return;
-      gsap.to(document.scrollingElement, {
+      if (!query || !ScrollMotion.instance?.scroller) return;
+      gsap.to(ScrollMotion.instance.scroller, {
         scrollTo: query,
         duration: 1,
         ease: Power1.easeInOut,
       });
     }
   );
+
+  useEffect(() => gsap.registerPlugin(ScrollToPlugin), []);
 
   return (
     <>
