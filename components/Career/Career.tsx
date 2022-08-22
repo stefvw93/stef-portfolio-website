@@ -2,11 +2,11 @@ import gsap, { Power1 } from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { useEffect, useMemo, useRef } from "react";
 import { Experience, Post, Skill } from "../../generated/graphql";
-import { slideUp } from "../../utils/animations/slideIn";
 import { classes } from "../../utils/classes";
-import { SCROLL_TRIGGER_START_DEFAULT } from "../../utils/shared";
-import { SplitText } from "../../utils/splitText";
+import { TextMotion } from "../../utils/TextMotion";
 import styles from "./Career.module.scss";
+
+const RULER_ANIMATION_DURATION = 0.8;
 
 type CareerProps = {
   post: Post;
@@ -47,53 +47,39 @@ function CareerItem({ year }: CareerItemProps) {
   const container = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const _container = container.current;
-    if (!_container) return;
-
     let scrollTrigger: ScrollTrigger;
+    gsap.registerPlugin(ScrollTrigger);
 
-    requestAnimationFrame(() => {
-      const fadeInTargets = _container.querySelectorAll(".fade-in");
-      const slideInTargets = _container.querySelectorAll(".slide-in");
-      const duration = 1;
-      const ease = Power1.easeInOut;
-
-      const fadeInFrom = { opacity: 0 };
-      const fadeIn = gsap.fromTo(fadeInTargets, fadeInFrom, {
-        opacity: 1,
-        duration,
-        ease,
-        paused: true,
-      });
-
-      const slideInFrom = { x: -30, opacity: 0 };
-      const slideIn = gsap.fromTo(slideInTargets, slideInFrom, {
-        x: 0,
-        opacity: 1,
-        duration,
-        ease,
-        paused: true,
-      });
-
-      const animate = () => {
-        fadeIn.play();
-        slideIn.play();
-      };
-
+    const raf = requestAnimationFrame(() => {
       scrollTrigger = ScrollTrigger.create({
-        trigger: _container,
-        start: SCROLL_TRIGGER_START_DEFAULT,
-        onEnter: animate,
-        onEnterBack: animate,
+        trigger: container.current,
+        onEnter() {
+          gsap.from(container.current!.getElementsByTagName("hr"), {
+            transformOrigin: "right",
+            scale: 0,
+            duration: RULER_ANIMATION_DURATION,
+            clearProps: "scale, transformOrigin",
+          });
+
+          gsap.from(container.current!.querySelector(".year > footer"), {
+            opacity: 0,
+            duration: 0.3,
+            delay: RULER_ANIMATION_DURATION,
+            clearProps: "opacity",
+          });
+        },
       });
     });
 
-    return () => scrollTrigger?.kill();
+    return () => {
+      cancelAnimationFrame(raf);
+      scrollTrigger?.kill();
+    };
   }, []);
 
   return (
     <article ref={container}>
-      <div className={classes(styles.yearSeparator, "year", "fade-in")}>
+      <div className={classes(styles.yearSeparator, "year")}>
         <footer className={styles.year}>{year[0].year}</footer>
         <hr className="slide-in" />
       </div>
@@ -108,50 +94,66 @@ function CareerItem({ year }: CareerItemProps) {
 function CareerExperience({ experience }: { experience: Experience }) {
   const container = useRef<HTMLDivElement>(null);
 
-  const animationMap = useRef<
-    WeakMap<
-      HTMLElement,
-      {
-        animations?: gsap.core.Animation[];
-        splitText?: SplitText;
-        scrollTrigger?: ScrollTrigger;
-      }
-    >
-  >(new WeakMap());
-
   useEffect(() => {
+    let scrollTrigger: ScrollTrigger;
     gsap.registerPlugin(ScrollTrigger);
-    if (!container.current) return;
 
-    const header = container.current.querySelector("h2 > a") as HTMLElement;
+    const raf = requestAnimationFrame(() => {
+      scrollTrigger = ScrollTrigger.create({
+        trigger: container.current,
+        async onEnter() {
+          if (!container.current) return;
+          const title = container.current.querySelector(
+            "header > h2 > a"
+          ) as HTMLElement;
 
-    animationMap.current.set(header, {
-      splitText: new SplitText(header, {
-        wrapChars: true,
-        charSpanAttrs: { class: styles.animateChar },
-        onComplete({ element, chars }) {
-          const obj = animationMap.current.get(element);
-          if (!obj) return;
-          obj.animations = [slideUp(chars, { duration: 0.8, stagger: 0.06 })];
-          obj.scrollTrigger = ScrollTrigger.create({
-            trigger: container.current,
-            start: SCROLL_TRIGGER_START_DEFAULT,
-            onEnter() {
-              animationMap.current
-                .get(header)
-                ?.animations?.forEach((a) => a.play());
-            },
-            onEnterBack() {
-              animationMap.current
-                .get(header)
-                ?.animations?.forEach((a) => a.play());
+          const titleTextMotion = new TextMotion(title, {
+            wrapChars: true,
+            processChar(char) {
+              char.style.setProperty("--clip-y", "0%");
+              gsap.set(char, {
+                willChange: "contents",
+                display: "inline-block",
+              });
             },
           });
+
+          const chars = await titleTextMotion.getChars();
+
+          await gsap.fromTo(
+            chars,
+            {
+              y: 20,
+              "--clip-y": "0%",
+              clipPath:
+                "polygon(0 0, 100% 0, 100% var(--clip-y), 0 var(--clip-y))",
+            },
+            {
+              y: 0,
+              "--clip-y": "100%",
+              duration: 0.3,
+              stagger: 0.05,
+              delay: RULER_ANIMATION_DURATION,
+              clearProps: [
+                "--clip-y",
+                "will-change",
+                "clip-path",
+                "transform",
+              ].join(","),
+            }
+          );
+
+          scrollTrigger.kill();
+
+          console.log({ chars });
         },
-      }),
+      });
     });
 
-    return () => animationMap.current.get(header)?.scrollTrigger?.kill();
+    return () => {
+      cancelAnimationFrame(raf);
+      scrollTrigger?.kill();
+    };
   }, []);
 
   return (

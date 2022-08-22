@@ -15,6 +15,7 @@ export class TextMotion {
 
   private readonly doWrapLines: boolean;
   private readonly doWrapChars: boolean;
+  private chars: HTMLSpanElement[] = [];
   private words: HTMLSpanElement[] = [];
   private lines: HTMLSpanElement[] = [];
   private processWord: SpanProcessor;
@@ -40,6 +41,11 @@ export class TextMotion {
 
     TextMotion.instances.set(element, this);
     this.wrap();
+  }
+
+  async getChars() {
+    await nextAnimationFrame();
+    return this.chars;
   }
 
   async getWords() {
@@ -77,16 +83,16 @@ export class TextMotion {
     const fragment = document.createDocumentFragment();
     const text = this.getTextContent(element);
 
-    fragment.append(
-      ...Array.from(text).map((char) => {
-        const span = document.createElement("span");
-        span.innerText = char;
-        this.processChar(span);
-        return span;
-      })
-    );
+    const chars = Array.from(text).map((char) => {
+      const span = document.createElement("span");
+      span.innerText = char;
+      this.processChar(span);
+      return span;
+    });
 
+    fragment.append(...chars);
     element.replaceChildren(fragment);
+    this.chars = chars;
   }
 
   private async wrapLines() {

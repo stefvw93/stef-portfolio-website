@@ -3,10 +3,6 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { useEffect, useRef } from "react";
 import { Post } from "../../generated/graphql";
-import { slideUp } from "../../utils/animations/slideIn";
-import { nextAnimationFrame } from "../../utils/nextAnimationFrame";
-import { SCROLL_TRIGGER_START_DEFAULT } from "../../utils/shared";
-import { SplitText } from "../../utils/splitText";
 import { TextMotion } from "../../utils/TextMotion";
 import styles from "./About.module.scss";
 
@@ -16,27 +12,15 @@ type AboutProps = {
 
 export function About({ post }: AboutProps) {
   const container = useRef<HTMLDivElement>(null);
-  const animationMap = useRef<
-    WeakMap<
-      HTMLElement,
-      {
-        splitText?: SplitText;
-        scrollTrigger?: ScrollTrigger;
-        animations?: gsap.core.Animation[];
-      }
-    >
-  >(new WeakMap());
 
   useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-
     let scrollTrigger: ScrollTrigger;
+    gsap.registerPlugin(ScrollTrigger);
 
     const raf = requestAnimationFrame(() => {
       const paragraphs = Array.from(container.current!.querySelectorAll("p"));
       scrollTrigger = ScrollTrigger.create({
         trigger: container.current,
-        start: "top 80%",
         async onEnter() {
           const textMotions = paragraphs.map(
             (p) =>
@@ -70,6 +54,12 @@ export function About({ post }: AboutProps) {
               duration: 0.5,
               stagger: 0.1,
               delay: 0.3,
+              clearProps: [
+                "--clip-y",
+                "will-change",
+                "clip-path",
+                "transform",
+              ].join(","),
             }
           );
 
