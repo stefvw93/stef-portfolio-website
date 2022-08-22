@@ -41,10 +41,11 @@ export class Experience {
     this.container = document.querySelector(".experience")!;
     this.backgroundCanvas = document.querySelector("canvas.webgl.background")!;
     this.canvas = document.querySelector("canvas.webgl.foreground")!;
-    this.renderer = this.createRenderer({ alpha: true });
+    this.renderer = this.createRenderer({ alpha: true, highPerformance: true });
     this.backgroundRenderer = this.createRenderer({
       dpr: 0.01,
       canvas: this.backgroundCanvas,
+      highPerformance: false,
     });
     this.scene = this.createScene();
     this.backgroundScene = this.createScene(true);
@@ -135,6 +136,7 @@ export class Experience {
     const renderer = new THREE.WebGLRenderer({
       canvas,
       alpha,
+      powerPreference: highPerformance ? "high-performance" : "default",
     });
 
     renderer.setSize(this.size.width, this.size.height);

@@ -30,7 +30,7 @@ export function About({ post }: AboutProps) {
                   line.style.setProperty("--clip-y", "0%");
                   gsap.set(line, {
                     display: "inline-block",
-                    willChange: "contents",
+                    willChange: "contents, transform",
                   });
                 },
               })
@@ -53,11 +53,11 @@ export function About({ post }: AboutProps) {
               "--clip-y": "100%",
               duration: 0.5,
               stagger: 0.1,
-              delay: 0.3,
+              delay: 0.2,
               clearProps: [
                 "--clip-y",
-                "will-change",
-                "clip-path",
+                "willChange",
+                "clipPath",
                 "transform",
               ].join(","),
             }

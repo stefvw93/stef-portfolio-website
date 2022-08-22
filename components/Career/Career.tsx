@@ -6,7 +6,7 @@ import { classes } from "../../utils/classes";
 import { TextMotion } from "../../utils/TextMotion";
 import styles from "./Career.module.scss";
 
-const RULER_ANIMATION_DURATION = 0.8;
+const RULER_ANIMATION_DURATION = 0.6;
 
 type CareerProps = {
   post: Post;
@@ -43,7 +43,7 @@ export function Career({ post }: CareerProps) {
 
 type CareerItemProps = { year: Experience[] };
 
-function CareerItem({ year }: CareerItemProps) {
+export function CareerItem({ year }: CareerItemProps) {
   const container = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -98,28 +98,29 @@ function CareerExperience({ experience }: { experience: Experience }) {
 
   useEffect(() => {
     let scrollTrigger: ScrollTrigger;
+    let title: HTMLElement;
+    let titleTextMotion: TextMotion;
     gsap.registerPlugin(ScrollTrigger);
 
     const raf = requestAnimationFrame(() => {
+      if (!container.current) return;
+
+      title = container.current.querySelector("header > h2 > a") as HTMLElement;
+
+      titleTextMotion = new TextMotion(title, {
+        wrapChars: true,
+        processChar(char) {
+          char.style.setProperty("--clip-y", "0%");
+          gsap.set(char, {
+            willChange: "contents",
+            display: "inline-block",
+          });
+        },
+      });
+
       scrollTrigger = ScrollTrigger.create({
         trigger: container.current,
         async onEnter() {
-          if (!container.current) return;
-          const title = container.current.querySelector(
-            "header > h2 > a"
-          ) as HTMLElement;
-
-          const titleTextMotion = new TextMotion(title, {
-            wrapChars: true,
-            processChar(char) {
-              char.style.setProperty("--clip-y", "0%");
-              gsap.set(char, {
-                willChange: "contents",
-                display: "inline-block",
-              });
-            },
-          });
-
           const chars = await titleTextMotion.getChars();
 
           await gsap.fromTo(
@@ -139,8 +140,8 @@ function CareerExperience({ experience }: { experience: Experience }) {
               delay: RULER_ANIMATION_DURATION,
               clearProps: [
                 "--clip-y",
-                "will-change",
-                "clip-path",
+                "willChange",
+                "clipPath",
                 "transform",
               ].join(","),
             }
@@ -153,6 +154,7 @@ function CareerExperience({ experience }: { experience: Experience }) {
 
     return () => {
       cancelAnimationFrame(raf);
+      titleTextMotion?.destroy();
       scrollTrigger?.kill();
     };
   }, []);

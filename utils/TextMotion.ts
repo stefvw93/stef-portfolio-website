@@ -47,6 +47,7 @@ export class TextMotion {
   }
 
   destroy = () => {
+    this.element.innerText = this.originalText;
     window.removeEventListener("resize", this.handleResize);
   };
 
