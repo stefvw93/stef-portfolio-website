@@ -1,4 +1,4 @@
-import gsap, { Power1 } from "gsap";
+import gsap, { Power4 } from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { useEffect, useMemo, useRef } from "react";
 import { Experience, Post, Skill } from "../../generated/graphql";
@@ -67,6 +67,8 @@ function CareerItem({ year }: CareerItemProps) {
             delay: RULER_ANIMATION_DURATION,
             clearProps: "opacity",
           });
+
+          scrollTrigger?.kill();
         },
       });
     });
@@ -131,8 +133,9 @@ function CareerExperience({ experience }: { experience: Experience }) {
             {
               y: 0,
               "--clip-y": "100%",
-              duration: 0.25,
-              stagger: 0.04,
+              duration: RULER_ANIMATION_DURATION,
+              stagger: 0.025,
+              ease: Power4.easeOut,
               delay: RULER_ANIMATION_DURATION,
               clearProps: [
                 "--clip-y",
@@ -144,8 +147,6 @@ function CareerExperience({ experience }: { experience: Experience }) {
           );
 
           scrollTrigger.kill();
-
-          console.log({ chars });
         },
       });
     });
