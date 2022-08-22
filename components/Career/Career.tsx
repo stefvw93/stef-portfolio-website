@@ -3,6 +3,7 @@ import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { useEffect, useMemo, useRef } from "react";
 import { Experience, Post, Skill } from "../../generated/graphql";
 import { classes } from "../../utils/classes";
+import { ScrollMotion } from "../../utils/ScrollMotion";
 import { TextMotion } from "../../utils/TextMotion";
 import styles from "./Career.module.scss";
 
@@ -52,6 +53,7 @@ export function CareerItem({ year }: CareerItemProps) {
 
     const raf = requestAnimationFrame(() => {
       scrollTrigger = ScrollTrigger.create({
+        scroller: ScrollMotion.instance?.scroller,
         trigger: container.current,
         onEnter() {
           gsap.from(container.current!.getElementsByTagName("hr"), {
@@ -119,6 +121,7 @@ function CareerExperience({ experience }: { experience: Experience }) {
       });
 
       scrollTrigger = ScrollTrigger.create({
+        scroller: ScrollMotion.instance?.scroller,
         trigger: container.current,
         async onEnter() {
           const chars = await titleTextMotion.getChars();
@@ -135,7 +138,7 @@ function CareerExperience({ experience }: { experience: Experience }) {
               y: 0,
               "--clip-y": "100%",
               duration: RULER_ANIMATION_DURATION,
-              stagger: 0.025,
+              stagger: 0.05,
               ease: Power4.easeOut,
               delay: RULER_ANIMATION_DURATION,
               clearProps: [

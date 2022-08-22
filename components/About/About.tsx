@@ -3,6 +3,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { useEffect, useRef } from "react";
 import { Post } from "../../generated/graphql";
+import { ScrollMotion } from "../../utils/ScrollMotion";
 import { TextMotion } from "../../utils/TextMotion";
 import styles from "./About.module.scss";
 
@@ -20,6 +21,7 @@ export function About({ post }: AboutProps) {
     const raf = requestAnimationFrame(() => {
       const paragraphs = Array.from(container.current!.querySelectorAll("p"));
       scrollTrigger = ScrollTrigger.create({
+        scroller: ScrollMotion.instance?.scroller,
         trigger: container.current,
         async onEnter() {
           const textMotions = paragraphs.map(
@@ -52,7 +54,7 @@ export function About({ post }: AboutProps) {
               y: 0,
               "--clip-y": "100%",
               duration: 0.5,
-              stagger: 0.1,
+              stagger: 0.08,
               delay: 0.2,
               clearProps: [
                 "--clip-y",

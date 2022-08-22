@@ -1,10 +1,12 @@
 import gsap from "gsap";
+import { isTouchDevice } from "./isTouchDevice";
 
 export class ScrollMotion {
   static outerChildClassName = "smooth-parent";
   static innerChildClassName = "smooth-child";
   static instance?: ScrollMotion;
 
+  readonly scroller: Window | HTMLElement;
   readonly outerChildren: HTMLElement[];
   readonly innerChildren: HTMLElement[] = [];
   virtuals: ScrollMotionVirtuals;
@@ -18,6 +20,8 @@ export class ScrollMotion {
   private setup: gsap.core.Tween[] = [];
 
   constructor(public readonly root: HTMLElement) {
+    this.scroller = isTouchDevice() ? root : window;
+
     this.outerChildren = Array.from(
       document.querySelectorAll(`.${ScrollMotion.outerChildClassName}`)
     ).filter((child) => child instanceof HTMLElement) as HTMLElement[];
@@ -27,11 +31,12 @@ export class ScrollMotion {
     ) as HTMLElement[];
 
     this.virtuals = new ScrollMotionVirtuals(this.outerChildren);
+    this.setTouchDeviceOverflowBehaviour();
     this.setOuterChildDimensions();
     this.setInnerChildPositions();
 
     gsap.ticker.add(this.handleTick);
-    window.addEventListener("scroll", this.handleScroll);
+    this.scroller.addEventListener("scroll", this.handleScroll);
     window.addEventListener("resize", this.handleResize);
 
     ScrollMotion.instance = this;
@@ -39,7 +44,7 @@ export class ScrollMotion {
 
   destroy = () => {
     gsap.ticker.remove(this.handleTick);
-    window.removeEventListener("scroll", this.handleScroll);
+    this.scroller.removeEventListener("scroll", this.handleScroll);
     window.removeEventListener("resize", this.handleResize);
   };
 
@@ -58,7 +63,10 @@ export class ScrollMotion {
 
   handleScroll = () => {
     if (!this.doHandleScroll) return;
-    this.scrollY = window.scrollY;
+    this.scrollY =
+      this.scroller === window
+        ? window.scrollY
+        : (this.scroller as HTMLElement).scrollTop;
     this.doHandleScroll = false;
   };
 
@@ -79,6 +87,29 @@ export class ScrollMotion {
     this.doHandleScroll = true;
   };
 
+  private setTouchDeviceOverflowBehaviour() {
+    if (!isTouchDevice()) return;
+    let element: HTMLElement | null = this.root;
+
+    gsap.set("html, body", {
+      overflow: "hidden",
+    });
+
+    gsap.set(this.root, {
+      overflowY: "auto",
+      top: 0,
+    });
+
+    while (element) {
+      gsap.set(element, {
+        width: "100%",
+        height: "100%",
+        position: "fixed",
+      });
+      element = element.parentElement;
+    }
+  }
+
   private async undoSetup() {
     const tweens: gsap.core.Tween[] = [];
     while (this.setup.length) {
@@ -89,6 +120,7 @@ export class ScrollMotion {
   }
 
   private updateChildPositions() {
+    if (isTouchDevice()) return;
     let outerChild: HTMLElement;
     let innerChild: HTMLElement;
     let yOffset = 0;
@@ -112,6 +144,7 @@ export class ScrollMotion {
   }
 
   private setInnerChildPositions() {
+    if (isTouchDevice()) return;
     this.setup.push(
       ...this.outerChildren.map((outerChild, index) => {
         const innerChild = this.innerChildren[index];
