@@ -153,7 +153,7 @@ export class Experience {
   tick = (time: number, deltaTime: number) => {
     // if (this.controls?.enabled) this.controls.update();
     if (ScrollMotion.instance) {
-      this.camera.position.y = ScrollMotion.instance.smoothY * -0.0035;
+      this.camera.position.y = ScrollMotion.instance.smoothY * -0.005;
     }
 
     this.tickListeners.forEach((f) => f(time, deltaTime));
@@ -165,7 +165,6 @@ export class Experience {
   };
 
   handleResize = debounce(() => {
-    if (this.size.width === window.innerWidth) return;
     this.size.width = window.innerWidth;
     this.size.height = window.innerHeight;
     this.setContainerSize();

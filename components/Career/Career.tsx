@@ -131,8 +131,8 @@ function CareerExperience({ experience }: { experience: Experience }) {
             {
               y: 0,
               "--clip-y": "100%",
-              duration: 0.3,
-              stagger: 0.05,
+              duration: 0.25,
+              stagger: 0.04,
               delay: RULER_ANIMATION_DURATION,
               clearProps: [
                 "--clip-y",
