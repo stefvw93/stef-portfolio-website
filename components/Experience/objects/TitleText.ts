@@ -21,7 +21,7 @@ export class TitleText {
   pointerPosition = new THREE.Vector2();
   group = new THREE.Group();
 
-  baseUniformSpeed = new THREE.Vector2(0.15, 0.15);
+  baseUniformSpeed = new THREE.Vector2(0.25, 0.08);
   material = new THREE.ShaderMaterial({
     // wireframe: true,
     depthWrite: false,
@@ -29,7 +29,7 @@ export class TitleText {
     transparent: true,
     vertexShader,
     fragmentShader,
-    side: THREE.DoubleSide,
+    side: THREE.FrontSide,
     uniforms: {
       uAlphaMap: {
         value: this.experience.textureLoader.load(
@@ -41,8 +41,8 @@ export class TitleText {
       uPointer: { value: new THREE.Vector2() },
       uTime: { value: 0 },
       uSpeed: { value: new THREE.Vector2().copy(this.baseUniformSpeed) },
-      uNoiseScale: { value: 1.3 },
-      uFragmentation: { value: 2.01 },
+      uNoiseScale: { value: 0.66 },
+      uFragmentation: { value: 10 },
       uColor1: { value: new THREE.Color(0xff206e) },
       uColor2: { value: new THREE.Color(0xfbff12) },
     },
@@ -64,8 +64,8 @@ export class TitleText {
     this.geometry = new THREE.PlaneBufferGeometry(
       this.dimensions.width,
       this.dimensions.height,
-      Math.round(window.innerWidth * 0.05),
-      Math.round(window.innerHeight * 0.05)
+      64,
+      16
     );
     this.mesh = this.createMesh();
     SubtitleText.create(this, this.texts.top, this.texts.bottom);

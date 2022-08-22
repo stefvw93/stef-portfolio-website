@@ -4,8 +4,10 @@ import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { useEffect, useRef } from "react";
 import { Post } from "../../generated/graphql";
 import { slideUp } from "../../utils/animations/slideIn";
+import { nextAnimationFrame } from "../../utils/nextAnimationFrame";
 import { SCROLL_TRIGGER_START_DEFAULT } from "../../utils/shared";
 import { SplitText } from "../../utils/splitText";
+import { TextMotion } from "../../utils/TextMotion";
 import styles from "./About.module.scss";
 
 type AboutProps = {
@@ -27,50 +29,58 @@ export function About({ post }: AboutProps) {
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
-    if (!container.current) return;
 
-    const paragraphs = Array.from(container.current.querySelectorAll("p"));
+    let scrollTrigger: ScrollTrigger;
 
-    paragraphs.forEach((p) => {
-      new SplitText(p, {
-        wrapLines: true,
-        wordSpanAttrs: { class: styles.animateWord },
-        onComplete(instance) {
-          const { element, lines } = instance;
+    const raf = requestAnimationFrame(() => {
+      const paragraphs = Array.from(container.current!.querySelectorAll("p"));
+      scrollTrigger = ScrollTrigger.create({
+        trigger: container.current,
+        start: "top 80%",
+        async onEnter() {
+          const textMotions = paragraphs.map(
+            (p) =>
+              new TextMotion(p, {
+                wrapLines: true,
+                processLine(line) {
+                  line.style.setProperty("--clip-y", "0%");
+                  gsap.set(line, {
+                    display: "inline-block",
+                    willChange: "contents",
+                  });
+                },
+              })
+          );
 
-          const animations = lines.map((line, index) => {
-            const words = line.querySelectorAll(`.${styles.animateWord}`);
-            return slideUp(words, {
-              duration: 1,
-              stagger: 0.05,
-              delay: 0.1 * index,
-            });
-          });
+          const lines = (
+            await Promise.all(textMotions.map((e) => e.getLines()))
+          ).flat();
 
-          animationMap.current.set(element, {
-            splitText: instance,
-            animations,
-            scrollTrigger: ScrollTrigger.create({
-              trigger: p,
-              start: SCROLL_TRIGGER_START_DEFAULT,
-              onEnter() {
-                animations?.forEach((a) => a.play());
-              },
-              onEnterBack() {
-                animations?.forEach((a) => a.play());
-              },
-            }),
-          });
+          await gsap.fromTo(
+            lines,
+            {
+              y: 20,
+              "--clip-y": "0%",
+              clipPath:
+                "polygon(0 0, 100% 0, 100% var(--clip-y), 0 var(--clip-y))",
+            },
+            {
+              y: 0,
+              "--clip-y": "100%",
+              duration: 0.5,
+              stagger: 0.1,
+              delay: 0.3,
+            }
+          );
+
+          scrollTrigger.kill();
         },
       });
     });
 
     return () => {
-      paragraphs.forEach((p) => {
-        const obj = animationMap.current?.get(p);
-        obj?.scrollTrigger?.kill();
-        obj?.splitText?.destroy();
-      });
+      cancelAnimationFrame(raf);
+      scrollTrigger?.kill();
     };
   }, []);
 
