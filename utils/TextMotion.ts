@@ -22,7 +22,7 @@ export class TextMotion {
   private processChar: SpanProcessor;
   private processLine: SpanProcessor;
   private resizeTimeout?: ReturnType<typeof setTimeout>;
-  private setup: gsap.core.Tween[] = [];
+  private originalText: string;
 
   constructor(
     public readonly element: HTMLElement,
@@ -30,6 +30,7 @@ export class TextMotion {
   ) {
     this.doWrapChars = params.wrapChars ?? false;
     this.doWrapLines = params.wrapLines ?? false;
+    this.originalText = element.textContent ?? "";
     this.processWord = params.processWord ?? ((e: HTMLSpanElement) => e);
     this.processChar = params.processChar ?? ((e: HTMLSpanElement) => e);
     this.processLine = params.processLine ?? ((e: HTMLSpanElement) => e);
@@ -41,7 +42,13 @@ export class TextMotion {
 
     TextMotion.instances.set(element, this);
     this.wrap();
+
+    window.addEventListener("resize", this.handleResize);
   }
+
+  destroy = () => {
+    window.removeEventListener("resize", this.handleResize);
+  };
 
   async getChars() {
     await nextAnimationFrame();
@@ -57,6 +64,18 @@ export class TextMotion {
     await nextAnimationFrame();
     return this.lines;
   }
+
+  private handleResize = () => {
+    if (this.resizeTimeout != undefined) {
+      clearTimeout(this.resizeTimeout);
+    }
+
+    this.resizeTimeout = setTimeout(async () => {
+      this.element.replaceChildren(this.originalText);
+      await nextAnimationFrame();
+      this.wrap();
+    }, 100);
+  };
 
   private wrap() {
     this.wrapWords();
