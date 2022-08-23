@@ -6,7 +6,6 @@
   padding: 2rem;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
 
   @media (max-width: 1240px) {
     padding: 1rem;
@@ -14,6 +13,11 @@
 
   article {
     position: relative;
+  }
+
+  h1 {
+    max-width: 100vw;
+    overflow: hidden;
   }
 }
 
